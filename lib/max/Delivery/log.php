@@ -55,17 +55,12 @@ function MAX_Delivery_log_logAdImpression($adId, $zoneId)
     // Only log impressions if impression logging is enabled
     if (empty($GLOBALS['_MAX']['CONF']['logging']['adImpressions'])) { return true; }
 
-        // If no-impression/click/redirect on inactive banners is enabled,
-        // check to see if the banner is active. If not, exit impression logging
-        // at this point, without recording the impression
-        if (!empty($GLOBALS['_MAX']['CONF']['logging']['blockInactiveBanners'])) {
-            $aAdInfo = MAX_cacheGetAd($adId);
-            if ($aAdInfo['status'] != OA_ENTITY_STATUS_RUNNING || $aAdInfo['campaign_status'] != OA_ENTITY_STATUS_RUNNING) {
-                // The ad and/or campaign is inactive - exit processing at this
-                // stage, so that the impression is not logged
-                return true;
-            }
-        }
+    // Check to see if the ad impression logging action is blocked (as a result
+    // of the settings & banner inactivity), and if so, exit impression logging
+    // at this point, without recording the impression
+    if (MAX_commonIsAdActionBlockedBecauseInactive($adId)) {
+        return true;
+    }
 
     // Call all registered plugins that use the "logImpression" hook
     OX_Delivery_Common_hook('logImpression', array($adId, $zoneId, _viewersHostOkayToLog($adId, $zoneId)));
