@@ -58,7 +58,7 @@ function MAX_Delivery_log_logAdImpression($adId, $zoneId)
         // If no-impression/click/redirect on inactive banners is enabled,
         // check to see if the banner is active. If not, exit impression logging
         // at this point, without recording the impression
-        if (isset($GLOBALS['_MAX']['CONF']['conf']['logging']['blockInactiveBanners'])) {
+        if (isset($GLOBALS['_MAX']['CONF']['logging']['blockInactiveBanners'])) {
             $aAdInfo = MAX_cacheGetAd($adId);
             if ($aAdInfo['status'] != OA_ENTITY_STATUS_RUNNING || $aAdInfo['campaign_status'] != OA_ENTITY_STATUS_RUNNING) {
                 // The ad and/or campaign is inactive - exit processing at this
