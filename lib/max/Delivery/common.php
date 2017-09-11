@@ -453,6 +453,7 @@ function MAX_commonInitVariables()
  * blocked.
  *
  * @param int $adId The ad ID.
+ * @return bool
  */
 function MAX_commonIsAdActionBlockedBecauseInactive($adId)
 {
