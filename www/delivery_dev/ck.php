@@ -82,7 +82,7 @@ for ($i = 0; $i < count($adId); $i++) {
         // If no-impression/click/redirect on inactive banners is enabled,
         // check to see if the banner is active. If not, exit click processing
         // at this point, without recording the click or performing redirection
-        if (isset($GLOBALS['conf']['logging']['blockInactiveBanners'])) {
+        if (!empty($GLOBALS['conf']['logging']['blockInactiveBanners'])) {
             $aAdInfo = MAX_cacheGetAd($adId[$i]);
             if ($aAdInfo['status'] != OA_ENTITY_STATUS_RUNNING || $aAdInfo['campaign_status'] != OA_ENTITY_STATUS_RUNNING) {
                 // The ad and/or campaign is inactive - exit processing at this
