@@ -29,7 +29,7 @@ class OX
      * @return string       The URL to the asset. If asset was not provided,
      * 		                the path does not contain a trailing slash.
      */
-    function assetPath($asset = null)
+    public static function assetPath($asset = null)
     {
         global $installing;
         $aConf = $GLOBALS['_MAX']['CONF'];
@@ -57,7 +57,7 @@ class OX
      * @param string $path
      */
 
-    function realPathRelative($path) {
+    public static function realPathRelative($path) {
         $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
         $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'strlen');
         $absolutes = array();

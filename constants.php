@@ -210,6 +210,8 @@ function setupConstants()
         define('MAX_CACHE', MAX_PATH . '/var/cache/');
 
        // Set the URL access mechanism
+        $GLOBALS['_MAX']['HTTP'] = 'http://';
+
         if (!empty($GLOBALS['_MAX']['CONF']['openads']['requireSSL'])) {
             $GLOBALS['_MAX']['HTTP'] = 'https://';
         } else {
@@ -217,8 +219,6 @@ function setupConstants()
                 if (isset($GLOBALS['_MAX']['CONF']['openads']['sslPort']) &&
                     $_SERVER['SERVER_PORT'] == $GLOBALS['_MAX']['CONF']['openads']['sslPort']) {
                     $GLOBALS['_MAX']['HTTP'] = 'https://';
-                } else {
-                    $GLOBALS['_MAX']['HTTP'] = 'http://';
                 }
             }
         }
