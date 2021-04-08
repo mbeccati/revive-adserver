@@ -174,7 +174,7 @@ class OA_Admin_Settings
         // What were the old host names used for the installation?
         $aConf = $GLOBALS['_MAX']['CONF'];
         $url = @parse_url('http://' . $aConf['webpath']['admin']);
-        $oldAdminHost = $url['host'];
+        $oldAdminHost = $url ? $url['host'] : null;
         $url = @parse_url('http://' . $aConf['webpath']['delivery']);
         $oldDeliveryHost = $url['host'];
         $url = @parse_url('http://' . $aConf['webpath']['deliverySSL']);

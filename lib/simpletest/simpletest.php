@@ -8,11 +8,13 @@
     /**#@+
      * include SimpleTest files
      */
-    if (version_compare(phpversion(), '5') >= 0) {
-        require_once(dirname(__FILE__) . '/reflection_php5.php');
+
+    if (PHP_VERSION_ID >= 80000) {
+        require_once(__DIR__ . '/reflection_php8.php');
     } else {
-        require_once(dirname(__FILE__) . '/reflection_php4.php');
+        require_once(__DIR__ . '/reflection_php5.php');
     }
+
     /**#@-*/
 
     /**
@@ -41,7 +43,7 @@
          *    @param string $class        Add a class to ignore.
          */
         public static function ignore($class) {
-            $registry = self::_getRegistry();
+            $registry =& self::_getRegistry();
             $registry['IgnoreList'][strtolower($class)] = true;
         }
 
@@ -59,7 +61,6 @@
          *    @param array $classes     Class names of interest.
          */
         public static function ignoreParentsIfIgnored($classes) {
-            $registry = self::_getRegistry();
             foreach ($classes as $class) {
                 if (SimpleTest::isIgnored($class)) {
                     $reflection = new SimpleReflection($class);
@@ -110,7 +111,7 @@
          *    @param string $password  Proxy password for authentication.
          */
         public static function useProxy($proxy, $username = false, $password = false) {
-            $registry = self::_getRegistry();
+            $registry =& self::_getRegistry();
             $registry['DefaultProxy'] = $proxy;
             $registry['DefaultProxyUsername'] = $username;
             $registry['DefaultProxyPassword'] = $password;
