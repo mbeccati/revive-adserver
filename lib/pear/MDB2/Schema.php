@@ -799,7 +799,7 @@ class MDB2_Schema extends PEAR
             switch ($instruction['type']) {
             case 'insert':
                 $data = $this->getInstructionFields($instruction, $table['fields'], $include_autoincrement);
-                if (!empty($data)) {
+                if (!empty($data['id'])) {
                     $aResult['aIds'][] = $data['id'];
                     unset($data['id']);
                     $fields = implode(', ', array_keys($data));
