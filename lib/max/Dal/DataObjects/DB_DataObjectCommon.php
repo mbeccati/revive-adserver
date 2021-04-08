@@ -657,7 +657,7 @@ class DB_DataObjectCommon extends DB_DataObject
         $result = parent::delete($useWhere);
         if ($result)
         {
-            if (is_null($id))
+            if (!isset($id))
             {
                 $doAffected->fetch();
                 $doAffected->audit(3, null, $parentid);

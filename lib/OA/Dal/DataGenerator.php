@@ -150,7 +150,7 @@ class DataGenerator
      * @access public
      * @static
      */
-    function cleanUp($addTablesToCleanUp = array())
+    public static function cleanUp($addTablesToCleanUp = array())
     {
         $tables = DataGenerator::trackData();
         $tables = array_merge($tables, $addTablesToCleanUp);
@@ -447,7 +447,7 @@ class DataGenerator
      * @param string $sequence the name of the sequence to reset
      * @return boolean true on success, false otherwise
      */
-    function resetSequence($tableName)
+    public static function resetSequence($tableName)
     {
         $aConf = $GLOBALS['_MAX']['CONF'];
         $oDbh = OA_DB::singleton();
@@ -459,11 +459,12 @@ class DataGenerator
             OA_DB::disableCaseSensitive();
             if (is_array($aSequences))
             {
-                OA::debug('Resetting sequence ' . $sequence, PEAR_LOG_DEBUG);
                 RV::disableErrorHandling();
                 $tableName = substr($aConf['table']['prefix'].$tableName, 0, 29).'_';
                 foreach ($aSequences AS $k => $sequence)
                 {
+                    OA::debug('Resetting sequence ' . $sequence, PEAR_LOG_DEBUG);
+
                     if (strpos($sequence, $tableName) === 0)
                     {
                         $sequence = $oDbh->quoteIdentifier($sequence.'_seq',true);
