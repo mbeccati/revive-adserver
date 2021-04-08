@@ -787,7 +787,7 @@ class MDB2
      * @access  public
      * @author  Tomas V.V.Cox <cox@idecnet.com>
      */
-    function parseDSN($dsn)
+    public static function parseDSN($dsn)
     {
         $parsed = $GLOBALS['_MDB2_dsninfo_default'];
 

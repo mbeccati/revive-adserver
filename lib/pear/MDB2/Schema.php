@@ -2598,11 +2598,10 @@ class MDB2_Schema extends PEAR
                       a string and $db->getMessage() == $code or
      *                $code is an integer and $db->getCode() == $code
      * @return  bool  true if parameter is an error
-     * @access  public
      */
-    function isError($data, $code = null)
+    public static function isError($data, $code = null)
     {
-        if (is_a($data, 'MDB2_Schema_Error')) {
+        if ($data instanceof MDB2_Schema_Error) {
             if (is_null($code)) {
                 return true;
             } elseif (is_string($code)) {
@@ -2612,6 +2611,7 @@ class MDB2_Schema extends PEAR
                 return in_array($data->getCode(), $code);
             }
         }
+
         return false;
     }
 
