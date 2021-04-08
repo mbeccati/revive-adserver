@@ -1485,6 +1485,8 @@ class OA_DB_Upgrade
      */
     function _verifyTasksIndexesAdd()
     {
+        $halt = false;
+
         if (isset($this->aChanges['tasks'][$this->timingStr]['tables']))
         {
             foreach ($this->aChanges['tasks'][$this->timingStr]['tables'] AS $table => &$aTable_tasks)
