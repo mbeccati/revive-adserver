@@ -71,7 +71,7 @@ class OA_DB_Table
      */
     function __construct()
     {
-        $this->oDbh =& $this->_getDbConnection();
+        $this->oDbh = $this->_getDbConnection();
     }
 
     /**

@@ -45,7 +45,7 @@ class OA_Maintenance_Priority_AdServer_Task_AllocateZoneImpressions extends OA_M
     function __construct()
     {
         parent::__construct();
-        $this->table =& $this->_getMaxTablePriorityObj();
+        $this->table = $this->_getMaxTablePriorityObj();
     }
 
     /**

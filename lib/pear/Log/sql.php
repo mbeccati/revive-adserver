@@ -266,7 +266,7 @@ class Log_sql extends Log
         $values = array($id, $this->_ident, $priority, $message);
 
         /* Execute the SQL query for this log entry insertion. */
-        $result =& $this->_db->execute($this->_statement, $values);
+        $result = $this->_db->execute($this->_statement, $values);
         if (DB::isError($result)) {
             return false;
         }

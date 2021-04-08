@@ -38,7 +38,7 @@ class OA_Maintenance_Priority_AdServer_Task extends OA_Task
      */
     function __construct()
     {
-        $this->oDal =& $this->_getDal();
+        $this->oDal = $this->_getDal();
     }
 
     /**

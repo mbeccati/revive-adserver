@@ -62,7 +62,7 @@ class OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressions extends OA_
     function __construct()
     {
         parent::__construct();
-        $this->oTable =& $this->_getMaxTablePriorityObj();
+        $this->oTable = $this->_getMaxTablePriorityObj();
         $this->currentTz = new Date_TimeZone('UTC');
     }
 

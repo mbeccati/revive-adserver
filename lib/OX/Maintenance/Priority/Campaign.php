@@ -234,8 +234,8 @@ class OX_Maintenance_Priority_Campaign
         $this->priority                   = isset($aParams['priority']) ? (int)$aParams['priority'] : 0;
 
         // Set the object's data access layer objects
-        $this->oMaxDalEntities            =& $this->_getMAX_Dal_Entities();
-        $this->oMaxDalMaintenancePriority =& $this->_getOA_Dal_Maintenance_Priority();
+        $this->oMaxDalEntities            = $this->_getMAX_Dal_Entities();
+        $this->oMaxDalMaintenancePriority = $this->_getOA_Dal_Maintenance_Priority();
     }
 
     /**

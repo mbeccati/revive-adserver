@@ -2616,7 +2616,7 @@ class DB_DataObject extends DB_DataObject_Overload
     }
 
     // NEW METHOD FOR PLUGINS
-    private static function findTableFile($location, $table)
+    public static function findTableFile($location, $table)
     {
         if (strpos($location,'%s') !== false)
         {

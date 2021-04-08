@@ -34,7 +34,7 @@ class OA_Dal
      */
     function __construct()
     {
-        $this->oDbh =& $this->_getDbh();
+        $this->oDbh = $this->_getDbh();
     }
 
     /**
@@ -44,10 +44,10 @@ class OA_Dal
      * This private method allows the database handler to be
      * mocked during unit tests.
      *
-     * @return MDB2_Driver_Common An MDB2 connection resource, or PEAR_Error
+     * @return MDB2_Driver_Common|PEAR_Error An MDB2 connection resource, or PEAR_Error
      *                            on failure to connect.
      */
-    function &_getDbh()
+    function _getDbh()
     {
         return OA_DB::singleton();
     }
@@ -57,7 +57,7 @@ class OA_Dal
      * table name.
      *
      * @param  string $table The name of the table for which a DB_DataObject is required.
-     * @return DB_DataObjectCommon The appropriate DB_DataObjectCommon implementaion,
+     * @return DB_DataObjectCommon|false The appropriate DB_DataObjectCommon implementaion,
      *                             or false on error.
      */
     public static function factoryDO($table)
@@ -71,7 +71,7 @@ class OA_Dal
         return false;
     }
 
-    function checkIfDoExists($table)
+    public static function checkIfDoExists($table)
     {
         self::_setupDataObjectOptions();
         global $_DB_DATAOBJECT;

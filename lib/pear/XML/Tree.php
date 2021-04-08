@@ -161,7 +161,7 @@ class XML_Tree extends XML_Parser
      */
     function &insertChild($path, $pos, $child, $content = '', $attributes = array())
     {
-        $parent =& $this->getNodeAt($path);
+        $parent = $this->getNodeAt($path);
         if (PEAR::isError($parent)) {
             return $parent;
         }
@@ -195,7 +195,7 @@ class XML_Tree extends XML_Parser
      */
     function &removeChild($path, $pos)
     {
-        $parent =& $this->getNodeAt($path);
+        $parent = $this->getNodeAt($path);
         if (PEAR::isError($parent)) {
             return $parent;
         }
@@ -276,13 +276,13 @@ class XML_Tree extends XML_Parser
         $lineno = xml_get_current_line_number($xp);
         // root elem
         if (!isset($this->i)) {
-            $this->obj1 =& $this->addRoot($elem, null, $attribs, $lineno);
+            $this->obj1 = $this->addRoot($elem, null, $attribs, $lineno);
             $this->i = 2;
         } else {
             // mixed contents
             if (!empty($this->cdata)) {
                 $parent_id = 'obj' . ($this->i - 1);
-                $parent    =& $this->$parent_id;
+                $parent    = $this->$parent_id;
                 $parent->children[] = new XML_Tree_Node(null, $this->cdata, null, $lineno);
             }
             $obj_id = 'obj' . $this->i++;
@@ -307,7 +307,7 @@ class XML_Tree extends XML_Parser
         if ($this->i > 1) {
             $obj_id = 'obj' . $this->i;
             // recover the node created in StartHandler
-            $node   =& $this->$obj_id;
+            $node   = $this->$obj_id;
             // mixed contents
             if (count($node->children) > 0) {
                 if (trim($this->cdata) != '') {
@@ -317,11 +317,11 @@ class XML_Tree extends XML_Parser
                 $node->setContent($this->cdata);
             }
             $parent_id = 'obj' . ($this->i - 1);
-            $parent    =& $this->$parent_id;
+            $parent    = $this->$parent_id;
             // attach the node to its parent node children array
             $parent->children[] = $node;
         } else {
-            $node =& $this->obj1;
+            $node = $this->obj1;
             if (count($node->children) > 0) {
                 if (trim($this->cdata)) {
                     $node->children[] = new XML_Tree_Node(null, $this->cdata);
@@ -467,7 +467,7 @@ class XML_Tree extends XML_Parser
         if ($this->root->name != $rootName) {
             return $this->customRaiseError("Path does not match the document root");
         }
-        $x =& $this->root->getNodeAt($path1);
+        $x = $this->root->getNodeAt($path1);
         if (!PEAR::isError($x)) {
             return $x;
         }
