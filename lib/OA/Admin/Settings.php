@@ -499,7 +499,7 @@ class OA_Admin_Settings
      * @param string $filename the full path of the file to generate a backup filename for.
      * @return string the new filename in format: "old.original.name-YYYYMMDD[_0]"
      */
-    function _getBackupFilename($filename)
+    public static function _getBackupFilename($filename)
     {
         $directory = dirname($filename);
         $basename = basename($filename);
