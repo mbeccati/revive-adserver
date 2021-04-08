@@ -42,7 +42,7 @@
  *
  * //Start and initialize...................... - dont forget the &
  * $config = parse_ini_file('example.ini',true);
- * $options = &PEAR::getStaticProperty('DB_DataObject','options');
+ * $options = PEAR::getStaticProperty('DB_DataObject','options');
  * $options = $config['DB_DataObject'];
  *
  * // example of a class (that does not use the 'auto generated tables data')
@@ -2485,14 +2485,14 @@ class DB_DataObject extends DB_DataObject_Overload
     {
         global $_DB_DATAOBJECT;
         if (empty($_DB_DATAOBJECT['CONFIG'])) {
-            DB_DataObject::_loadConfig();
+            self::_loadConfig();
         }
         $p = isset($_DB_DATAOBJECT['CONFIG']['class_prefix']) ?
             $_DB_DATAOBJECT['CONFIG']['class_prefix'] : '';
         $class = $p . preg_replace('/[^A-Z0-9]/i','_',ucfirst($table));
 
         $ce = substr(phpversion(),0,1) > 4 ? class_exists($class,false) : class_exists($class);
-        $class = $ce ? $class  : DB_DataObject::_autoloadClass($class);
+        $class = $ce ? $class  : self::_autoloadClass($class);
         return $class;
     }
 
@@ -2509,33 +2509,23 @@ class DB_DataObject extends DB_DataObject_Overload
      * (this also helps proxy creation)
      *
      *
-     * @param  string  $table  tablename (use blank to create a new instance of the same class.)
+     * @param  string  $table  tablename
      * @access private
-     * @return DataObject|PEAR_Error
+     * @return self|PEAR_Error
      */
-    function factory($table = '') {
+    public static function factory($table) {
         global $_DB_DATAOBJECT;
+
         if (empty($_DB_DATAOBJECT['CONFIG'])) {
             DB_DataObject::_loadConfig();
         }
-
-        if ($table === '') {
-            if (is_a($this,'DB_DataObject') && strlen($this->__table)) {
-                $table = $this->__table;
-            } else {
-                return DB_DataObject::raiseError(
-                    "factory did not recieve a table name",
-                    DB_DATAOBJECT_ERROR_INVALIDARGS);
-            }
-        }
-
 
         $p = isset($_DB_DATAOBJECT['CONFIG']['class_prefix']) ?
             $_DB_DATAOBJECT['CONFIG']['class_prefix'] : '';
         $class = $p . preg_replace('/[^A-Z0-9]/i','_',ucfirst($table));
 
         $ce = substr(phpversion(),0,1) > 4 ? class_exists($class,false) : class_exists($class);
-        $class = $ce ? $class  : DB_DataObject::_autoloadClass($class);
+        $class = $ce ? $class  : self::_autoloadClass($class);
 
         // proxy = full|light
         if (!$class && isset($_DB_DATAOBJECT['CONFIG']['proxy'])) {
@@ -2569,7 +2559,7 @@ class DB_DataObject extends DB_DataObject_Overload
      * @access private
      * @return string classname on Success
      */
-    function _autoloadClass($class)
+    private static function _autoloadClass($class)
     {
         global $_DB_DATAOBJECT;
 
@@ -2626,7 +2616,7 @@ class DB_DataObject extends DB_DataObject_Overload
     }
 
     // NEW METHOD FOR PLUGINS
-    function findTableFile($location, $table)
+    private static function findTableFile($location, $table)
     {
         if (strpos($location,'%s') !== false)
         {
@@ -3988,16 +3978,16 @@ class DB_DataObject extends DB_DataObject_Overload
      * @param  int $type       type
      * @param  int $behaviour  behaviour (die or continue!);
      * @access public
-     * @return error object
+     * @return DB_DataObject_Error|PEAR_Error
      */
-    function raiseError($message, $type = null, $behaviour = null)
+    public static function raiseError($message, $type = null, $behaviour = null)
     {
         global $_DB_DATAOBJECT;
 
         if ($behaviour == PEAR_ERROR_DIE && !empty($_DB_DATAOBJECT['CONFIG']['dont_die'])) {
             $behaviour = null;
         }
-        $error = &PEAR::getStaticProperty('DB_DataObject','lastError');
+        $error = PEAR::getStaticProperty('DB_DataObject','lastError');
 
         // this will never work totally with PHP's object model.
         // as this is passed on static calls (like staticGet in our case)
@@ -4010,7 +4000,6 @@ class DB_DataObject extends DB_DataObject_Overload
 
         // no checks for production here?....... - we log  errors before we throw them.
         DB_DataObject::debug($message,'ERROR',1);
-
 
         if (PEAR::isError($message)) {
             $error = $message;
@@ -4032,25 +4021,19 @@ class DB_DataObject extends DB_DataObject_Overload
      * all calls to debug are wrapped with direct variable queries rather than actually calling the funciton
      * THIS STILL NEEDS FURTHER INVESTIGATION
      *
-     * @access   public
      * @return   object an error object
      */
-    function _loadConfig()
+    public static function _loadConfig()
     {
         global $_DB_DATAOBJECT;
 
         $_DB_DATAOBJECT['CONFIG'] = &PEAR::getStaticProperty('DB_DataObject','options');
-
-
     }
+
      /**
      * Free global arrays associated with this object.
-     *
-     *
-     * @access   public
-     * @return   none
      */
-    function free()
+    public function free()
     {
         global $_DB_DATAOBJECT;
 

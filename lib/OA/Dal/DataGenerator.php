@@ -42,8 +42,6 @@ class DataGenerator
 {
     /**
      * Data conteiner
-     * Use this data to populate any new records
-     * @see getFieldValueFromDataContainer()
      *
      * @var array
      */
@@ -60,13 +58,10 @@ class DataGenerator
      * @return int                    Id of created record
      * @see DB_DataObject::insert()
      */
-    function generateOne($do, $generateParents = false)
+    public static function generateOne($do, $generateParents = false)
     {
-        if (!empty($this) && is_a($this, 'DataGenerator')) {
-            $ids = $this->generate($do, 1, $generateParents);
-        } else {
-            $ids = DataGenerator::generate($do, 1, $generateParents);
-        }
+        $ids = DataGenerator::generate($do, 1, $generateParents);
+
         return array_pop($ids);
     }
 
@@ -92,10 +87,8 @@ class DataGenerator
      * @param int $numberOfCopies    How many records should be generated
      * @param bool $generateParents  Should parent records be generated?
      * @return array                 Array ids of created records
-     * @access public
-     * @static
      */
-    function generate($do, $numberOfCopies = 1, $generateParents = false)
+    public static function generate($do, $numberOfCopies = 1, $generateParents = false)
     {
         // Cleanup ancestor ids
         DataGenerator::getReferenceId();
@@ -108,29 +101,17 @@ class DataGenerator
             }
         }
         if ($generateParents) {
-	        if (!empty($this) && is_a($this, 'DataGenerator')) {
-    	       $this->generateParents($do);
-	        } else {
-    	       DataGenerator::generateParents($do);
-	        }
+           DataGenerator::generateParents($do);
         }
         $doOriginal = clone($do);
-        if (isset($this) && is_a($this, 'DataGenerator')) {
-            $this->setDefaultValues($do);
-        } else {
-            DataGenerator::setDefaultValues($do);
-        }
+        DataGenerator::setDefaultValues($do);
         DataGenerator::trackData($do->getTableWithoutPrefix());
 
         $ids = array();
         for ($i = 0; $i < $numberOfCopies; $i++) {
             $id = $do->insert();
             $do = clone($doOriginal);
-            if (!empty($this) && is_a($this, 'DataGenerator')) {
-                $this->setDefaultValues($do, $i+1);
-            } else {
-                DataGenerator::setDefaultValues($do, $i+1);
-            }
+            DataGenerator::setDefaultValues($do, $i+1);
             $ids[] = $id;
         }
         return $ids;
@@ -141,7 +122,7 @@ class DataGenerator
      *
      * @param DB_DataObject $do
      */
-    function generateParents(&$do)
+    public static function generateParents(&$do)
     {
         $links = $do->links();
     	foreach ($links as $foreignKey => $linkedTableField) {
@@ -156,11 +137,7 @@ class DataGenerator
     	        continue;
     	    }
 	        $linkedPrimaryKeyVal = isset($do->$foreignKey) ? $do->$foreignKey : null;
-	        if (!empty($this) && is_a($this, 'DataGenerator')) {
-    	       $do->$foreignKey = $this->addAncestor($table, $linkedPrimaryKeyVal);
-	        } else {
-    	       $do->$foreignKey = DataGenerator::addAncestor($table, $linkedPrimaryKeyVal);
-	        }
+            $do->$foreignKey = DataGenerator::addAncestor($table, $linkedPrimaryKeyVal);
     	}
     }
 
@@ -203,10 +180,8 @@ class DataGenerator
      * @param string $table
      * @param int $id
      * @return int | false  Id or false if doesn't exist
-     * @access public
-     * @static
      */
-    function getReferenceId($table = null, $id = null)
+    public static function getReferenceId($table = null, $id = null)
     {
         static $ids;
         if (!isset($ids) || $table === null) {
@@ -224,10 +199,8 @@ class DataGenerator
      *
      * @param string $table     Table name to track, if it's equal null it reset all the data
      * @return array            Array of stored tables names
-     * @access package private
-     * @static
      */
-    function trackData($table = null)
+    private static function trackData($table = null)
     {
         static $tables;
         if (!isset($tables)) {
@@ -256,18 +229,15 @@ class DataGenerator
      * @return int  New ID
      * @access package private
      */
-    function addAncestor($table, $primaryKey = null)
+    public static function addAncestor($table, $primaryKey = null)
     {
         $doAncestor = OA_Dal::factoryDO($table);
         if ($primaryKey && $primaryKeyField = $doAncestor->getFirstPrimaryKey()) {
             // it's possible to preset parent id's (only one level up so far)
             $doAncestor->$primaryKeyField = $primaryKey;
         }
-        if (!empty($this) && is_a($this, 'DataGenerator')) {
-            $this->setDefaultValues($doAncestor);
-        } else {
-            DataGenerator::setDefaultValues($doAncestor);
-        }
+
+        DataGenerator::setDefaultValues($doAncestor);
 
         $links = $doAncestor->links();
     	foreach ($links as $foreignKey => $linkedTableField) {
@@ -277,11 +247,6 @@ class DataGenerator
     	        // Don't create accounts via DataGenerator. DataObjects already take care of it.
     	        continue;
     	    }
-    		if (isset($this) && is_a($this, 'DataGenerator')) {
-    		    $fieldValue = $this->getFieldValueFromDataContainer($table, $foreignKey);
-    		} else {
-    		    $fieldValue = DataGenerator::getFieldValueFromDataContainer($table, $foreignKey);
-    		}
     		if(isset($fieldValue) && !isset($GLOBALS['dataGeneratorDontOptimize'])) { //hack for quick test fix
     		    $doAncestor->$foreignKey = $fieldValue;
     		} else {
@@ -312,24 +277,17 @@ class DataGenerator
      * set using any of methods defined in 1, 2 or 3 (it doesn't
      * populate it with default data based on field type)
      *
-     * @param DataObject $do    DataObject to populate data in
+     * @param DB_DataObjectCommon $do    DataObject to populate data in
      * @param int $counter      Used to generate a key for data container array to retreive data
-     * @access package private
-     * @static
      */
-    function setDefaultValues(&$do, $counter = 0)
+    public static function setDefaultValues(&$do, $counter = 0)
     {
         $fields = $do->table();
         $keys = $do->keys();
         $table = $do->getTableWithoutPrefix();
         foreach ($fields as $fieldName => $fieldType) {
             if (!isset($do->$fieldName)) {
-                if (!empty($this) && is_a($this, 'DataGenerator')) {
-                    $fieldValue = $this->getFieldValueFromDataContainer($table, $fieldName, $counter);
-                } else {
-                    $fieldValue = DataGenerator::getFieldValueFromDataContainer($table, $fieldName, $counter);
-                }
-                if(!isset($fieldValue) && !in_array($fieldName, $keys))
+                if(!in_array($fieldName, $keys))
                 {
                     $fieldValue = DataGenerator::defaultValueForObject($do, $fieldName, $fieldType);
                     if(!isset($fieldValue))
@@ -357,7 +315,7 @@ class DataGenerator
      * @access package private
      * @static
      */
-    function getFieldValueFromDataContainer($table, $fieldName, $counter = 0)
+    private static function getFieldValueFromDataContainer($table, $fieldName, $counter = 0)
     {
         if (isset($this)) {
             if (isset($this->data[$table]) && isset($this->data[$table][$fieldName])) {
@@ -376,12 +334,11 @@ class DataGenerator
      *
      * @see DB_DataObject for list of defined field types
      *
-     * @param DataObject $do    DataObject to populate data in
+     * @param DB_DataObjectCommon $do    DataObject to populate data in
      * @param string $fieldName Field (column) name
      * @return string
-     * @static
      */
-    function defaultValueForObject(&$do, $fieldName, $fieldType)
+    private static function defaultValueForObject(&$do, $fieldName, $fieldType)
     {
         return $do->setDefaultValue($fieldName, $fieldType);
     }
@@ -394,9 +351,8 @@ class DataGenerator
      * @param string $fieldType        Field type to set
      * @param string $setDefaultValue  Value to set
      * @return string
-     * @static
      */
-    function defaultValueByType($fieldType, $setDefaultValue = null)
+    private static function defaultValueByType($fieldType, $setDefaultValue = null)
     {
         static $aDefaultValues;
 

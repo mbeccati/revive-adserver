@@ -133,23 +133,16 @@
          *    @access public
          *    @static
          */
-        function isA($object, $class) {
-            if (version_compare(phpversion(), '5') >= 0) {
-                if (! class_exists($class, false)) {
-                    if (function_exists('interface_exists')) {
-                        if (! interface_exists($class, false))  {
-                            return false;
-                        }
+        public static function isA($object, $class) {
+            if (! class_exists($class, false)) {
+                if (function_exists('interface_exists')) {
+                    if (! interface_exists($class, false))  {
+                        return false;
                     }
                 }
-                eval("\$is_a = \$object instanceof $class;");
-                return $is_a;
             }
-            if (function_exists('is_a')) {
-                return is_a($object, $class);
-            }
-            return ((strtolower($class) == get_class($object))
-                    or (is_subclass_of($object, $class)));
+            eval("\$is_a = \$object instanceof $class;");
+            return $is_a;
         }
 
         /**

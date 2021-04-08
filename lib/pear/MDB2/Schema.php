@@ -215,11 +215,11 @@ class MDB2_Schema extends PEAR
      *              format returned by @see MDB2::parseDSN.
      *              Finally you can also pass an existing db object to be used.
      * @param array An associative array of option names and their values.
-     * @return bool|MDB2_Error MDB2_OK or error object
+     * @return self|MDB2_Error MDB2_OK or error object
      * @access public
      * @see     MDB2::parseDSN
      */
-    function &factory(&$db, $options = array())
+    public static function factory(&$db, $options = array())
     {
         $obj = new MDB2_Schema();
         $err = $obj->connect($db, $options);

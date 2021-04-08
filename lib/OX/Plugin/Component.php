@@ -407,7 +407,7 @@ class OX_Component
         return $aReturn;
     }
 
-    function getListOfRegisteredComponentsForHook($hook)
+    public static function getListOfRegisteredComponentsForHook($hook)
     {
         $aHooks = self::getComponentsHookCache();
         if (isset($aHooks[$hook]))
@@ -417,7 +417,7 @@ class OX_Component
         return array();
     }
 
-    function getComponentsHookCache()
+    public static function getComponentsHookCache()
     {
         if (!isset($GLOBALS['_MAX']['ComponentHooks']))
         {

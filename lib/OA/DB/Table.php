@@ -106,7 +106,7 @@ class OA_DB_Table
         }
         // Create an instance of MDB2_Schema to parse the schema file
         $options = array('force_defaults'=>false);
-        $this->oSchema =& MDB2_Schema::factory($this->oDbh, $options);
+        $this->oSchema = MDB2_Schema::factory($this->oDbh, $options);
 
         if ($useCache) {
             $oCache = new OA_DB_XmlCache();

@@ -52,7 +52,7 @@ class OA_DB
      *                      ['capath']   = Path to CA file above, is "ssl" true
      *                      ['compress'] = false|true Use client compression?
      *
-     * @return MDB2_Driver_Common An MDB2 connection resource, or PEAR_Error
+     * @return MDB2_Driver_Common|PEAR_Error An MDB2 connection resource, or PEAR_Error
      *                            on failure to connect.
      */
     static function singleton($dsn = null, $aDriverOptions = array())

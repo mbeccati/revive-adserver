@@ -56,14 +56,13 @@ class OA_Dal
      * A factory method to obtain the appropriate DB_DataObject for a given
      * table name.
      *
-     * @static
      * @param  string $table The name of the table for which a DB_DataObject is required.
      * @return DB_DataObjectCommon The appropriate DB_DataObjectCommon implementaion,
      *                             or false on error.
      */
-    function factoryDO($table)
+    public static function factoryDO($table)
     {
-        OA_Dal::_setupDataObjectOptions();
+        self::_setupDataObjectOptions();
         $do = DB_DataObject::factory($table);
         if (is_a($do, 'DB_DataObjectCommon')) {
             $do->init();
@@ -74,7 +73,7 @@ class OA_Dal
 
     function checkIfDoExists($table)
     {
-        OA_Dal::_setupDataObjectOptions();
+        self::_setupDataObjectOptions();
         global $_DB_DATAOBJECT;
         if (!is_array($_DB_DATAOBJECT['CONFIG']['class_location']))
         {
@@ -114,12 +113,12 @@ class OA_Dal
      * @param string $k     Either the column name, if $v is supplied, otherwise the
      *                      value of the table's primary key.
      * @param string $v     An optional value when $k is a column name of the table.
-     * @return DB_DataObjectCommon The appropriate DB_DataObjectCommon implementaion,
+     * @return DB_DataObjectCommon|false The appropriate DB_DataObjectCommon implementaion,
      *                             or false on error.
      */
-    function staticGetDO($table, $k, $v = null)
+    public static function staticGetDO($table, $k, $v = null)
     {
-        OA_DAL::_setupDataObjectOptions();
+        self::_setupDataObjectOptions();
         $do = OA_Dal::factoryDO($table);
         if (PEAR::isError($do) || !$do) {
             return false;
@@ -144,7 +143,7 @@ class OA_Dal
      */
     function staticDuplicate($table, $origId, $newId = null)
     {
-        OA_DAL::_setupDataObjectOptions();
+        self::_setupDataObjectOptions();
         $do = OA_Dal::factoryDO($table);
         if (PEAR::isError($do)) {
             return false;
@@ -165,7 +164,7 @@ class OA_Dal
      * @return MAX_Dal_Common The appropriate MAX_Dal_Common implementaion,
      *                        or false on error.
      */
-    function factoryDAL($table)
+    public static function factoryDAL($table)
     {
         include_once MAX_PATH . '/lib/max/Dal/Common.php';
         return MAX_Dal_Common::factory($table);
@@ -176,7 +175,7 @@ class OA_Dal
      *
      * @return string  Table prefix
      */
-    function getTablePrefix()
+    public static function getTablePrefix()
     {
         return $GLOBALS['_MAX']['CONF']['table']['prefix'];
     }
@@ -185,19 +184,16 @@ class OA_Dal
      * Clear the DataObject options cache
      *
      */
-    function cleanCache()
+    public static function cleanCache()
     {
-        OA_Dal::_setupDataObjectOptions(false);
+        self::_setupDataObjectOptions(false);
     }
 
     /**
      * Set up the required DB_DataObject options.
      * this method will add one location for all data-aware plugins
-     *
-     * @static
-     * @access private
      */
-    function _setupDataObjectOptions($fromCache = true)
+    private static function _setupDataObjectOptions($fromCache = true)
     {
         static $needsSetup;
         if (isset($needsSetup) && $fromCache) {

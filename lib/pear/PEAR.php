@@ -226,7 +226,7 @@ class PEAR
     * @return mixed   A reference to the variable. If not set it will be
     *                 auto initialised to NULL.
     */
-    function &getStaticProperty($class, $var)
+    public static function &getStaticProperty($class, $var)
     {
         static $properties;
         if (!isset($properties[$class])) {
@@ -331,15 +331,10 @@ class PEAR
      * @since PHP 4.0.5
      */
 
-    function setErrorHandling($mode = null, $options = null)
+    public static function setErrorHandling($mode = null, $options = null)
     {
-        if (isset($this) && is_a($this, 'PEAR')) {
-            $setmode     = &$this->_default_error_mode;
-            $setoptions  = &$this->_default_error_options;
-        } else {
-            $setmode     = &$GLOBALS['_PEAR_default_error_mode'];
-            $setoptions  = &$GLOBALS['_PEAR_default_error_options'];
-        }
+        $setmode     = &$GLOBALS['_PEAR_default_error_mode'];
+        $setoptions  = &$GLOBALS['_PEAR_default_error_options'];
 
         switch ($mode) {
             case PEAR_ERROR_EXCEPTION:
@@ -520,7 +515,7 @@ class PEAR
      * @see PEAR::setErrorHandling
      * @since PHP 4.0.5
      */
-    function &raiseError($message = null,
+    public static function raiseError($message = null,
                          $code = null,
                          $mode = null,
                          $options = null,
@@ -682,23 +677,16 @@ class PEAR
      *
      * @see PEAR::setErrorHandling
      */
-    function pushErrorHandling($mode, $options = null)
+    public static function pushErrorHandling($mode, $options = null)
     {
         $stack = &$GLOBALS['_PEAR_error_handler_stack'];
-        if (isset($this) && is_a($this, 'PEAR')) {
-            $def_mode    = &$this->_default_error_mode;
-            $def_options = &$this->_default_error_options;
-        } else {
-            $def_mode    = &$GLOBALS['_PEAR_default_error_mode'];
-            $def_options = &$GLOBALS['_PEAR_default_error_options'];
-        }
+
+        $def_mode    = &$GLOBALS['_PEAR_default_error_mode'];
+        $def_options = &$GLOBALS['_PEAR_default_error_options'];
         $stack[] = array($def_mode, $def_options);
 
-        if (isset($this) && is_a($this, 'PEAR')) {
-            $this->setErrorHandling($mode, $options);
-        } else {
-            PEAR::setErrorHandling($mode, $options);
-        }
+        PEAR::setErrorHandling($mode, $options);
+
         $stack[] = array($mode, $options);
         return true;
     }
@@ -713,17 +701,14 @@ class PEAR
     *
     * @see PEAR::pushErrorHandling
     */
-    function popErrorHandling()
+    public static function popErrorHandling()
     {
         $stack = &$GLOBALS['_PEAR_error_handler_stack'];
         array_pop($stack);
         list($mode, $options) = $stack[sizeof($stack) - 1];
         array_pop($stack);
-        if (isset($this) && is_a($this, 'PEAR')) {
-            $this->setErrorHandling($mode, $options);
-        } else {
-            PEAR::setErrorHandling($mode, $options);
-        }
+
+        PEAR::setErrorHandling($mode, $options);
         return true;
     }
 

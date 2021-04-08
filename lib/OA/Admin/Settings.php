@@ -77,7 +77,7 @@ class OA_Admin_Settings
      * @return boolean True if the file or directory is writable, false
      *                 otherwise.
      */
-    function isConfigWritable($configFile = null, $isDir = true)
+    public static function isConfigWritable($configFile = null, $isDir = true)
     {
         if (!$configFile) {
             $conf = $GLOBALS['_MAX']['CONF'];

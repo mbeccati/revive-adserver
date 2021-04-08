@@ -111,9 +111,9 @@ class DB_DataObjectCommon extends DB_DataObject
     /**
      * Loads corresponding DAL class. Plain SQL should be kept inside DAL class
      *
-     * @return object|false
+     * @return MAX_Dal_Common|false
      */
-    function factoryDAL()
+    public static function factoryDAL()
     {
         include_once MAX_PATH . '/lib/max/Dal/Common.php';
         return MAX_Dal_Common::factory($this->_tableName);
@@ -672,19 +672,10 @@ class DB_DataObjectCommon extends DB_DataObject
      * is properly initialized with prefixes.
      *
      * @param  string  $table  tablename (use blank to create a new instance of the same class.)
-     * @access private
-     * @return DataObject|PEAR_Error
+     * @return self|PEAR_Error
      */
-    function factory($table = '')
+    public static function factory($table)
     {
-        if (isset($this) && !empty($this->_prefix)) {
-            $table = $this->getTableWithoutPrefix($table);
-            $do = parent::factory($table);
-            if (!PEAR::isError($do)) {
-                $do->init();
-            }
-            return $do;
-        }
         $ret = parent::factory($table);
         $ret->init();
         return $ret;
@@ -978,7 +969,7 @@ class DB_DataObjectCommon extends DB_DataObject
         if (empty($_DB_DATAOBJECT['CONFIG'])) {
             $this->_loadConfig();
         }
-        $dbh = &OA_DB::singleton();
+        $dbh = OA_DB::singleton();
         if (PEAR::isError($dbh)) {
             return $dbh;
         }
@@ -994,7 +985,7 @@ class DB_DataObjectCommon extends DB_DataObject
         return parent::_connect();
     }
 
-    function _loadConfig()
+    public static function _loadConfig()
     {
         global $_DB_DATAOBJECT;
 
@@ -1192,7 +1183,7 @@ class DB_DataObjectCommon extends DB_DataObject
      */
     function quote($val)
     {
-        $oDbh = &OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
         return $oDbh->quote($val);
     }
 

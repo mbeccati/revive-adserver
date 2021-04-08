@@ -270,10 +270,8 @@ class MDB2
      * @param   array   An associative array of option names and their values.
      *
      * @return mixed   MDB2_OK or a PEAR Error object
-     *
-     * @access  public
      */
-    function setOptions(&$db, $options)
+    public static function setOptions(&$db, $options)
     {
         if (is_array($options)) {
             foreach ($options as $option => $value) {
@@ -295,10 +293,8 @@ class MDB2
      * @param   string  classname
      *
      * @return  bool    true success and false on error
-     *
-     * @access  public
      */
-    function classExists($classname)
+    public static function classExists($classname)
     {
         if (version_compare(phpversion(), "5.0", ">=")) {
             return class_exists($classname, false);
@@ -316,10 +312,8 @@ class MDB2
      * @param   bool    if errors should be suppressed
      *
      * @return  bool    true success or false on failure
-     *
-     * @access  public
      */
-    function loadClass($class_name, $debug)
+    public static function loadClass($class_name, $debug)
     {
         if (!MDB2::classExists($class_name)) {
             $file_name = str_replace('_', DIRECTORY_SEPARATOR, $class_name).'.php';
@@ -365,14 +359,12 @@ class MDB2
      *                            their values.
      *
      * @return  mixed   a newly created MDB2 object, or false on error
-     *
-     * @access  public
      */
-    function factory($dsn, $options = false)
+    public static function factory($dsn, $options = false)
     {
         $dsninfo = MDB2::parseDSN($dsn);
         if (empty($dsninfo['phptype'])) {
-            $err =& MDB2::raiseError(MDB2_ERROR_NOT_FOUND,
+            $err = MDB2::raiseError(MDB2_ERROR_NOT_FOUND,
                 null, null, 'no RDBMS driver specified');
             return $err;
         }
@@ -451,17 +443,6 @@ class MDB2
      * A new MDB2 connection object is only created if no object with the
      * requested DSN exists yet.
      *
-     * IMPORTANT: In order for MDB2 to work properly it is necessary that
-     * you make sure that you work with a reference of the original
-     * object instead of a copy (this is a PHP4 quirk).
-     *
-     * For example:
-     *     $db =& MDB2::singleton($dsn);
-     *          ^^
-     * And not:
-     *     $db = MDB2::singleton($dsn);
-     *          ^^
-     *
      * @param   mixed   'data source name', see the MDB2::parseDSN
      *                            method for a description of the dsn format.
      *                            Can also be specified as an array of the
@@ -472,10 +453,9 @@ class MDB2
      * @return  mixed   a newly created MDB2 connection object, or a MDB2
      *                  error object on error
      *
-     * @access  public
      * @see     MDB2::parseDSN
      */
-    function singleton($dsn = null, $options = false)
+    public static function singleton($dsn = null, $options = false)
     {
         if ($dsn) {
             $dsninfo = MDB2::parseDSN($dsn);
@@ -494,7 +474,7 @@ class MDB2
             $db =& $GLOBALS['_MDB2_databases'][key($GLOBALS['_MDB2_databases'])];
             return $db;
         }
-        $db =& MDB2::factory($dsn, $options);
+        $db = MDB2::factory($dsn, $options);
         return $db;
     }
 
@@ -614,10 +594,8 @@ class MDB2
      * @param   mixed   value to test
      *
      * @return  bool    whether $value is a MDB2 connection
-     *
-     * @access  public
      */
-    function isConnection($value)
+    public static function isConnection($value)
     {
         return is_a($value, 'MDB2_Driver_Common');
     }
@@ -631,10 +609,8 @@ class MDB2
      * @param   mixed   value to test
      *
      * @return  bool    whether $value is a MDB2 result
-     *
-     * @access  public
      */
-    function isResult($value)
+    public static function isResult($value)
     {
         return is_a($value, 'MDB2_Result');
     }
@@ -648,10 +624,8 @@ class MDB2
      * @param   mixed   value to test
      *
      * @return  bool    whether $value is a MDB2 result implementing the common interface
-     *
-     * @access  public
      */
-    function isResultCommon($value)
+    public static function isResultCommon($value)
     {
         return is_a($value, 'MDB2_Result_Common');
     }
@@ -665,10 +639,8 @@ class MDB2
      * @param   mixed   value to test
      *
      * @return  bool    whether $value is a MDB2 statement interface
-     *
-     * @access  public
      */
-    function isStatement($value)
+    public static function isStatement($value)
     {
         return is_a($value, 'MDB2_Statement');
     }
@@ -683,12 +655,9 @@ class MDB2
                                 null to get the current error code-message map,
                                 or an array with a new error code-message map
      *
-     * @return  string  error message, or false if the error code was
-     *                  not recognized
-     *
-     * @access  public
+     * @return  string  error message
      */
-    function errorMessage($value = null)
+    public static function errorMessage($value = null)
     {
         static $errorMessages;
 
@@ -735,16 +704,15 @@ class MDB2
             );
         }
 
-        if (is_null($value)) {
-            return $errorMessages;
+        if (null === $value) {
+            return $errorMessages[MDB2_ERROR];
         }
 
         if (PEAR::isError($value)) {
             $value = $value->getCode();
         }
 
-        return isset($errorMessages[$value]) ?
-           $errorMessages[$value] : $errorMessages[MDB2_ERROR];
+        return $errorMessages[$value] ?? $errorMessages[MDB2_ERROR];
     }
 
     // }}}
@@ -905,10 +873,8 @@ class MDB2
      * @param   string  filename
      *
      * @return  bool    true success and false on error
-     *
-     * @access  public
      */
-    function fileExists($file)
+    public static function fileExists($file)
     {
         // safe_mode does notwork with is_readable()
         if (!@ini_get('safe_mode')) {
@@ -1426,7 +1392,7 @@ class MDB2_Driver_Common extends PEAR
             }
         }
 
-        $err =& PEAR::raiseError(null, $code, $mode, $options, $userinfo, 'MDB2_Error', true);
+        $err = PEAR::raiseError(null, $code, $mode, $options, $userinfo, 'MDB2_Error', true);
         if ($err->getMode() !== PEAR_ERROR_RETURN
             && isset($this->nested_transaction_counter) && !$this->has_transaction_error) {
             $this->has_transaction_error =& $err;
@@ -2078,7 +2044,7 @@ class MDB2_Driver_Common extends PEAR
     }
 
     // }}}
-    // {{{ function setTransactionIsolation($isolation)
+    // {{{ function setTransactionIsolation($isolation, $options = array())
 
     /**
      * Set the transacton isolation level.
