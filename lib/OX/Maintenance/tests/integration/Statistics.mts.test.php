@@ -95,7 +95,7 @@ class Test_OX_Maintenance_Statistics extends UnitTestCase
 
         // Prepare the current date/time for testing
         $oNowDate = new Date('2008-08-28 15:01:00');
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->register('now', $oNowDate);
 
         // Test 1: Run the MSE process with NO DATA
@@ -444,7 +444,7 @@ class Test_OX_Maintenance_Statistics extends UnitTestCase
 
         // Prepare the current date/time for testing
         $oNowDate = new Date('2008-08-28 16:01:00');
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->register('now', $oNowDate);
 
         // Test 2: Run the MSE process WITH data

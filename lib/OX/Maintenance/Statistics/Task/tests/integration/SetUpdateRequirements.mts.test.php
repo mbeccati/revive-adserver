@@ -44,7 +44,7 @@ class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTest
 
         // Create the database connection
         $oDbh            =& OA_DB::singleton();
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
 
         // Prepare the OX_Maintenance_Statistics_Task_SetUpdateRequirements class to test with
         $oSetUpdateRequirements = new OX_Maintenance_Statistics_Task_SetUpdateRequirements();

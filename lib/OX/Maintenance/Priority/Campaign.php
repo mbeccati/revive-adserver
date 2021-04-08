@@ -246,7 +246,7 @@ class OX_Maintenance_Priority_Campaign
      */
     function &_getMAX_Dal_Entities()
     {
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oDal =& $oServiceLocator->get('MAX_Dal_Entities');
         if (!$oDal) {
             $oDal = new MAX_Dal_Entities();
@@ -263,7 +263,7 @@ class OX_Maintenance_Priority_Campaign
      */
     function &_getOA_Dal_Maintenance_Priority()
     {
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oDal =& $oServiceLocator->get('OA_Dal_Maintenance_Priority');
         if (!$oDal) {
             $oDal = new OA_Dal_Maintenance_Priority();

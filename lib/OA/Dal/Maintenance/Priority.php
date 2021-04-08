@@ -549,7 +549,7 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
     {
         OA::debug('  - Getting the impression inventory data for all zones', PEAR_LOG_DEBUG);
         $aConf = $GLOBALS['_MAX']['CONF'];
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oDate =& $oServiceLocator->get('now');
         if (!$oDate) {
             return false;
@@ -735,7 +735,7 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
     {
         OA::debug("  - Getting details of previous creative/zone delivery", PEAR_LOG_DEBUG);
         $aConf = $GLOBALS['_MAX']['CONF'];
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oDate =& $oServiceLocator->get('now');
         if (!$oDate) {
             return false;
@@ -1591,7 +1591,7 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
     {
         OA::debug('- Updating priorities', PEAR_LOG_DEBUG);
         $aConf = $GLOBALS['_MAX']['CONF'];
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oDate =& $oServiceLocator->get('now');
         if (!$oDate) {
             OA::debug('  - Date not found in service locator', PEAR_LOG_DEBUG);
@@ -2136,7 +2136,7 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
             return false;
         }
         $aConf = $GLOBALS['_MAX']['CONF'];
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oDate =& $oServiceLocator->get('now');
         if (!$oDate) {
             return false;

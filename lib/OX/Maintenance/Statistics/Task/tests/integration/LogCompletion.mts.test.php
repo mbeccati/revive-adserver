@@ -53,7 +53,7 @@ class Test_OX_Maintenance_Statistics_Task_LogCompletion extends UnitTestCase
         $aConf =& $GLOBALS['_MAX']['CONF'];
         $oTable =& OA_DB_Table_Core::singleton();
         $oDbh =& OA_DB::singleton();
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
 
         $oNow = new Date('2004-06-06 18:10:00');
         $oServiceLocator->register('now', $oNow);

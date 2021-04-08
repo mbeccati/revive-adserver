@@ -138,7 +138,7 @@ class OA_Maintenance_Priority_Ad
      */
     function &_getOA_Dal_Maintenance_Priority()
     {
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oDal =& $oServiceLocator->get('OA_Dal_Maintenance_Priority');
         if (!$oDal) {
             $oDal = new OA_Dal_Maintenance_Priority();

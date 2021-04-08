@@ -1071,7 +1071,7 @@ abstract class OX_Dal_Maintenance_Statistics extends MAX_Dal_Common
                 MAX::raiseError('_saveSummaryUpdateAdsWithFinanceInfo called with dates not on the same day.', null, PEAR_ERROR_DIE);
             }
         }
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         // Prepare the revenue type to column name mapping array
         $aAdFinanceMappings =& $oServiceLocator->get('aAdFinanceMappings');
         if (($aAdFinanceMappings === false) || (!array($aAdFinanceMappings)) || (empty($aAdFinanceMappings))) {

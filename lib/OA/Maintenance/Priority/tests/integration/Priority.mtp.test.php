@@ -73,7 +73,7 @@ class Test_Priority extends UnitTestCase
         $this->oDbh =& OA_DB::singleton();
 
         // Set up the service locator object
-        $this->oServiceLocator =& OA_ServiceLocator::instance();
+        $this->oServiceLocator = OA_ServiceLocator::instance();
 
         // Discover the number of operation intervals per week
         $this->intervalsPerWeek = OX_OperationInterval::operationIntervalsPerWeek();
@@ -270,7 +270,7 @@ class Test_Priority extends UnitTestCase
         // Insert data that indicates that the Maintenance Statistics Engine
         // has recently updated the available stats, but don't insert any
         // stats into the tables
-        $this->oServiceLocator =& OA_ServiceLocator::instance();
+        $this->oServiceLocator = OA_ServiceLocator::instance();
         $startDate = new Date('2005-06-15 14:00:01');
         $this->oServiceLocator->register('now', $startDate);
         $oMaintenanceStatistics = new OX_Maintenance_Statistics();
@@ -420,7 +420,7 @@ class Test_Priority extends UnitTestCase
 
         // Insert data that indicates that the Maintenance Statistics Engine
         // has recently updated the available stats
-        $this->oServiceLocator =& OA_ServiceLocator::instance();
+        $this->oServiceLocator = OA_ServiceLocator::instance();
         $startDate = new Date('2005-06-19 00:00:01');
         $this->oServiceLocator->register('now', $startDate);
         $oMaintenanceStatistics = new OX_Maintenance_Statistics();

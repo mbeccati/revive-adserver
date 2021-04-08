@@ -335,7 +335,7 @@ class TestEnv
         // Reset all database sequences
         $oTable->resetAllSequences();
         // Destroy the service locator
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         unset($oServiceLocator->aService);
         // Re-set up the test environment
         TestRunner::setupEnv($GLOBALS['_MAX']['TEST']['layerEnv'], true);

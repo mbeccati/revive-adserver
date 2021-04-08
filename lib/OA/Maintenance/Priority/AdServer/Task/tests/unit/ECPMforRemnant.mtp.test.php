@@ -102,7 +102,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_ECPMforRemnant extends UnitTest
             4 => 10, // this should be ignored
         );
         $oDal->setReturnReference('getZonesAllocationsForEcpmRemnantByAgency', $aZonesAllocations);
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->register('OA_Dal_Maintenance_Priority', $oDal);
 
         // Partially mock the OA_Maintenance_Priority_AdServer_Task_ECPMforRemnant class

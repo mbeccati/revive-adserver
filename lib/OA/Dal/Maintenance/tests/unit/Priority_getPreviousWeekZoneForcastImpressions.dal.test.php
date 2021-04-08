@@ -52,7 +52,7 @@ class Test_OA_Dal_Maintenance_Priority_getPreviousWeekZoneForcastImpressions ext
         $this->assertFalse($aResult);
 
         // Test 2
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->remove('now');
         $aResult = $oDal->getPreviousWeekZoneForcastImpressions(1);
         $this->assertFalse($aResult);

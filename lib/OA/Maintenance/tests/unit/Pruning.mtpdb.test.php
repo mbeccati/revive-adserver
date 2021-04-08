@@ -75,7 +75,7 @@ class Test_Priority extends UnitTestCase
     function testPruneDataSummaryAdZoneAssocOldData()
     {
         $oDate      = new Date();
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->register('now', $oDate);
         $oDal       = new OA_Maintenance_Pruning();
         $doDSAZA    = OA_Dal::factoryDO('data_summary_ad_zone_assoc');

@@ -37,7 +37,7 @@ class Test_OA_Maintenance_Priority_Ad extends UnitTestCase
      */
     function setUp()
     {
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oMaxDalMaintenancePriority = new MockOA_Dal_Maintenance_Priority($this);
         $oServiceLocator->register('OA_Dal_Maintenance_Priority', $oMaxDalMaintenancePriority);
     }
@@ -49,7 +49,7 @@ class Test_OA_Maintenance_Priority_Ad extends UnitTestCase
      */
     function tearDown()
     {
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->remove('OA_Dal_Maintenance_Priority');
     }
 
@@ -173,7 +173,7 @@ class Test_OA_Maintenance_Priority_Ad extends UnitTestCase
      */
     function testGetDeliveryLimitations()
     {
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oMaxDalMaintenancePriority = &$oServiceLocator->get('OA_Dal_Maintenance_Priority');
         $oMaxDalMaintenancePriority->expectArgumentsAt(0, 'getAllDeliveryLimitationsByTypeId', array(1, 'ad'));
         $oMaxDalMaintenancePriority->expectCallCount('getAllDeliveryLimitationsByTypeId', 1);

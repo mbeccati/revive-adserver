@@ -335,7 +335,7 @@ class OX_Maintenance
             return;
         }
         // Calculate the date before which it is valid to prune data
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oNowDate =& $oServiceLocator->get('now');
         if (is_null($oNowDate) || !is_a($oNowDate, 'Date')) {
             return;

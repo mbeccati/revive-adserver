@@ -39,7 +39,7 @@ class Test_OA_Maintenance extends UnitTestCase
     function test_runGeneralPruning()
     {
         $oNowDate = new Date('2007-09-28 12:00:01');
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->register('now', $oNowDate);
 
         $oMaintenance = new OX_Maintenance();
@@ -183,7 +183,7 @@ class Test_OA_Maintenance extends UnitTestCase
         unset($GLOBALS['serverTimezone']);
 
         $oNowDate = new Date('2008-01-28 00:00:10');
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->register('now', $oNowDate);
 
         $oMaintenance = new OX_Maintenance();

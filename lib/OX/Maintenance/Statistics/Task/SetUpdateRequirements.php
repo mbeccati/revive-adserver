@@ -46,7 +46,7 @@ class OX_Maintenance_Statistics_Task_SetUpdateRequirements extends OX_Maintenanc
     function run()
     {
         $aConf = $GLOBALS['_MAX']['CONF'];
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oNowDate =& $oServiceLocator->get('now');
         if (!$oNowDate) {
             $oNowDate = new Date();

@@ -42,7 +42,7 @@ class Test_OX_Maintenance_Priority_Campaign extends UnitTestCase
      */
     function setUp()
     {
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oMaxDalEntities = new MockMAX_Dal_Entities($this);
         $oServiceLocator->register('MAX_Dal_Entities', $oMaxDalEntities);
         $oMaxDalMaintenancePriority = new MockOA_Dal_Maintenance_Priority($this);
@@ -56,7 +56,7 @@ class Test_OX_Maintenance_Priority_Campaign extends UnitTestCase
      */
     function tearDown()
     {
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->remove('MAX_Dal_Entities');
         $oServiceLocator->remove('OA_Dal_Maintenance_Priority');
     }
@@ -168,7 +168,7 @@ class Test_OX_Maintenance_Priority_Campaign extends UnitTestCase
             3 => array('ad_id' => 3, 'type' => 'sql', 'weight' => 2, 'status' => OA_ENTITY_STATUS_RUNNING,),
             5 => array('ad_id' => 5, 'type' => 'gif', 'weight' => 3, 'status' => OA_ENTITY_STATUS_AWAITING,),
         );
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oMaxDalEntities =& $oServiceLocator->get('MAX_Dal_Entities');
         $oMaxDalEntities->setReturnValueAt(0, 'getAdsByCampaignId', $oError);
         $oMaxDalEntities->setReturnValueAt(1, 'getAdsByCampaignId', null);
@@ -232,7 +232,7 @@ class Test_OX_Maintenance_Priority_Campaign extends UnitTestCase
             'sum_clicks'      => 5,
             'sum_conversions' => 1,
         );
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oMaxDalMaintenancePriority =& $oServiceLocator->get('OA_Dal_Maintenance_Priority');
         $oMaxDalMaintenancePriority->setReturnValueAt(0, 'getCampaignStats', null);
         $oMaxDalMaintenancePriority->setReturnValueAt(1, 'getCampaignStats', $aCampaignStats);
@@ -285,7 +285,7 @@ class Test_OX_Maintenance_Priority_Campaign extends UnitTestCase
             'sum_clicks'      => 5,
             'sum_conversions' => 1,
         );
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oMaxDalMaintenancePriority =& $oServiceLocator->get('OA_Dal_Maintenance_Priority');
         $oMaxDalMaintenancePriority->setReturnValueAt(0, 'getCampaignStats', null);
         $oMaxDalMaintenancePriority->setReturnValueAt(1, 'getCampaignStats', $aCampaignStats);

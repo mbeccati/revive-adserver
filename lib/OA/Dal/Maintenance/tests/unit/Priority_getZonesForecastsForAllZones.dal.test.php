@@ -126,7 +126,7 @@ class Test_OA_Dal_Maintenance_Priority_getZonesForecastsForAllZones extends Unit
         $zoneForecastDefaultZoneImpressions = 0; // $oMaxDalMaintenance->getZoneForecastDefaultZoneImpressions();
 
         // Test 1
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oServiceLocator->remove('now');
         $result =& $oMaxDalMaintenance->getZonesForecastsForAllZones();
         $this->assertFalse($result);

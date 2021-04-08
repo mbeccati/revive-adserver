@@ -104,7 +104,7 @@ class OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressions extends OA_
         if (!empty($date)) {
             return new Date($date);
         }
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $oDateNow =& $oServiceLocator->get('now');
         if (!$oDateNow) {
             $oDateNow = new Date();

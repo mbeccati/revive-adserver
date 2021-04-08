@@ -55,7 +55,7 @@ class OX_Maintenance_Statistics_Task extends OA_Task
     function __construct()
     {
         // Set the local reference to the class which is controlling this task
-        $oServiceLocator =& OA_ServiceLocator::instance();
+        $oServiceLocator = OA_ServiceLocator::instance();
         $this->oController =& $oServiceLocator->get('Maintenance_Statistics_Controller');
     }
 
