@@ -341,30 +341,30 @@ class MDB2_Schema_Parser extends XML_Parser
         $this->element = implode('-', $this->elements);
     }
 
-    function &customRaiseError($msg = null, $xmlecode = 0, $xp = null, $ecode = MDB2_SCHEMA_ERROR_PARSE)
+    function customRaiseError($msg = null, $xmlecode = 0, $xp = null, $ecode = MDB2_SCHEMA_ERROR_PARSE)
     {
         if (is_null($this->error)) {
             $error = '';
-            if (is_resource($msg)) {
+            if (!is_string($msg)) {
                 $error.= 'Parser error: '.xml_error_string(xml_get_error_code($msg));
                 $xp = $msg;
             } else {
                 $error.= 'Parser error: '.$msg;
-                if (!is_resource($xp)) {
+                if (null === $xp) {
                     $xp = $this->parser;
                 }
             }
             if ($error_string = xml_error_string($xmlecode)) {
                 $error.= ' - '.$error_string;
             }
-            if (is_resource($xp)) {
+            if (!empty($xp)) {
                 $byte = @xml_get_current_byte_index($xp);
                 $line = @xml_get_current_line_number($xp);
                 $column = @xml_get_current_column_number($xp);
                 $error.= " - Byte: $byte; Line: $line; Col: $column";
             }
             $error.= "\n";
-            $this->error =& MDB2_Schema::raiseError($ecode, null, null, $error);
+            $this->error = MDB2_Schema::raiseError($ecode, null, null, $error);
         }
         return $this->error;
     }

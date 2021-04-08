@@ -50,7 +50,7 @@ class OA_UpgradePackageParser extends XML_Parser
         //$this->__construct();
     }
 
-    function startHandler($xp, $element, &$attribs)
+    function startHandler($xp, $element, $attribs)
     {
         $this->elements[$this->count++] = strtolower($element);
         $this->element = implode('-', $this->elements);

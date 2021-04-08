@@ -271,7 +271,7 @@ class XML_Tree extends XML_Parser
      *
      * @access private
      */
-    function startHandler($xp, $elem, &$attribs)
+    function startHandler($xp, $elem, $attribs)
     {
         $lineno = xml_get_current_line_number($xp);
         // root elem

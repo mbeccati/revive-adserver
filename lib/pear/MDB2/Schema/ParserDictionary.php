@@ -80,14 +80,14 @@ class MDB2_Dictionary_Parser extends XML_Parser
         $this->val = new MDB2_Schema_Validate($fail_on_invalid_names, $valid_types, $force_defaults);
     }
 
-    function startHandler($xp, $element, $attribs)
+    function startHandler($xp, $elem, $attribs)
     {
-        if (strtolower($element) == 'variable') {
+        if (strtolower($elem) == 'variable') {
             $this->var_mode = true;
             return;
         }
 
-        $this->elements[$this->count++] = strtolower($element);
+        $this->elements[$this->count++] = strtolower($elem);
         $this->element = implode('-', $this->elements);
 
         switch ($this->element) {

@@ -73,7 +73,7 @@ class MDB2_Changeset_Parser extends XML_Parser
 //        $this->val = new MDB2_Schema_Validate($fail_on_invalid_names, $valid_types, $force_defaults);
     }
 
-    function startHandler($xp, $element, &$attribs)
+    function startHandler($xp, $element, $attribs)
     {
         if (strtolower($element) == 'variable') {
             $this->var_mode = true;
@@ -213,8 +213,6 @@ class MDB2_Changeset_Parser extends XML_Parser
             case 'instructionset-destructive-changeset-change-table-remove-field-name':
             	break;
             case 'instructionset-constructive-changeset-table-index':
-                break;
-            case 'instructionset-constructive-changeset-change-table-index':
                 break;
             case 'instructionset-constructive-changeset-change-table-index-remove':
                 $this->index_name = '';

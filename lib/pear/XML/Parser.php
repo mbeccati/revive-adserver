@@ -466,7 +466,7 @@ class XML_Parser extends PEAR
         } else {
             $xp = @xml_parser_create($this->srcenc);
         }
-        if (is_resource($xp)) {
+        if (false !== $xp) {
             if ($this->tgtenc !== null) {
                 if (!@xml_parser_set_option($xp, XML_OPTION_TARGET_ENCODING,
                     $this->tgtenc)) {
@@ -494,7 +494,7 @@ class XML_Parser extends PEAR
      */
     function _initHandlers()
     {
-        if (!is_resource($this->parser)) {
+        if (empty($this->parser)) {
             return false;
         }
 
@@ -556,7 +556,7 @@ class XML_Parser extends PEAR
      **/
     function free()
     {
-        if (isset($this->parser) && is_resource($this->parser)) {
+        if (!empty($this->parser)) {
             xml_parser_free($this->parser);
             unset($this->parser);
         }
@@ -575,18 +575,18 @@ class XML_Parser extends PEAR
      * @param string $data XML data
      * @param boolean $eof If set and TRUE, data is the last piece of data sent in this parser
      *
-     * @return   Pear Error|true   true on success or a PEAR Error
-     * @throws   XML_Parser_Error
+     * @return   XML_Parser_Error|true   true on success or a PEAR Error
+     * @throws
      * @see      _parseString()
      */
     function parseString($data, $eof = false)
     {
-        if (!isset($this->parser) || !is_resource($this->parser)) {
+        if (empty($this->parser)) {
             $this->reset();
         }
 
         if (!$this->_parseString($data, $eof)) {
-            $error = &$this->customRaiseError();
+            $error = $this->customRaiseError();
             $this->free();
             return $error;
         }
@@ -631,8 +631,14 @@ class XML_Parser extends PEAR
     /**
      *
      * @abstract
+     *
+     * @param $xp
+     * @param $elem
+     * @param $attribs
+     *
+     * @return null
      */
-    function startHandler($xp, $elem, &$attribs)
+    function startHandler($xp, $elem, $attribs)
     {
         return NULL;
     }
