@@ -81,12 +81,12 @@ class OX_Component
         return $returned;
     }
 
-    function _isGroupInstalled($group)
+    public static function _isGroupInstalled($group)
     {
         return isset($GLOBALS['_MAX']['CONF']['pluginGroupComponents'][$group]);
     }
 
-    function _isGroupEnabled($group)
+    public static function _isGroupEnabled($group)
     {
         return ( self::_isGroupInstalled($group) && $GLOBALS['_MAX']['CONF']['pluginGroupComponents'][$group] ? true : false);
     }
@@ -103,7 +103,7 @@ class OX_Component
      *                     otherwise the component with the same name as the group is assumed.
      * @return boolean True on success, false otherwise.
      */
-    function _includeComponentFile($extension, $group, $component = null)
+    public static function _includeComponentFile($extension, $group, $component = null)
     {
         $aConf = $GLOBALS['_MAX']['CONF'];
         if ($component === null) {
@@ -146,7 +146,7 @@ class OX_Component
      *                     is assumed.
      * @return string The component class name.
      */
-    function _getComponentClassName($extension, $group, $component = null)
+    public static function _getComponentClassName($extension, $group, $component = null)
     {
         if ($component === null) {
             $component = $group;
