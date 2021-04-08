@@ -79,7 +79,7 @@ class Migration
         {
             $this->logFile = $logfile;
         }
-        elseif (!$this->logfile)
+        elseif (!$this->logFile)
         {
             $this->logFile = MAX_PATH.'/var/migration.log';
         }
@@ -293,8 +293,7 @@ class Migration
 
     function afterAddTable($table)
     {
-        if ($this->aObjectMap[$table])
-        {
+        if (isset($this->aObjectMap[$table])) {
             $fromTable = $this->aObjectMap[$table]['fromTable'];
             return $this->copyTableData($fromTable, $table);
         }
