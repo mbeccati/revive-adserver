@@ -311,7 +311,7 @@ class MDB2
      * @param   string  classname to load
      * @param   bool    if errors should be suppressed
      *
-     * @return  bool    true success or false on failure
+     * @return  bool|PEAR_Error true success or PEAR_Error on failure
      */
     public static function loadClass($class_name, $debug)
     {
@@ -323,12 +323,12 @@ class MDB2
                 $include = @include_once($file_name);
             }
             if (!$include) {
-                if (!MDB2::fileExists($file_name)) {
+                if (!self::fileExists($file_name)) {
                     $msg = "unable to find package '$class_name' file '$file_name'";
                 } else {
                     $msg = "unable to load class '$class_name' from file '$file_name'";
                 }
-                $err =& MDB2::raiseError(MDB2_ERROR_NOT_FOUND, null, null, $msg);
+                $err = MDB2::customRaiseError(MDB2_ERROR_NOT_FOUND, null, null, $msg);
                 return $err;
             }
         }
@@ -486,19 +486,17 @@ class MDB2
      *
      * @param   string  name of the file in the MDB2 directory (without '.php')
      *
-     * @return  string  name of the file that was included
-     *
-     * @access  public
+     * @return  string|PEAR_Error name of the file that was included
      */
-    function loadFile($file)
+    public static function loadFile($file)
     {
         $file_name = 'MDB2'.DIRECTORY_SEPARATOR.$file.'.php';
-        if (!MDB2::fileExists($file_name)) {
-            return MDB2::raiseError(MDB2_ERROR_NOT_FOUND, null, null,
+        if (!self::fileExists($file_name)) {
+            return self::customRaiseError(MDB2_ERROR_NOT_FOUND, null, null,
                 'unable to find: '.$file_name);
         }
         if (!include_once($file_name)) {
-            return MDB2::raiseError(MDB2_ERROR_NOT_FOUND, null, null,
+            return self::customRaiseError(MDB2_ERROR_NOT_FOUND, null, null,
                 'unable to load driver class: '.$file_name);
         }
         return $file_name;
@@ -548,9 +546,9 @@ class MDB2
      * @access  private
      * @see     PEAR_Error
      */
-    function customRaiseError($code = null, $mode = null, $options = null, $userinfo = null)
+    private static function customRaiseError($code = null, $mode = null, $options = null, $userinfo = null)
     {
-        $err =& PEAR::raiseError(null, $code, $mode, $options, $userinfo, 'MDB2_Error', true);
+        $err = PEAR::raiseError(null, $code, $mode, $options, $userinfo, 'MDB2_Error', true);
         return $err;
     }
 
@@ -567,10 +565,8 @@ class MDB2
      *                        $code is an integer and $db->getCode() == $code
      *
      * @return  bool    true if parameter is an error
-     *
-     * @access  public
      */
-    function isError($data, $code = null)
+    public static function isError($data, $code = null)
     {
         if (is_a($data, 'MDB2_Error')) {
             if (is_null($code)) {
