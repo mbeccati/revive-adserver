@@ -345,7 +345,7 @@ class OA_Email
      */
     function _prepareCampaignDeliveryEmailBodyStats($adId, $oStartDate, $oEndDate, $type, $adTextPrint)
     {
-        $oDbh =& OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
 
         // Obtain the required date format
         global $date_format;

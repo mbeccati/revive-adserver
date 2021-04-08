@@ -43,7 +43,7 @@ class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTest
         $aConf['maintenance']['operationInterval'] = 15;
 
         // Create the database connection
-        $oDbh            =& OA_DB::singleton();
+        $oDbh            = OA_DB::singleton();
         $oServiceLocator = OA_ServiceLocator::instance();
 
         // Prepare the OX_Maintenance_Statistics_Task_SetUpdateRequirements class to test with

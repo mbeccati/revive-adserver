@@ -56,7 +56,7 @@ class Admin_DaTest extends DalUnitTestCase
     function __construct()
     {
         parent::__construct();
-        $this->dbh =& OA_DB::singleton();
+        $this->dbh = OA_DB::singleton();
     }
 
     function getLastRecordInserted($tableName, $tableIndexField)
@@ -724,7 +724,7 @@ class Admin_DaTest extends DalUnitTestCase
     function testGetZones()
     {
         $conf = $GLOBALS['_MAX']['CONF'];
-        $dbh =& OA_DB::singleton();
+        $dbh = OA_DB::singleton();
 
         $ret = $this->newZone();
         $this->assertTrue(is_int($ret));
@@ -784,7 +784,7 @@ class Admin_DaTest extends DalUnitTestCase
     function testDuplicateZone()
     {
         $conf = $GLOBALS['_MAX']['CONF'];
-        $dbh =& OA_DB::singleton();
+        $dbh = OA_DB::singleton();
         $id = $this->newZone();
         $this->assertTrue(is_int($id));
         $this->assertTrue($id > 0);

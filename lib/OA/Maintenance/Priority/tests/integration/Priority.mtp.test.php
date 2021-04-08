@@ -70,7 +70,7 @@ class Test_Priority extends UnitTestCase
         //setTimeZoneLocation($aConf['timezone']['location']);
 
         // Set up the database handler object
-        $this->oDbh =& OA_DB::singleton();
+        $this->oDbh = OA_DB::singleton();
 
         // Set up the service locator object
         $this->oServiceLocator = OA_ServiceLocator::instance();
@@ -695,7 +695,7 @@ class Test_Priority extends UnitTestCase
     function _assertPriority($aParams)
     {
         $aConf =& $GLOBALS['_MAX']['CONF'];
-        $oDbh =& OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
 
         $tableAza   = $oDbh->quoteIdentifier($aConf['table']['prefix'].'ad_zone_assoc', true);
         $tableDsaza = $oDbh->quoteIdentifier($aConf['table']['prefix'].'data_summary_ad_zone_assoc', true);

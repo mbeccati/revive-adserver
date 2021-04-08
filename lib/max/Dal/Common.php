@@ -298,7 +298,7 @@ class MAX_Dal_Common
 
     function _getTablenameUnquoted($tableName)
     {
-        return $this->prefix.($this->conf['table'][$tableName] ? $this->conf['table'][$tableName] : $tableName);
+        return $this->prefix.($this->conf['table'][$tableName] ?? $tableName);
     }
 
 }

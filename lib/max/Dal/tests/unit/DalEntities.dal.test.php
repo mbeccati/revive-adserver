@@ -161,7 +161,7 @@ class Dal_TestOfMAX_Dal_Entities extends UnitTestCase
     function testGetAdsByCampaignId()
     {
         $conf = $GLOBALS['_MAX']['CONF'];
-        $oDbh =& OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
         $oDal = new MAX_Dal_Entities();
 
         // Test 1
@@ -249,7 +249,7 @@ class Dal_TestOfMAX_Dal_Entities extends UnitTestCase
     function testGetDeliveryLimitationsByAdId()
     {
         $conf = $GLOBALS['_MAX']['CONF'];
-        $oDbh =& OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
         $oDal = new MAX_Dal_Entities();
 
         // Test 1
@@ -341,7 +341,7 @@ class Dal_TestOfMAX_Dal_Entities extends UnitTestCase
     function testGetDeliveryLimitationsByChannelId()
     {
         $conf = $GLOBALS['_MAX']['CONF'];
-        $oDbh =& OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
         $oDal = new MAX_Dal_Entities();
 
         // Test 1

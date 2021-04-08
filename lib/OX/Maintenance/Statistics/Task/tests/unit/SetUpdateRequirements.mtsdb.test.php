@@ -56,7 +56,7 @@ class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTest
         $aConf =& $GLOBALS['_MAX']['CONF'];
 
         // Create the database connection and service locator objects
-        $oDbh            =& OA_DB::singleton();
+        $oDbh            = OA_DB::singleton();
         $oServiceLocator = OA_ServiceLocator::instance();
 
         // Create the "log_maintenance_statistics" table required for the tests

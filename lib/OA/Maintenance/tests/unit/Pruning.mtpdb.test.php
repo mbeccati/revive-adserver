@@ -44,7 +44,7 @@ class Test_Priority extends UnitTestCase
     function setUp()
     {
         // Set up the database handler object
-        $this->oDbh =& OA_DB::singleton();
+        $this->oDbh = OA_DB::singleton();
 
         $doCampaigns = OA_Dal::factoryDO('campaigns');
         $aIds = DataGenerator::generate($doCampaigns,2);
