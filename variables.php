@@ -27,6 +27,24 @@
  */
 
 /**
+ * Polyfills
+ */
+if (!function_exists('each')) {
+    function each(&$array) {
+        $key = key($array);
+
+        if (null === $key) {
+            return false;
+        }
+
+        $value = current($array);
+        next($array);
+
+        return [$key, $value];
+    }
+}
+
+/**
  * Setup common variables - used by both delivery and admin part as well
  *
  * This function should be executed after the config file is read in.
