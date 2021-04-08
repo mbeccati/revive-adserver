@@ -343,9 +343,9 @@ class TestEnv
 
     static function dropTempTables()
     {
-        $oDbh = &OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
         // Truncate & drop all existing temporary tables
-        $oTable = &OA_DB_Table_Priority::singleton();
+        $oTable = OA_DB_Table_Priority::singleton();
         foreach ($oTable->aDefinition['tables'] as $tableName => $aTable) {
             if ($oTable->existsTemporaryTable($tableName))
             {

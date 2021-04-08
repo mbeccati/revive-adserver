@@ -174,7 +174,7 @@ class OX_Component
      *                             which are enabled.
      * @return array An array of component objects, indexed by component identifier.
      */
-    function &getComponents($extension, $group = null, $recursive = 1, $enabledOnly = true)
+    public static function getComponents($extension, $group = null, $recursive = 1, $enabledOnly = true)
     {
         $aComponents = array();
         $aGroups = self::_getComponentsFiles($extension, $group, $recursive);
@@ -218,7 +218,7 @@ class OX_Component
      *               given directory parameter, and "filename" is the filename
      *               before the OX_COMPONENT_SUFFIX extension of the file.
      */
-    function _getComponentsFiles($extension, $group = null, $recursive = 1)
+    private static function _getComponentsFiles($extension, $group = null, $recursive = 1)
     {
         $aResult = array();
         $aConf = $GLOBALS['_MAX']['CONF'];
@@ -251,7 +251,7 @@ class OX_Component
         return $aResult;
     }
 
-    function _getComponentGroupsFromDirectory($directory)
+    public static function _getComponentGroupsFromDirectory($directory)
     {
         $aGroups = array();
         if (is_readable($directory))
@@ -293,7 +293,7 @@ class OX_Component
      *               given directory parameter, and "filename" is the filename
      *               before the OX_COMPONENT_SUFFIX extension of the file.
      */
-    function _getComponentFilesFromDirectory($directory, $recursive = 1, &$aMatches)
+    public static function _getComponentFilesFromDirectory($directory, $recursive, &$aMatches)
     {
         if (is_readable($directory))
         {
