@@ -1347,6 +1347,8 @@ class DB_DataObjectCommon extends DB_DataObject
      * @param boolean $resetCache When true, reset the internal cache and
      *                            return null.
      *
+     * @return array|false
+     *
      * @see DB_DataObjectCommon::getOwningAccountIds()
      */
     protected function _getOwningAccountIds($parentTable = null, $parentKeyName = null, $resetCache = false)
@@ -1358,7 +1360,7 @@ class DB_DataObjectCommon extends DB_DataObject
         // Reset the cache?
         if ($resetCache) {
             $aCache = array();
-            return;
+            return false;
         }
 
         // Get this DB_DataObject's table name and primary key name
@@ -1544,7 +1546,7 @@ class DB_DataObjectCommon extends DB_DataObject
      *                              - 3 for DELETE
      * @param unknown_type $oDataObject
      * @param unknown_type $parentid
-     * @return unknown
+     * @return int|false
      */
     function audit($actionid, $oDataObject = null, $parentid = null)
     {
@@ -1575,7 +1577,7 @@ class DB_DataObjectCommon extends DB_DataObject
                 // Set the primary account ID
                 if (isset($aAccountIds[OA_ACCOUNT_MANAGER])) {
                     $this->doAudit->account_id = $aAccountIds[OA_ACCOUNT_MANAGER];
-                } else {
+                } elseif (isset($aAccountIds[OA_ACCOUNT_ADMIN])) {
                     $this->doAudit->account_id = $aAccountIds[OA_ACCOUNT_ADMIN];
                 }
                 // Set the advertiser account ID, if required

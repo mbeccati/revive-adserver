@@ -481,7 +481,7 @@ class DataObjects_Campaigns extends DB_DataObjectCommon
             case OA_AUDIT_ACTION_INSERT:
                 $actionType = 'added';
             case OA_AUDIT_ACTION_UPDATE:
-                if (isset($this->status) && $this->status != $dataobjectOld->status) {
+                if (isset($this->status) && $dataobjectOld && $this->status != $dataobjectOld->status) {
                     if (isset($aActionMap[$this->status][$dataobjectOld->status])) {
                         $actionType = $aActionMap[$this->status][$dataobjectOld->status];
                     } elseif (isset($aActionMap[$this->status][''])) {
