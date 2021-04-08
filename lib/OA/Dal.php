@@ -232,28 +232,6 @@ class OA_Dal
         );
     }
 
-    function _setupDataObjectOptionsOLD()
-    {
-        static $needsSetup;
-        if (isset($needsSetup)) {
-            return;
-        }
-        $needsSetup = false;
-
-        // Set DB_DataObject options
-        $MAX_ENT_DIR = MAX_PATH . '/lib/max/Dal/DataObjects';
-        $options =& PEAR::getStaticProperty('DB_DataObject', 'options');
-        $options = array(
-            'database'              => OA_DB::getDsn(),
-            'schema_location'       => $MAX_ENT_DIR,
-            'class_location'        => $MAX_ENT_DIR,
-            'require_prefix'        => $MAX_ENT_DIR . '/',
-            'class_prefix'          => 'DataObjects_',
-            'debug'                 => 0,
-            'production'            => 0,
-        );
-    }
-
     /**
      * A method to return the SQL required to create a temporary
      * table when prepended to a SELECT statement, depending on
@@ -264,10 +242,10 @@ class OA_Dal
      * @return string The SQL code to prepend to a SELECT statement to
      *                create the temporary table.
      */
-    function createTemporaryTableFromSelect($table)
+    public static function createTemporaryTableFromSelect($table)
     {
         $aConf = $GLOBALS['_MAX']['CONF'];
-        $oDbh =& OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
         if ($oDbh->dsn['phptype'] == 'pgsql') {
             $sql = "
                 CREATE TEMPORARY TABLE
@@ -298,9 +276,9 @@ class OA_Dal
      * @param string $type     The INTERVAL length. For example, "DAY".
      * @return string The SQL code required to obtain the INTERVAL value.
      */
-    function quoteInterval($interval, $type)
+    public static function quoteInterval($interval, $type)
     {
-        $oDbh =& OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
         if ($oDbh->dsn['phptype'] == 'pgsql') {
             return "($interval || ' $type')::interval";
         }
@@ -313,7 +291,7 @@ class OA_Dal
      * @static
      * @param string $sqlDate
      */
-    function isValidDate($sqlDate)
+    public static function isValidDate($sqlDate)
     {
         $dbh = OA_DB::singleton();
         return !empty($sqlDate) && preg_match('#^\d\d\d\d-\d\d-\d\d$#D', $sqlDate);
@@ -326,7 +304,7 @@ class OA_Dal
      * @static
      * @param string $sqlDate
      */
-    function isNullDate($sqlDate)
+    public static function isNullDate($sqlDate)
     {
         return !OA_Dal::isValidDate($sqlDate);
     }
@@ -341,9 +319,9 @@ class OA_Dal
      * @param array  $aValues   The array of data to be inserted
      * @param bool $replace Should the data be UPDATEd when the primary key or unique key is already present in the table?
      *
-     * @return int   The number of rows inserted or PEAR_Error on failure
+     * @return int|PEAR_Error   The number of rows inserted or PEAR_Error on failure
      */
-    function batchInsert($tableName, $aFields, $aValues, $replace = false, $primaryKey = array())
+    public static function batchInsert($tableName, $aFields, $aValues, $replace = false, $primaryKey = array())
     {
         if(!is_array($aFields) || !is_array($aValues)) {
             return MAX::raiseError('$aFields and $aValues must be arrays', PEAR_ERROR_RETURN);
@@ -372,7 +350,7 @@ class OA_Dal
         return $result;
     }
 
-    private function _batchInsertMySQL($qTableName, $fieldList, $aValues, $replace)
+    private static function _batchInsertMySQL($qTableName, $fieldList, $aValues, $replace)
     {
         $oDbh = OA_DB::singleton();
 
@@ -473,7 +451,7 @@ class OA_Dal
      * @param bool $replace Should the primary key be replaced when already present?
      * @return int   The number of rows inserted or PEAR_Error on failure
      */
-    private function _batchInsertPgSQL($qTableName, $fieldList, $aValues, $replace, $primaryKey)
+    private static function _batchInsertPgSQL($qTableName, $fieldList, $aValues, $replace, $primaryKey)
     {
         $oDbh = OA_DB::singleton();
 
@@ -534,7 +512,7 @@ class OA_Dal
         return $result;
     }
 
-    function batchInsertPlain($tableName, $aFields, $aValues)
+    private static function batchInsertPlain($tableName, $aFields, $aValues)
     {
         if(!is_array($aFields) || !is_array($aValues)) {
             return MAX::raiseError('$aFields and $aData must be arrays', PEAR_ERROR_RETURN);

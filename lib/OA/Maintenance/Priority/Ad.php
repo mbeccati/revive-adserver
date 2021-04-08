@@ -100,8 +100,8 @@ class OA_Maintenance_Priority_Ad
                 $valid = false;
             }
             if (count($aParams) == 4) {
-                if (!is_bool($aParams['status'])) {
-                    if ($aParams['status'] == OA_ENTITY_STATUS_RUNNING) {
+                if (isset($aParams['status'])) {
+                    if ($aParams['status'] === OA_ENTITY_STATUS_RUNNING) {
                         $aParams['active'] = true;
                     } else {
                         $aParams['active'] = false;

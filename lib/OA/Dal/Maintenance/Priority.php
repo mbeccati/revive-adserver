@@ -949,12 +949,12 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
                             $aFinalResult[$a][$z] = array(
                             'ad_id'                         => $a,
                             'zone_id'                       => $z,
-                            'required_impressions'          => $aPastPriorityResult[$a][$z]['required_impressions'],
-                            'requested_impressions'         => $aPastPriorityResult[$a][$z]['requested_impressions'],
-                            'to_be_delivered'               => $aPastPriorityResult[$a][$z]['to_be_delivered'],
-                            'priority_factor'               => $aPastPriorityResult[$a][$z]['priority_factor'],
-                            'past_zone_traffic_fraction'    => $aPastPriorityResult[$a][$z]['past_zone_traffic_fraction'],
-                            'impressions'                   => $aPastDeliveryResult[$a][$z]['impressions']
+                            'required_impressions'          => $aPastPriorityResult[$a][$z]['required_impressions'] ?? null,
+                            'requested_impressions'         => $aPastPriorityResult[$a][$z]['requested_impressions'] ?? null,
+                            'to_be_delivered'               => $aPastPriorityResult[$a][$z]['to_be_delivered'] ?? null,
+                            'priority_factor'               => $aPastPriorityResult[$a][$z]['priority_factor'] ?? null,
+                            'past_zone_traffic_fraction'    => $aPastPriorityResult[$a][$z]['past_zone_traffic_fraction'] ?? null,
+                            'impressions'                   => $aPastDeliveryResult[$a][$z]['impressions'] ?? null
                             );
                         }
                     }
@@ -1427,7 +1427,7 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
                 foreach ($aPastPriorityResult as $a => $aAd) {
                     if (is_array($aAd) && (count($aAd) > 0)) {
                         foreach ($aAd as $z => $aZone) {
-                            if (!empty($aPastPriorityResult[$a][$z]['average']) && (!$aPastPriorityResult[$a][$z]['pastPriorityFound'])) {
+                            if (!empty($aPastPriorityResult[$a][$z]['average']) && empty($aPastPriorityResult[$a][$z]['pastPriorityFound'])) {
                                 $aPastPriorityResult[$a][$z]['required_impressions'] /= SECONDS_PER_HOUR;
                                 $aPastPriorityResult[$a][$z]['requested_impressions'] /= SECONDS_PER_HOUR;
                                 $aPastPriorityResult[$a][$z]['priority_factor'] /= SECONDS_PER_HOUR;
@@ -2080,7 +2080,7 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
                 $aValues['zone_id'],
                 $aValues['required_impressions'],
                 $aValues['requested_impressions'],
-                ($aValues['to_be_delivered'] ? 1 : 0)
+                empty($aValues['to_be_delivered']) ? 0 : 1
                 );
             }
             $this->batchInsert($tableNameUnquoted, $data, array('ad_id', 'zone_id', 'required_impressions', 'requested_impressions', 'to_be_delivered'));

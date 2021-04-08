@@ -350,7 +350,7 @@ class Test_OA_Dal_Maintenance_Priority_getPreviousAdDeliveryInfo extends UnitTes
         $this->assertEqual($result[1][1]['requested_impressions'], 1);
         $this->assertEqual($result[1][1]['priority_factor'], 0.5);
         $this->assertEqual($result[1][1]['past_zone_traffic_fraction'], 0.99);
-        $this->assertNull($result[1][1]['impressions']);
+        $this->assertFalse(isset($result[1][1]['impressions']));
 
         $oDate =& $oServiceLocator->get('now');
         DataGenerator::cleanUp();
@@ -389,7 +389,7 @@ class Test_OA_Dal_Maintenance_Priority_getPreviousAdDeliveryInfo extends UnitTes
         $this->assertEqual($result[1][1]['requested_impressions'], 1);
         $this->assertEqual($result[1][1]['priority_factor'], 0.5);
         $this->assertEqual($result[1][1]['past_zone_traffic_fraction'], 0.99);
-        $this->assertNull($result[1][1]['impressions']);
+        $this->assertFalse(isset($result[1][1]['impressions']));
 
         $oDate =& $oServiceLocator->get('now');
         DataGenerator::cleanUp();
@@ -483,7 +483,7 @@ class Test_OA_Dal_Maintenance_Priority_getPreviousAdDeliveryInfo extends UnitTes
         $this->assertEqual($result[1][1]['requested_impressions'], 1);
         $this->assertEqual($result[1][1]['priority_factor'], 0.5);
         $this->assertEqual($result[1][1]['past_zone_traffic_fraction'], 0.99);
-        $this->assertNull($result[1][1]['impressions']);
+        $this->assertFalse(isset($result[1][1]['impressions']));
 
         $oDate =& $oServiceLocator->get('now');
         DataGenerator::cleanUp();
@@ -538,7 +538,7 @@ class Test_OA_Dal_Maintenance_Priority_getPreviousAdDeliveryInfo extends UnitTes
         $this->assertEqual($result[1][1]['requested_impressions'], 1);
         $this->assertEqual($result[1][1]['priority_factor'], 0.5);
         $this->assertEqual($result[1][1]['past_zone_traffic_fraction'], 0.99);
-        $this->assertNull($result[1][1]['impressions']);
+        $this->assertFalse(isset($result[1][1]['impressions']));
 
         $oDate =& $oServiceLocator->get('now');
         DataGenerator::cleanUp();
@@ -638,7 +638,7 @@ class Test_OA_Dal_Maintenance_Priority_getPreviousAdDeliveryInfo extends UnitTes
         $this->assertEqual($result[1][1]['requested_impressions'], 1);
         $this->assertEqual($result[1][1]['priority_factor'], 0.5);
         $this->assertEqual($result[1][1]['past_zone_traffic_fraction'], 0.99);
-        $this->assertNull($result[1][1]['impressions']);
+        $this->assertFalse(isset($result[1][1]['impressions']));
 
         $oDate =& $oServiceLocator->get('now');
         DataGenerator::cleanUp();
@@ -1227,7 +1227,7 @@ class Test_OA_Dal_Maintenance_Priority_getPreviousAdDeliveryInfo extends UnitTes
         $this->assertEqual($result[9][9]['requested_impressions'], 59);
         $this->assertEqual($result[9][9]['priority_factor'], 95);
         $this->assertEqual($result[9][9]['past_zone_traffic_fraction'], 0.995);
-        $this->assertNull($result[9][9]['impressions']);
+        $this->assertFalse(isset($result[9][9]['impressions']));
 
         $oDate =& $oServiceLocator->get('now');
         DataGenerator::cleanUp();
@@ -1692,7 +1692,7 @@ class Test_OA_Dal_Maintenance_Priority_getPreviousAdDeliveryInfo extends UnitTes
         $this->assertEqual($result[9][9]['requested_impressions'], 59);
         $this->assertEqual($result[9][9]['priority_factor'], 95);
         $this->assertEqual($result[9][9]['past_zone_traffic_fraction'], 0.995);
-        $this->assertNull($result[9][9]['impressions']);
+        $this->assertFalse(isset($result[9][9]['impressions']));
         $this->assertEqual(count($result[10]), 1);
         $this->assertEqual($result[10][4]['ad_id'], 10);
         $this->assertEqual($result[10][4]['zone_id'], 4);
