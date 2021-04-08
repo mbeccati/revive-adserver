@@ -176,16 +176,16 @@ class OA_Admin_Settings
         $url = @parse_url('http://' . $aConf['webpath']['admin']);
         $oldAdminHost = $url ? $url['host'] : null;
         $url = @parse_url('http://' . $aConf['webpath']['delivery']);
-        $oldDeliveryHost = $url['host'];
+        $oldDeliveryHost = $url ? $url['host'] : null;
         $url = @parse_url('http://' . $aConf['webpath']['deliverySSL']);
-        $oldDeliverySslHost = $url['host'];
+        $oldDeliverySslHost = $url ? $url['host'] : null;
         // What are the new host names used for the installation?
         $url = @parse_url('http://' . $this->aConf['webpath']['admin']);
-        $newAdminHost = $url['host'];
+        $newAdminHost = $url ? $url['host'] : null;
         $url = @parse_url('http://' . $this->aConf['webpath']['delivery']);
-        $newDeliveryHost = $url['host'];
+        $newDeliveryHost = $url ? $url['host'] : null;
         $url = @parse_url('http://' . $this->aConf['webpath']['deliverySSL']);
-        $newDeliverySslHost = $url['host'];
+        $newDeliverySslHost = $url ? $url['host'] : null;
 
         // Prepare config arrays
         $adminConfig = $deliverySslConfig = array('realConfig' => $newDeliveryHost);
@@ -225,7 +225,7 @@ class OA_Admin_Settings
         foreach ($this->aConf as $section => $sectionArray) {
             // Compare the value to be written against that in memory
             // (merged admin/delivery configs)
-            if (is_array($aConf[$section])) {
+            if (isset($aConf[$section])) {
                 $sectionDiff = array_diff_assoc($this->aConf[$section], $aConf[$section]);
                 foreach ($sectionDiff as $configKey => $configValue) {
                     if (isset($adminConfig[$section][$configKey])) {
@@ -248,7 +248,7 @@ class OA_Admin_Settings
             // Check if any of the in-memory items have been removed from the
             // $this->aConf array, and remove them from the appropriate file if
             // necessary
-            if (is_array($aConf[$section]) && is_array($this->aConf[$section])) {
+            if (isset($aConf[$section]) && isset($this->aConf[$section])) {
                 $reverseDiff = array_diff(array_keys($aConf[$section]), array_keys($this->aConf[$section]));
                 foreach ($reverseDiff as $deletedSectionKey) {
                     if (isset($adminConfig[$section][$deletedSectionKey])) {
@@ -400,11 +400,11 @@ class OA_Admin_Settings
         if (!is_null($configPath) && is_dir($configPath)) {
             // Enumerate any valid config files for this installation
             $url = @parse_url('http://' . $this->aConf['webpath']['admin']);
-            $hosts[] = $url['host'] . $configFile . '.conf.php';
+            $hosts[] = ($url ? $url['host'] : null) . $configFile . '.conf.php';
             $url = @parse_url('http://' . $this->aConf['webpath']['delivery']);
-            $hosts[] = $url['host'] . $configFile . '.conf.php';
+            $hosts[] =($url ? $url['host'] : null) . $configFile . '.conf.php';
             $url = @parse_url('http://' . $this->aConf['webpath']['deliverySSL']);
-            $hosts[] = $url['host'] . $configFile . '.conf.php';
+            $hosts[] = ($url ? $url['host'] : null) . $configFile . '.conf.php';
 
             $aFiles = array();
             $CONFIG_DIR = opendir($configPath);

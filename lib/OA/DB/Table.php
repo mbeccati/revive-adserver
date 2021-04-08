@@ -162,7 +162,7 @@ class OA_DB_Table
      * @param string $like
      * @return array
      */
-    function listOATablesCaseSensitive($like='')
+    public static function listOATablesCaseSensitive($like='')
     {
         OA_DB::setCaseSensitive();
         $oDbh = OA_DB::singleton();
