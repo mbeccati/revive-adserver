@@ -82,7 +82,7 @@ class OA_Admin_Settings
         if (!$configFile) {
             $conf = $GLOBALS['_MAX']['CONF'];
             $url = @parse_url('http://' . $conf['webpath']['delivery']);
-            $configFile = MAX_PATH . '/var/' . $url['host'] . '.conf.php';
+            $configFile = MAX_PATH . '/var/' . ($url ? $url['host'] : null) . '.conf.php';
         }
         if (file_exists($configFile)) {
             return is_writable($configFile);
