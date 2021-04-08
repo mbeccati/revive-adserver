@@ -95,7 +95,7 @@ class XML_Parser extends PEAR
 {
     // {{{ properties
 
-   /**
+    /**
      * XML parser handle
      *
      * @var  resource
@@ -133,12 +133,12 @@ class XML_Parser extends PEAR
      * @var  array
      */
     var $handler = array(
-        'character_data_handler'            => 'cdataHandler',
-        'default_handler'                   => 'defaultHandler',
-        'processing_instruction_handler'    => 'piHandler',
-        'unparsed_entity_decl_handler'      => 'unparsedHandler',
-        'notation_decl_handler'             => 'notationHandler',
-        'external_entity_ref_handler'       => 'entityrefHandler'
+        'character_data_handler' => 'cdataHandler',
+        'default_handler' => 'defaultHandler',
+        'processing_instruction_handler' => 'piHandler',
+        'unparsed_entity_decl_handler' => 'unparsedHandler',
+        'notation_decl_handler' => 'notationHandler',
+        'external_entity_ref_handler' => 'entityrefHandler'
     );
 
     /**
@@ -180,10 +180,10 @@ class XML_Parser extends PEAR
      *
      * @param string $srcenc source charset encoding, use NULL (default) to use
      *                       whatever the document specifies
-     * @param string $mode   how this parser object should work, "event" for
+     * @param string $mode how this parser object should work, "event" for
      *                       startelement/endelement-type events, "func"
      *                       to have it call functions named after elements
-     * @param string $tgenc  a valid target encoding
+     * @param string $tgenc a valid target encoding
      */
     function XML_Parser($srcenc = null, $mode = 'event', $tgtenc = null)
     {
@@ -196,16 +196,16 @@ class XML_Parser extends PEAR
      *
      * @param string $srcenc source charset encoding, use NULL (default) to use
      *                       whatever the document specifies
-     * @param string $mode   how this parser object should work, "event" for
+     * @param string $mode how this parser object should work, "event" for
      *                       startelement/endelement-type events, "func"
      *                       to have it call functions named after elements
-     * @param string $tgenc  a valid target encoding
+     * @param string $tgenc a valid target encoding
      */
     function __construct($srcenc = null, $mode = 'event', $tgtenc = null)
     {
         parent::__construct('XML_Parser_Error');
 
-        $this->mode   = $mode;
+        $this->mode = $mode;
         $this->srcenc = $srcenc;
         $this->tgtenc = $tgtenc;
     }
@@ -225,7 +225,9 @@ class XML_Parser extends PEAR
      * mode at a later point.
      *
      * @access  public
-     * @param   string          mode, either 'func' or 'event'
+     *
+     * @param string          mode, either 'func' or 'event'
+     *
      * @return  boolean|object  true on success, PEAR_Error otherwise
      */
     function setMode($mode)
@@ -239,6 +241,23 @@ class XML_Parser extends PEAR
     }
 
     /**
+     * XML_Parser::customRaiseError()
+     *
+     * Throws a XML_Parser_Error
+     *
+     * @param string $msg the error message
+     * @param integer $ecode the error message code
+     *
+     * @return XML_Parser_Error
+     **/
+    function customRaiseError($msg = null, $ecode = 0)
+    {
+        $msg = !is_null($msg) ? $msg : $this->parser;
+        $err = new XML_Parser_Error($msg, $ecode);
+        return parent::raiseError($err);
+    }
+
+    /**
      * Sets the object, that will handle the XML events
      *
      * This allows you to create a handler object independent of the
@@ -249,7 +268,9 @@ class XML_Parser extends PEAR
      * extend this class and handle the events in $this.
      *
      * @access  public
-     * @param   object      object to handle the events
+     *
+     * @param object      object to handle the events
+     *
      * @return  boolean     will always return true
      * @since   v1.2.0beta3
      */
@@ -257,6 +278,213 @@ class XML_Parser extends PEAR
     {
         $this->_handlerObj = &$obj;
         return true;
+    }
+
+    // {{{ _create()
+
+    /**
+     * XML_Parser::setInputString()
+     *
+     * Sets the xml input from a string
+     *
+     * @param string $data a string containing the XML document
+     *
+     * @return null
+     **/
+    function setInputString($data)
+    {
+        $this->fp = $data;
+        return null;
+    }
+
+    // }}}
+    // {{{ reset()
+
+    /**
+     * Sets the file handle to use with parse().
+     *
+     * You should use setInputFile() or setInputString() if you
+     * pass a string
+     *
+     * @param mixed $fp Can be either a resource returned from fopen(),
+     *                       a URL, a local filename or a string.
+     *
+     * @access   public
+     * @see      parse()
+     * @uses     setInputString(), setInputFile()
+     */
+    function setInput($fp)
+    {
+        if (is_resource($fp)) {
+            $this->fp = $fp;
+            return true;
+        } // see if it's an absolute URL (has a scheme at the beginning)
+        elseif (preg_match('%^[a-z]+://%i', substr($fp, 0, 10))) {
+            return $this->setInputFile($fp);
+        } // see if it's a local file
+        elseif (file_exists($fp)) {
+            return $this->setInputFile($fp);
+        } // it must be a string
+        else {
+            $this->fp = $fp;
+            return true;
+        }
+
+        return $this->customRaiseError('Illegal input format', XML_PARSER_ERROR_INVALID_INPUT);
+    }
+
+    // }}}
+    // {{{ setInputFile()
+
+    /**
+     * Sets the input xml file to be parsed
+     *
+     * @param string      Filename (full path)
+     *
+     * @return   resource    fopen handle of the given file
+     * @throws   XML_Parser_Error
+     * @see      setInput(), setInputString(), parse()
+     * @access   public
+     */
+    function setInputFile($file)
+    {
+        /**
+         * check, if file is a remote file
+         */
+        if (preg_match('%^(http|ftp)://%i', substr($file, 0, 10))) {
+            if (!ini_get('allow_url_fopen')) {
+                return $this->customRaiseError('Remote files cannot be parsed, as safe mode is enabled.', XML_PARSER_ERROR_REMOTE);
+            }
+        }
+
+        $fp = @fopen($file, 'rb');
+        if (is_resource($fp)) {
+            $this->fp = $fp;
+            return $fp;
+        }
+        return $this->customRaiseError('File could not be opened.', XML_PARSER_ERROR_FILE_NOT_READABLE);
+    }
+
+    // }}}
+    // {{{ setInputString()
+
+    /**
+     * Central parsing function.
+     *
+     * @return   true|object PEAR error     returns true on success, or a PEAR_Error otherwise
+     * @access   public
+     */
+    function parse()
+    {
+        /**
+         * reset the parser
+         */
+        $result = $this->reset();
+        if ($this->isError($result)) {
+            return $result;
+        }
+        // Allocate a buffer for later usage
+        $buffer = '';
+        // if $this->fp was fopened previously
+        if (is_resource($this->fp)) {
+            $parse_bug = version_compare(phpversion(), '5.0.0', '<');
+            while ($data = fread($this->fp, 4096)) {
+                if ($parse_bug) {
+                    // PHP 4 *does* have a bug hadling chunked CDATA, so
+                    // we're parsing the whole content instead
+                    $buffer .= $data;
+                } else {
+                    // PHP 5 doesn't have such bug
+                    if (!$this->_parseString($data, feof($this->fp))) {
+                        $error = &$this->customRaiseError();
+                        $this->free();
+                        return $error;
+                    }
+                }
+            }
+            // otherwise, $this->fp must be a string
+        } else {
+            $buffer = $this->fp;
+        }
+        // if the buffer is not empty, parse it
+        if ($buffer !== '') {
+            if (!$this->_parseString($buffer, true)) {
+                $error = &$this->customRaiseError();
+                $this->free();
+                return $error;
+            }
+            unset($buffer);
+        }
+
+        $this->free();
+
+        return true;
+    }
+
+    // }}}
+    // {{{ setInput()
+
+    /**
+     * Reset the parser.
+     *
+     * This allows you to use one parser instance
+     * to parse multiple XML documents.
+     *
+     * @access   public
+     * @return   boolean|object     true on success, PEAR_Error otherwise
+     */
+    function reset()
+    {
+        $result = $this->_create();
+        if ($this->isError($result)) {
+            return $result;
+        }
+        return true;
+    }
+
+    // }}}
+    // {{{ parse()
+
+    /**
+     * create the XML parser resource
+     *
+     * Has been moved from the constructor to avoid
+     * problems with object references.
+     *
+     * Furthermore it allows us returning an error
+     * if something fails.
+     *
+     * @access   private
+     * @return   boolean|object     true on success, PEAR_Error otherwise
+     *
+     * @see xml_parser_create
+     */
+    function _create()
+    {
+        if ($this->srcenc === null) {
+            $xp = @xml_parser_create();
+        } else {
+            $xp = @xml_parser_create($this->srcenc);
+        }
+        if (is_resource($xp)) {
+            if ($this->tgtenc !== null) {
+                if (!@xml_parser_set_option($xp, XML_OPTION_TARGET_ENCODING,
+                    $this->tgtenc)) {
+                    return $this->customRaiseError('invalid target encoding', XML_PARSER_ERROR_INVALID_ENCODING);
+                }
+            }
+            $this->parser = $xp;
+            $result = $this->_initHandlers($this->mode);
+            if ($this->isError($result)) {
+                return $result;
+            }
+            xml_parser_set_option($xp, XML_OPTION_CASE_FOLDING, $this->folding);
+            return true;
+        }
+        if (!in_array(strtoupper($this->srcenc), $this->_validEncodings)) {
+            return $this->customRaiseError('invalid source encoding', XML_PARSER_ERROR_INVALID_ENCODING);
+        }
+        return $this->customRaiseError('Unable to create XML parser resource.', XML_PARSER_ERROR_NO_RESOURCE);
     }
 
     /**
@@ -298,221 +526,18 @@ class XML_Parser extends PEAR
                 $xml_func = 'xml_set_' . $xml_func;
                 $xml_func($this->parser, $method);
             }
-		}
-    }
-
-    // {{{ _create()
-
-    /**
-     * create the XML parser resource
-     *
-     * Has been moved from the constructor to avoid
-     * problems with object references.
-     *
-     * Furthermore it allows us returning an error
-     * if something fails.
-     *
-     * @access   private
-     * @return   boolean|object     true on success, PEAR_Error otherwise
-     *
-     * @see xml_parser_create
-     */
-    function _create()
-    {
-        if ($this->srcenc === null) {
-            $xp = @xml_parser_create();
-        } else {
-            $xp = @xml_parser_create($this->srcenc);
         }
-        if (is_resource($xp)) {
-            if ($this->tgtenc !== null) {
-                if (!@xml_parser_set_option($xp, XML_OPTION_TARGET_ENCODING,
-                                            $this->tgtenc)) {
-                    return $this->customRaiseError('invalid target encoding', XML_PARSER_ERROR_INVALID_ENCODING);
-                }
-            }
-            $this->parser = $xp;
-            $result = $this->_initHandlers($this->mode);
-            if ($this->isError($result)) {
-                return $result;
-            }
-            xml_parser_set_option($xp, XML_OPTION_CASE_FOLDING, $this->folding);
-            return true;
-        }
-        if (!in_array(strtoupper($this->srcenc), $this->_validEncodings)) {
-            return $this->customRaiseError('invalid source encoding', XML_PARSER_ERROR_INVALID_ENCODING);
-        }
-        return $this->customRaiseError('Unable to create XML parser resource.', XML_PARSER_ERROR_NO_RESOURCE);
     }
 
     // }}}
-    // {{{ reset()
-
-    /**
-     * Reset the parser.
-     *
-     * This allows you to use one parser instance
-     * to parse multiple XML documents.
-     *
-     * @access   public
-     * @return   boolean|object     true on success, PEAR_Error otherwise
-     */
-    function reset()
-    {
-        $result = $this->_create();
-        if ($this->isError( $result )) {
-            return $result;
-        }
-        return true;
-    }
-
-    // }}}
-    // {{{ setInputFile()
-
-    /**
-     * Sets the input xml file to be parsed
-     *
-     * @param    string      Filename (full path)
-     * @return   resource    fopen handle of the given file
-     * @throws   XML_Parser_Error
-     * @see      setInput(), setInputString(), parse()
-     * @access   public
-     */
-    function setInputFile($file)
-    {
-        /**
-         * check, if file is a remote file
-         */
-        if (preg_match('%^(http|ftp)://%i', substr($file, 0, 10))) {
-            if (!ini_get('allow_url_fopen')) {
-            	return $this->customRaiseError('Remote files cannot be parsed, as safe mode is enabled.', XML_PARSER_ERROR_REMOTE);
-            }
-        }
-
-        $fp = @fopen($file, 'rb');
-        if (is_resource($fp)) {
-            $this->fp = $fp;
-            return $fp;
-        }
-        return $this->customRaiseError('File could not be opened.', XML_PARSER_ERROR_FILE_NOT_READABLE);
-    }
-
-    // }}}
-    // {{{ setInputString()
-
-    /**
-     * XML_Parser::setInputString()
-     *
-     * Sets the xml input from a string
-     *
-     * @param string $data a string containing the XML document
-     * @return null
-     **/
-    function setInputString($data)
-    {
-        $this->fp = $data;
-        return null;
-    }
-
-    // }}}
-    // {{{ setInput()
-
-    /**
-     * Sets the file handle to use with parse().
-     *
-     * You should use setInputFile() or setInputString() if you
-     * pass a string
-     *
-     * @param    mixed  $fp  Can be either a resource returned from fopen(),
-     *                       a URL, a local filename or a string.
-     * @access   public
-     * @see      parse()
-     * @uses     setInputString(), setInputFile()
-     */
-    function setInput($fp)
-    {
-        if (is_resource($fp)) {
-            $this->fp = $fp;
-            return true;
-        }
-        // see if it's an absolute URL (has a scheme at the beginning)
-        elseif (preg_match('%^[a-z]+://%i', substr($fp, 0, 10))) {
-            return $this->setInputFile($fp);
-        }
-        // see if it's a local file
-        elseif (file_exists($fp)) {
-            return $this->setInputFile($fp);
-        }
-        // it must be a string
-        else {
-            $this->fp = $fp;
-            return true;
-        }
-
-        return $this->customRaiseError('Illegal input format', XML_PARSER_ERROR_INVALID_INPUT);
-    }
-
-    // }}}
-    // {{{ parse()
-
-    /**
-     * Central parsing function.
-     *
-     * @return   true|object PEAR error     returns true on success, or a PEAR_Error otherwise
-     * @access   public
-     */
-    function parse()
-    {
-        /**
-         * reset the parser
-         */
-        $result = $this->reset();
-        if ($this->isError($result)) {
-            return $result;
-        }
-        // Allocate a buffer for later usage
-        $buffer = '';
-        // if $this->fp was fopened previously
-        if (is_resource($this->fp)) {
-            $parse_bug = version_compare(phpversion(), '5.0.0', '<');
-            while ($data = fread($this->fp, 4096)) {
-                if ($parse_bug) {
-                    // PHP 4 *does* have a bug hadling chunked CDATA, so
-                    // we're parsing the whole content instead
-                    $buffer .= $data;
-                } else {
-                    // PHP 5 doesn't have such bug
-                    if (!$this->_parseString($data, feof($this->fp))) {
-                        $error = &$this->customRaiseError();
-                        $this->free();
-                        return $error;
-                    }
-                }
-            }
-        // otherwise, $this->fp must be a string
-        } else {
-            $buffer = $this->fp;
-        }
-        // if the buffer is not empty, parse it
-        if ($buffer !== '') {
-            if (!$this->_parseString($buffer, true)) {
-                $error = &$this->customRaiseError();
-                $this->free();
-                return $error;
-            }
-            unset($buffer);
-        }
-
-        $this->free();
-
-        return true;
-    }
+    // {{{ parseString()
 
     /**
      * XML_Parser::_parseString()
      *
      * @param string $data
      * @param boolean $eof
+     *
      * @return bool
      * @access private
      * @see parseString()
@@ -520,38 +545,6 @@ class XML_Parser extends PEAR
     function _parseString($data, $eof = false)
     {
         return xml_parse($this->parser, $data, $eof);
-    }
-
-    // }}}
-    // {{{ parseString()
-
-    /**
-     * XML_Parser::parseString()
-     *
-     * Parses a string.
-     *
-     * @param    string  $data XML data
-     * @param    boolean $eof  If set and TRUE, data is the last piece of data sent in this parser
-     * @throws   XML_Parser_Error
-     * @return   Pear Error|true   true on success or a PEAR Error
-     * @see      _parseString()
-     */
-    function parseString($data, $eof = false)
-    {
-        if (!isset($this->parser) || !is_resource($this->parser)) {
-            $this->reset();
-        }
-
-        if (!$this->_parseString($data, $eof)) {
-           $error = &$this->customRaiseError();
-           $this->free();
-           return $error;
-        }
-
-        if ($eof === true) {
-            $this->free();
-        }
-        return true;
     }
 
     /**
@@ -565,7 +558,7 @@ class XML_Parser extends PEAR
     {
         if (isset($this->parser) && is_resource($this->parser)) {
             xml_parser_free($this->parser);
-            unset( $this->parser );
+            unset($this->parser);
         }
         if (isset($this->fp) && is_resource($this->fp)) {
             fclose($this->fp);
@@ -575,19 +568,33 @@ class XML_Parser extends PEAR
     }
 
     /**
-     * XML_Parser::customRaiseError()
+     * XML_Parser::parseString()
      *
-     * Throws a XML_Parser_Error
+     * Parses a string.
      *
-     * @param string  $msg   the error message
-     * @param integer $ecode the error message code
-     * @return XML_Parser_Error
-     **/
-    function customRaiseError($msg = null, $ecode = 0)
+     * @param string $data XML data
+     * @param boolean $eof If set and TRUE, data is the last piece of data sent in this parser
+     *
+     * @return   Pear Error|true   true on success or a PEAR Error
+     * @throws   XML_Parser_Error
+     * @see      _parseString()
+     */
+    function parseString($data, $eof = false)
     {
-        $msg = !is_null($msg) ? $msg : $this->parser;
-        $err = new XML_Parser_Error($msg, $ecode);
-        return parent::raiseError($err);
+        if (!isset($this->parser) || !is_resource($this->parser)) {
+            $this->reset();
+        }
+
+        if (!$this->_parseString($data, $eof)) {
+            $error = &$this->customRaiseError();
+            $this->free();
+            return $error;
+        }
+
+        if ($eof === true) {
+            $this->free();
+        }
+        return true;
     }
 
     // }}}
@@ -665,39 +672,41 @@ class XML_Parser_Error extends PEAR_Error
 {
     // {{{ properties
 
-   /**
-    * prefix for all messages
-    *
-    * @var      string
-    */
+    /**
+     * prefix for all messages
+     *
+     * @var      string
+     */
     var $error_message_prefix = 'XML_Parser: ';
 
     // }}}
     // {{{ constructor()
-   /**
-    * construct a new error instance
-    *
-    * You may either pass a message or an xml_parser resource as first
-    * parameter. If a resource has been passed, the last error that
-    * happened will be retrieved and returned.
-    *
-    * @access   public
-    * @param    string|resource     message or parser resource
-    * @param    integer             error code
-    * @param    integer             error handling
-    * @param    integer             error level
-    */
+    /**
+     * construct a new error instance
+     *
+     * You may either pass a message or an xml_parser resource as first
+     * parameter. If a resource has been passed, the last error that
+     * happened will be retrieved and returned.
+     *
+     * @access   public
+     *
+     * @param string|resource     message or parser resource
+     * @param integer             error code
+     * @param integer             error handling
+     * @param integer             error level
+     */
     function __construct($msgorparser = 'unknown error', $code = 0, $mode = PEAR_ERROR_RETURN, $level = E_USER_NOTICE)
     {
         if (is_resource($msgorparser)) {
             $code = xml_get_error_code($msgorparser);
             $msgorparser = sprintf('%s at XML input line %d:%d',
-                                   xml_error_string($code),
-                                   xml_get_current_line_number($msgorparser),
-                                   xml_get_current_column_number($msgorparser));
+                xml_error_string($code),
+                xml_get_current_line_number($msgorparser),
+                xml_get_current_column_number($msgorparser));
         }
         parent::__construct($msgorparser, $code, $mode, $level);
     }
     // }}}
 }
+
 ?>
