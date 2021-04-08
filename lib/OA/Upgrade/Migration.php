@@ -164,7 +164,7 @@ class Migration
 
 	function _getQuotedTableName($table)
 	{
-	    $table = $this->getPrefix().($GLOBALS['_MAX']['CONF']['table'][$table] ? $GLOBALS['_MAX']['CONF']['table'][$table] : $table);
+	    $table = $this->getPrefix().($GLOBALS['_MAX']['CONF']['table'][$table] ?? $table);
 	    $quoted = $this->oDBH->quoteIdentifier($table,true);
 	    if (PEAR::isError($quoted))
 	    {

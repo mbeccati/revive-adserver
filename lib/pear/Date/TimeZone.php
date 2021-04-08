@@ -133,7 +133,7 @@ class Date_TimeZone
      * @access public
      * @return object Date_TimeZone the default time zone
      */
-    function getDefault()
+    public static function getDefault()
     {
         global $_DATE_TIMEZONE_DEFAULT;
         return new Date_TimeZone($_DATE_TIMEZONE_DEFAULT);
