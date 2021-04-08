@@ -27,7 +27,7 @@ class OA_Creative_File extends OA_Creative
      * @param string $fileName
      *
      * @return OA_Creative_File
-     * 
+     *
      * @noinspection PhpMissingParentConstructorInspection
      */
     public function __construct($fileName)
