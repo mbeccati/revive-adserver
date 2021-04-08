@@ -38,7 +38,7 @@ class OA_Maintenance_Priority
      *                           script process can always update priorities.
      * @return boolean True on MPE running correctly, false otherwise.
      */
-    function run($alwaysRun = false)
+    public static function run($alwaysRun = false)
     {
         OA::switchLogIdent('maintenance');
 
@@ -113,7 +113,7 @@ class OA_Maintenance_Priority
         return true;
     }
 
-    function scheduleRun()
+    public static function scheduleRun()
     {
         global $session;
 
