@@ -45,7 +45,7 @@ class DataGenerator
      *
      * @var array
      */
-    var $data;
+    private static $data;
 
     /**
      * Generate one record. Wrapper for: generate($do, 1, $generateParents)
@@ -276,14 +276,16 @@ class DataGenerator
      * @param DB_DataObjectCommon $do    DataObject to populate data in
      * @param int $counter      Used to generate a key for data container array to retreive data
      */
-    public static function setDefaultValues(&$do, $counter = 0)
+    public static function setDefaultValues($do, $counter = 0)
     {
         $fields = $do->table();
         $keys = $do->keys();
         $table = $do->getTableWithoutPrefix();
         foreach ($fields as $fieldName => $fieldType) {
             if (!isset($do->$fieldName)) {
-                if(!in_array($fieldName, $keys))
+                $fieldValue = DataGenerator::getFieldValueFromDataContainer($table, $fieldName, $counter);
+
+                if(!isset($fieldValue) && !in_array($fieldName, $keys))
                 {
                     $fieldValue = DataGenerator::defaultValueForObject($do, $fieldName, $fieldType);
                     if(!isset($fieldValue))
@@ -299,6 +301,30 @@ class DataGenerator
                 }
             }
         }
+    }
+
+    /**
+     * Return value for a specified field in the table
+     * if it was previously set in data container
+     *
+     * @param string $table     Table name
+     * @param string $fieldName Field (column) name
+     * @return mixed Data defined for field or null if data wasn't prepared in data container
+     * @access package private
+     * @static
+     */
+    public static function getFieldValueFromDataContainer($table, $fieldName, $counter = 0)
+    {
+        if (isset(self::$data[$table]) && isset(self::$data[$table][$fieldName])) {
+            if (is_array(self::$data[$table][$fieldName])) {
+                $index = $counter % count(self::$data[$table][$fieldName]);
+                return self::$data[$table][$fieldName][$index];
+            } else {
+                return self::$data[$table][$fieldName];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -381,13 +407,14 @@ class DataGenerator
      * @param array $data    Save prepared data in data container
      * @access public
      */
-    function setData($table = null, $data = array())
+    public static function setData($table = null, $data = array())
     {
         if ($table === null) {
             // reset all
-            $this->data = array();
+            self::$data = array();
         }
-        $this->data[$table] = $data;
+
+        self::$data[$table] = $data;
     }
 
 
@@ -402,13 +429,13 @@ class DataGenerator
      * @param string $table
      * @param array $data
      */
-    function setDataOne($table = null, $data = array())
+    public static function setDataOne($table = null, $data = array())
     {
         $convertedData = array();
         foreach($data as $column => $value) {
             $convertedData[$column] = array($value);
         }
-        $this->setData($table, $convertedData);
+        self::setData($table, $convertedData);
     }
 
     /**

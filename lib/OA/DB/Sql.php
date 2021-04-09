@@ -48,7 +48,7 @@ class OA_DB_Sql
      * @param string $id
      * @return Number of deleted rows on success and PEAR::Error on exit.
      */
-    function deleteWhereOne($table, $idColumn, $id)
+    public static function deleteWhereOne($table, $idColumn, $id)
     {
         $dbh = OA_DB::singleton();
         $table = self::modifyTableName($table);
@@ -68,7 +68,7 @@ class OA_DB_Sql
      * @param array $aColumns List of columns, defaults to '*'.
      * @return DataSpace
      */
-    function selectWhereOne($table, $idColumn, $id, $aColumns = array('*'))
+    public static function selectWhereOne($table, $idColumn, $id, $aColumns = array('*'))
     {
         $sColumns = implode(' ', $aColumns);
         $table = self::modifyTableName($table);
@@ -93,7 +93,7 @@ class OA_DB_Sql
      * @param array $aValues A map from column name => new value
      * @return int Number of rows updated on success or PEAR::Error on failure.
      */
-    function updateWhereOne($table, $idColumn, $id, $aValues)
+    public static function updateWhereOne($table, $idColumn, $id, $aValues)
     {
         $aSet = array();
         foreach ($aValues as $column => $value) {

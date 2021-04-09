@@ -46,9 +46,9 @@ class Plugins_TestOfPlugins_demoBannerTypeHtml extends UnitTestCase
 
         // generate test data
         $doBanners = OA_Dal::factoryDO('banners');
-        $oDG = new DataGenerator();
-        $oDG->setData('banners', array('ext_bannertype' => array($oComponent->getComponentIdentifier())));
-        $aIds = $oDG->generate($doBanners, 5, false);
+
+        DataGenerator::setData('banners', array('ext_bannertype' => array($oComponent->getComponentIdentifier())));
+        $aIds = DataGenerator::generate($doBanners, 5, false);
 
         $aFields = $aVariables = array();
 
