@@ -433,7 +433,7 @@ class MDB2_Changeset_Parser extends XML_Parser
         $this->element = implode('-', $this->elements);
     }
 
-    function &customRaiseError($msg = null, $xmlecode = 0, $xp = null, $ecode = MDB2_SCHEMA_ERROR_PARSE)
+    function &raiseInstanceError($msg = null, $xmlecode = 0, $xp = null, $ecode = MDB2_SCHEMA_ERROR_PARSE)
     {
         if (is_null($this->error)) {
             $error = '';
@@ -465,7 +465,7 @@ class MDB2_Changeset_Parser extends XML_Parser
     {
         if ($this->var_mode == true) {
             if (!isset($this->variables[$data])) {
-                $this->customRaiseError('variable "'.$data.'" not found', null, $xp);
+                $this->raiseInstanceError('variable "'.$data.'" not found', null, $xp);
                 return;
             }
             $data = $this->variables[$data];

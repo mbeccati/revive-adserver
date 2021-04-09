@@ -234,7 +234,6 @@ class Test_OA_DB_Table extends UnitTestCase
         $oTable->setReturnReference('_getDbConnection', $oDbh);
 
         // Test 1
-        $oTable->__construct();
         $this->assertEqual(strtolower(get_class($oTable)), strtolower('PartialMockOA_DB_Table'));
         $oDbhReturn = $oTable->_getDbConnection();
         $this->assertIdentical($oDbh, $oDbhReturn);

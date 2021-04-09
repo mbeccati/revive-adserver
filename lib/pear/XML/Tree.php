@@ -123,7 +123,7 @@ class XML_Tree extends XML_Parser
         if (!is_null($this->root)) {
             return $this->root;
         }
-        return $this->customRaiseError("No root");
+        return $this->raiseInstanceError("No root");
     }
 
     /**
@@ -401,7 +401,7 @@ class XML_Tree extends XML_Parser
         if (!is_null($this->root))
         {
             if(!is_object($this->root) || (strtolower(get_class($this->root)) != 'xml_tree_node'))
-            return $this->customRaiseError("Bad XML root node");
+            return $this->raiseInstanceError("Bad XML root node");
             $out .= $this->root->get($this->use_cdata_sections);
         }
         return $out;
@@ -455,24 +455,24 @@ class XML_Tree extends XML_Parser
     function &getNodeAt($path)
     {
         if (is_null($this->root)){
-            return $this->customRaiseError("XML_Tree hasn't a root node");
+            return $this->raiseInstanceError("XML_Tree hasn't a root node");
         }
         if (is_string($path))
             $path = explode("/", $path);
         if (sizeof($path) == 0) {
-            return $this->customRaiseError("Path to node is empty");
+            return $this->raiseInstanceError("Path to node is empty");
         }
         $path1 = $path;
         $rootName = array_shift($path1);
         if ($this->root->name != $rootName) {
-            return $this->customRaiseError("Path does not match the document root");
+            return $this->raiseInstanceError("Path does not match the document root");
         }
         $x = $this->root->getNodeAt($path1);
         if (!PEAR::isError($x)) {
             return $x;
         }
         // No node with that name found
-        return $this->customRaiseError("Bad path to node: [".implode('/', $path)."]");
+        return $this->raiseInstanceError("Bad path to node: [".implode('/', $path)."]");
     }
 
     /**
@@ -488,7 +488,7 @@ class XML_Tree extends XML_Parser
     function &getElementsByTagName($tagName)
     {
         if (empty($tagName)) {
-            return $this->customRaiseError('Empty tag name');
+            return $this->raiseInstanceError('Empty tag name');
         }
         $result = array();
         foreach ($this->root->children as $child) {
@@ -514,7 +514,7 @@ class XML_Tree extends XML_Parser
     function &getElementsByTagNameFromNode($tagName, &$node)
     {
         if (empty($tagName)) {
-            return $this->customRaiseError('Empty tag name');
+            return $this->raiseInstanceError('Empty tag name');
         }
         $result = array();
         foreach ($node->children as $child) {
