@@ -1688,7 +1688,7 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
                                 SET
                                     priority = ".(float)$aAdZonePriority['priority'].",
                                     priority_factor = " . (is_null($aAdZonePriority['priority_factor']) ? 'NULL' : $aAdZonePriority['priority_factor']) . ",
-                                    to_be_delivered = " . ($aAdZonePriority['to_be_delivered'] ? 1 : 0) . "
+                                    to_be_delivered = " . (empty($aAdZonePriority['to_be_delivered']) ? 0 : 1) . "
                                 WHERE
                                     ad_id = {$aAdZonePriority['ad_id']}
                                     AND
@@ -1807,7 +1807,7 @@ class OA_Dal_Maintenance_Priority extends OA_Dal_Maintenance_Common
                             $aAdZonePriority['zone_id'],
                             $aAdZonePriority['required_impressions'],
                             $aAdZonePriority['requested_impressions'],
-                            ($aAdZonePriority['to_be_delivered'] ? 1 : 0),
+                            !empty($aAdZonePriority['to_be_delivered']) ? 1 : 0,
                             $aAdZonePriority['priority'],
                             $aAdZonePriority['priority_factor'],
                             !empty($aAdZonePriority['priority_factor_limited']) ? 1 : 0,
