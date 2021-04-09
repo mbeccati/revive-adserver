@@ -171,7 +171,7 @@ class OA_phpAdsNew
      * @param OA_Upgrade Parent Upgrader class
      * @return bool True on success
      */
-    function checkPANConfigIntegrity(&$oUpgrader)
+    function checkPANConfigIntegrity($oUpgrader)
     {
         $phpAds_config = $this->_getPANConfig();
 
@@ -214,7 +214,7 @@ class OA_phpAdsNew
     }
 
 
-    function phpAds_geoip_getConf($db)
+    public static function phpAds_geoip_getConf($db)
     {
     	$ret = '';
 
@@ -232,7 +232,7 @@ class OA_phpAdsNew
     	return $ret;
     }
 
-    function phpAds_geoip_get_defaults()
+    private static function phpAds_geoip_get_defaults()
     {
     	return array(
     		'COUNTRY_BEGIN'				=> 16776960,
@@ -274,10 +274,10 @@ class OA_phpAdsNew
     	);
     }
 
-    function phpAds_geoip_get_info($fp)
+    private static function phpAds_geoip_get_info($fp)
     {
     	// Default variables
-    	extract(OA_phpAdsNew::phpAds_geoip_get_defaults());
+    	extract(self::phpAds_geoip_get_defaults());
 
     	/* default to GeoIP Country Edition */
     	$databaseType = $GEOIP_COUNTRY_EDITION;
@@ -374,12 +374,12 @@ class OA_phpAdsNew
     	);
     }
 
-    function phpPgAdsIndexToOpenads($index, $table, $prefix)
+    public static function phpPgAdsIndexToOpenads($index, $table, $prefix)
     {
         return substr($index, 0, 30 - strlen($table) - strlen($prefix));
     }
 
-    function phpPgAdsPrefixedIndex($index, $prefix)
+    public static function phpPgAdsPrefixedIndex($index, $prefix)
     {
         return substr($prefix.$index, 0, 31);
     }
