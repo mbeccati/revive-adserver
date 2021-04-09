@@ -532,21 +532,10 @@ class PEAR
             $message     = $message->getMessage();
         }
 
-        if (isset($this) && isset($this->_expected_errors) && sizeof($this->_expected_errors) > 0 && sizeof($exp = end($this->_expected_errors))) {
-            if ($exp[0] == "*" ||
-                (is_int(reset($exp)) && in_array($code, $exp)) ||
-                (is_string(reset($exp)) && in_array($message, $exp))) {
-                $mode = PEAR_ERROR_RETURN;
-            }
-        }
         // No mode given, try global ones
         if ($mode === null) {
             // Class error handler
-            if (isset($this) && isset($this->_default_error_mode)) {
-                $mode    = $this->_default_error_mode;
-                $options = $this->_default_error_options;
-            // Global error handler
-            } elseif (isset($GLOBALS['_PEAR_default_error_mode'])) {
+            if (isset($GLOBALS['_PEAR_default_error_mode'])) {
                 $mode    = $GLOBALS['_PEAR_default_error_mode'];
                 $options = $GLOBALS['_PEAR_default_error_options'];
             }
@@ -554,8 +543,6 @@ class PEAR
 
         if ($error_class !== null) {
             $ec = $error_class;
-        } elseif (isset($this) && isset($this->_error_class)) {
-            $ec = $this->_error_class;
         } else {
             $ec = 'PEAR_Error';
         }
@@ -569,29 +556,7 @@ class PEAR
     }
 
     // }}}
-    // {{{ throwError()
 
-    /**
-     * Simpler form of raiseError with fewer options.  In most cases
-     * message, code and userinfo are enough.
-     *
-     * @param string $message
-     *
-     */
-    function &throwError($message = null,
-                         $code = null,
-                         $userinfo = null)
-    {
-        if (isset($this) && is_a($this, 'PEAR')) {
-            $a = &$this->raiseError($message, $code, null, null, $userinfo);
-            return $a;
-        } else {
-            $a = &PEAR::raiseError($message, $code, null, null, $userinfo);
-            return $a;
-        }
-    }
-
-    // }}}
     public static function staticPushErrorHandling($mode, $options = null)
     {
         $stack = &$GLOBALS['_PEAR_error_handler_stack'];

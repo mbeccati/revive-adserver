@@ -47,7 +47,7 @@ class OA_Dal_ApplicationVariables
     public static function set($name, $value)
     {
         // Load the cache
-        $aVars = OA_Dal_ApplicationVariables::_getAll();
+        $aVars =& OA_Dal_ApplicationVariables::_getAll();
 
         $doAppVar = OA_Dal::factoryDO('application_variable');
         $doAppVar->name  = $name;
@@ -85,7 +85,7 @@ class OA_Dal_ApplicationVariables
      */
     public static function delete($name)
     {
-        $aVars = OA_Dal_ApplicationVariables::_getAll();
+        $aVars =& OA_Dal_ApplicationVariables::_getAll();
 
         $doAppVar = OA_Dal::factoryDO('application_variable');
         $doAppVar->name = $name;

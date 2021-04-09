@@ -113,7 +113,7 @@ class DB_DataObjectCommon extends DB_DataObject
      *
      * @return MAX_Dal_Common|false
      */
-    public static function factoryDAL()
+    public function factoryDAL()
     {
         include_once MAX_PATH . '/lib/max/Dal/Common.php';
         return MAX_Dal_Common::factory($this->_tableName);
@@ -271,7 +271,7 @@ class DB_DataObjectCommon extends DB_DataObject
             foreach ($links as $key => $match) {
                 list($table,$link) = explode(':', $match);
                 $table = $this->getTableWithoutPrefix($table);
-                $doCheck = &$this->getCachedLink($key, $table, $link);
+                $doCheck = $this->getCachedLink($key, $table, $link);
                 if (!$doCheck) {
                     return null;
                 }
@@ -294,9 +294,9 @@ class DB_DataObjectCommon extends DB_DataObject
      * @param string $key
      * @param string $table
      * @param string $link
-     * @return DB_DataObject_Common
+     * @return DB_DataObjectCommon|null
      */
-    function &getCachedLink($key, $table, $link)
+    function getCachedLink($key, $table, $link)
     {
         static $cachedTables;
         if (is_null($cachedTables)) {
@@ -400,7 +400,7 @@ class DB_DataObjectCommon extends DB_DataObject
      */
     function addListOrderBy($listOrder = '', $orderDirection = '')
     {
-        $dalModel = &$this->factoryDAL();
+        $dalModel = $this->factoryDAL();
         if (!$dalModel) {
             return false;
         }
@@ -595,7 +595,7 @@ class DB_DataObjectCommon extends DB_DataObject
             return $links;
         } else {
             $prefixedLinks = array();
-            if ($GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database][$this->_tableName]) {
+            if (!empty($GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database][$this->_tableName])) {
                 $links = $GLOBALS['_DB_DATAOBJECT']['LINKS'][$this->_database][$this->_tableName];
                 foreach ($links as $k => $v) {
                     // add prefix
@@ -1190,13 +1190,14 @@ class DB_DataObjectCommon extends DB_DataObject
     /**
      * Fetch DataObject by property
      *
-     * @param unknown_type $propertyName
-     * @param unknown_type $propertyValue
-     * @return unknown
+     * @param string $propertyName
+     * @param mixed $propertyValue
+     * @return string|false
      */
     function loadByProperty($propertyName, $propertyValue)
     {
         $fields = $this->table();
+
         if (!isset($fields[$propertyName])) {
             MAX::raiseError($propertyName.' is not a field in table '.$this->getTableWithoutPrefix(), PEAR_LOG_ERR);
             return false;

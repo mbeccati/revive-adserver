@@ -65,7 +65,7 @@ class ConfigMigration
         	// Make sure config is always read from ini file
         	unset($GLOBALS['_MAX']['CONF'][$module]);
         }
-    	
+
     	$conf = MAX_Plugin::getConfig($module);
 
     	if (false === $conf) {

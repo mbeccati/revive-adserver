@@ -250,11 +250,7 @@ class DataGenerator
     		if(isset($fieldValue) && !isset($GLOBALS['dataGeneratorDontOptimize'])) { //hack for quick test fix
     		    $doAncestor->$foreignKey = $fieldValue;
     		} else {
-        		if (isset($this) && is_a($this, 'DataGenerator')) {
-        		    $doAncestor->$foreignKey = $this->addAncestor($ancestorTable);
-        		} else {
-        		    $doAncestor->$foreignKey = DataGenerator::addAncestor($ancestorTable);
-        		}
+                $doAncestor->$foreignKey = DataGenerator::addAncestor($ancestorTable);
     		}
     	}
     	DataGenerator::trackData($table);
@@ -305,30 +301,6 @@ class DataGenerator
         }
     }
 
-    /**
-     * Return value for a specified field in the table
-     * if it was previously set in data container
-     *
-     * @param string $table     Table name
-     * @param string $fieldName Field (column) name
-     * @return mixed Data defined for field or null if data wasn't prepared in data container
-     * @access package private
-     * @static
-     */
-    private static function getFieldValueFromDataContainer($table, $fieldName, $counter = 0)
-    {
-        if (isset($this)) {
-            if (isset($this->data[$table]) && isset($this->data[$table][$fieldName])) {
-                if (is_array($this->data[$table][$fieldName])) {
-                    $index = $counter % count($this->data[$table][$fieldName]);
-                    return $this->data[$table][$fieldName][$index];
-                } else {
-                    return $this->data[$table][$fieldName];
-                }
-            }
-        }
-        return null;
-    }
     /**
      * Return (or set) a default field value based individual dataobjects default array
      *
