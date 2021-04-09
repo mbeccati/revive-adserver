@@ -890,7 +890,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             $file = $this->getPathToPackages().$name.'.xml';
             if (!@file_exists($file))
             {
-                if ($GLOBALS['installing'] && file_exists(str_replace('/plugins/', '/extensions/', $file))) {
+                if (!empty($GLOBALS['installing']) && file_exists(str_replace('/plugins/', '/extensions/', $file))) {
                     $file = str_replace('/plugins/', '/extensions/', $file);
                 } else {
                     $this->_logError('Failed to find package definition file '.$file);
@@ -1010,20 +1010,16 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
         }
         foreach ($aPackage AS $k => &$v)
         {
-            if (!is_array($v))
-            {
+            if (!is_array($v)) {
                 $aPkgInfo[$k] = $v;
-            }
-            else if ($k == 'install')
-            {
-                foreach ($v['contents'] AS $i => &$aPlugin)
-                {
+            } else if ($k == 'install') {
+                foreach ($v['contents'] AS $i => $aPlugin) {
                     $aPlugins[] = $aPlugin['name'];
                 }
-                if ($getComponentGroupInfo)
-                {
+
+                if ($getComponentGroupInfo) {
                     $aPkgInfo['contents'] = $this->getComponentGroupsList($aPlugins);
-                    $aPkgInfo['extensions'] = $v['components'];
+                    $aPkgInfo['extensions'] = $v['components'] ?? [];
                 }
             }
             unset($aPkgInfo['extends']);

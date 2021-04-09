@@ -425,7 +425,7 @@ class OA_Maintenance_Priority_DeliveryLimitation
         // Finally, bitwise AND the results of the operation groups
         // (as these are the inverse of normal, where they are ORed)
         foreach ($aOperationGroupResults as $groupLimitation) {
-            if (is_null($result)) {
+            if (!isset($result)) {
                 $result = $groupLimitation;
             } else {
                 $result &= $groupLimitation;

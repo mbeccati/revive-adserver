@@ -16,6 +16,8 @@ require_once MAX_PATH . '/lib/OA/Maintenance/Priority/AdServer/Task/GetRequiredA
 require_once MAX_PATH . '/lib/OA/ServiceLocator.php';
 require_once MAX_PATH . '/lib/pear/Date.php';
 
+Language_Loader::load('default');
+
 /**
  * A class for testing the OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetime class.
  *
@@ -51,7 +53,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
      * @access private
      * @return OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetime
      */
-    function &_getCurrentTask()
+    function _getCurrentTask()
     {
         $oServiceLocator = OA_ServiceLocator::instance();
         $oDal = new MockMAX_Dal_Entities($this);
@@ -560,7 +562,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
                 )
             )
         );
-        $oAd->__construct($aParam);
+        (new ReflectionMethod(OA_Maintenance_Priority_Ad::class, '__construct'))->invoke($oAd, $aParam);
         $totalRequiredAdImpressions = 120;
         $oDate = new Date('2006-02-15 12:07:01');
         $oCampaignExpiryDate = new Date('2006-12-15 23:59:59');
@@ -593,7 +595,8 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
                 )
             )
         );
-        $oAd->__construct($aParam);
+        (new ReflectionMethod(OA_Maintenance_Priority_Ad::class, '__construct'))->invoke($oAd, $aParam);
+        //(new ReflectionMethod(OA_Maintenance_Priority_Ad::class, '__construct'))->invoke($oAd, $aParam);
         $totalRequiredAdImpressions = 110;
         $oDate = new Date('2006-02-15 12:07:01');
         $oCampaignExpiryDate = new Date('2006-02-15 23:59:59');
@@ -602,7 +605,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
             '_getCumulativeZoneForecast',
             array()
         );
-        $oGetRequiredAdImpressionsLifetime->__construct();
+        (new ReflectionMethod(OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetime::class, '__construct'))->invoke($oGetRequiredAdImpressionsLifetime);
         $oDeliveryLimitaions = new OA_Maintenance_Priority_DeliveryLimitation($oAd->getDeliveryLimitations());
         $aAdZones = array(array('zone_id' => 1));
         $result = $oGetRequiredAdImpressionsLifetime->_getAdImpressions(
@@ -631,7 +634,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
                 )
             )
         );
-        $oAd->__construct($aParam);
+        (new ReflectionMethod(OA_Maintenance_Priority_Ad::class, '__construct'))->invoke($oAd, $aParam);
         $totalRequiredAdImpressions = 110;
         $oDate = new Date('2006-02-15 12:07:01');
         $oCampaignExpiryDate = new Date('2006-02-15 23:59:59');
@@ -644,7 +647,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
             '_getCumulativeZoneForecast',
             $aCumulativeZoneForecast
         );
-        $oGetRequiredAdImpressionsLifetime->__construct();
+        (new ReflectionMethod(OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetime::class, '__construct'))->invoke($oGetRequiredAdImpressionsLifetime);
         $oDeliveryLimitaions = new OA_Maintenance_Priority_DeliveryLimitation($oAd->getDeliveryLimitations());
         $remainingOIs = OX_OperationInterval::getIntervalsRemaining($oDate, $oCampaignExpiryDate);
         $oDeliveryLimitaions->getActiveAdOperationIntervals($remainingOIs, $oDate, $oCampaignExpiryDate);
@@ -675,7 +678,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
                 )
             )
         );
-        $oAd->__construct($aParam);
+        (new ReflectionMethod(OA_Maintenance_Priority_Ad::class, '__construct'))->invoke($oAd, $aParam);
         $totalRequiredAdImpressions = 110;
         $oDate = new Date('2006-02-15 12:07:01');
         $oCampaignExpiryDate = new Date('2006-02-15 23:59:59');
@@ -710,7 +713,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
             '_getCumulativeZoneForecast',
             $aCumulativeZoneForecast
         );
-        $oGetRequiredAdImpressionsLifetime->__construct();
+        (new ReflectionMethod(OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetime::class, '__construct'))->invoke($oGetRequiredAdImpressionsLifetime);
         $oDeliveryLimitaions = new OA_Maintenance_Priority_DeliveryLimitation($oAd->getDeliveryLimitations());
         $remainingOIs = OX_OperationInterval::getIntervalsRemaining($oDate, $oCampaignExpiryDate);
         $oDeliveryLimitaions->getActiveAdOperationIntervals($remainingOIs, $oDate, $oCampaignExpiryDate);
@@ -741,7 +744,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
                 )
             )
         );
-        $oAd->__construct($aParam);
+        (new ReflectionMethod(OA_Maintenance_Priority_Ad::class, '__construct'))->invoke($oAd, $aParam);
         $totalRequiredAdImpressions = 110;
         $oDate = new Date('2006-02-15 12:07:01');
         $oCampaignExpiryDate = new Date('2006-02-15 23:59:59');
@@ -776,7 +779,7 @@ class Test_OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetim
             '_getCumulativeZoneForecast',
             $aCumulativeZoneForecast
         );
-        $oGetRequiredAdImpressionsLifetime->__construct();
+        (new ReflectionMethod(OA_Maintenance_Priority_AdServer_Task_GetRequiredAdImpressionsLifetime::class, '__construct'))->invoke($oGetRequiredAdImpressionsLifetime);
         $oDeliveryLimitaions = new OA_Maintenance_Priority_DeliveryLimitation($oAd->getDeliveryLimitations());
         $remainingOIs = OX_OperationInterval::getIntervalsRemaining($oDate, $oCampaignExpiryDate);
         $oDeliveryLimitaions->getActiveAdOperationIntervals($remainingOIs, $oDate, $oCampaignExpiryDate);

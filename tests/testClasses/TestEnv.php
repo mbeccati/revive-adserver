@@ -63,7 +63,7 @@ class TestEnv
     static function setupCoreTables()
     {
         OA_DB_Table_Core::destroy();
-        $oTable = &OA_DB_Table_Core::singleton();
+        $oTable = OA_DB_Table_Core::singleton();
         $oTable->createAllTables();
     }
 

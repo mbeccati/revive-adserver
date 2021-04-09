@@ -127,7 +127,7 @@ class OA_Maintenance_Priority_Ad
         $this->type   = isset($aParams['type']) ? $aParams['type'] : null;
         $this->weight = isset($aParams['weight']) ? $aParams['weight'] : null;
         // Set the object's data access layer objects
-        $this->oMaxDalMaintenancePriority = &$this->_getOA_Dal_Maintenance_Priority();
+        $this->oMaxDalMaintenancePriority = $this->_getOA_Dal_Maintenance_Priority();
     }
 
     /**
