@@ -14,7 +14,7 @@ require_once MAX_PATH . '/lib/OA/Dal/DataGenerator.php';
 require_once MAX_PATH . '/lib/OA/Email.php';
 require_once MAX_PATH . '/lib/OA/Admin/UI/UserAccess.php';
 
-Language_Loader::load('default');
+Language_Loader::load();
 
 /**
  * A class for testing the OA_Email class.
