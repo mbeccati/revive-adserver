@@ -101,7 +101,7 @@ class OA_Maintenance_Priority_Ad
             }
             if (count($aParams) == 4) {
                 if (isset($aParams['status'])) {
-                    if ($aParams['status'] === OA_ENTITY_STATUS_RUNNING) {
+                    if ($aParams['status'] == OA_ENTITY_STATUS_RUNNING) {
                         $aParams['active'] = true;
                     } else {
                         $aParams['active'] = false;

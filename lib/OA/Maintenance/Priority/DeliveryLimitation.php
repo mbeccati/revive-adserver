@@ -324,7 +324,8 @@ class OA_Maintenance_Priority_DeliveryLimitation
         $aDates = OX_OperationInterval::convertDateToOperationIntervalStartAndEndDates($oTempDate);
         while ($aDates['start']->before($oEndDateCopy)) {
             // Increase the count for this day of the week
-            $aDays[$aDates['start']->getDayOfWeek()]++;
+            $dow = $aDates['start']->getDayOfWeek();
+            $aDays[$dow] = ($aDays[$dow] ?? 0) + 1;
             // Go to the next day
             $oTempDate->addSeconds(SECONDS_PER_DAY);
             $aDates = OX_OperationInterval::convertDateToOperationIntervalStartAndEndDates($oTempDate);
@@ -339,7 +340,7 @@ class OA_Maintenance_Priority_DeliveryLimitation
             $aDates = OX_OperationInterval::convertDateToOperationIntervalStartAndEndDates($oTempDate);
             for ($counter = 0; $counter < 7; $counter++) {
                 // Are there any instances of this day in the campaign?
-                if ($aDays[$oTempDate->getDayOfWeek()] > 0) {
+                if (!empty($aDays[$oTempDate->getDayOfWeek()])) {
                     // Calculate the sum of the zone forecasts for this day of week
                     $aDates = OX_OperationInterval::convertDateToOperationIntervalStartAndEndDates($oTempDate);
                     $dayStartOperationIntervalId = OX_OperationInterval::convertDateToOperationIntervalID($aDates['start']);

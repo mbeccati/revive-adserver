@@ -50,14 +50,6 @@ class Test_Priority extends UnitTestCase
     var $intervalsPerWeek;
 
     /**
-     * The constructor method.
-     */
-    function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * A method to be run before all tests.
      */
     function setUp()

@@ -155,7 +155,7 @@ class TestEnv
         file_put_contents($aFile['tmp_name'], file_get_contents($file));
         if (file_exists($aFile['tmp_name']))
         {
-            $oPkgMgr = & TestEnv::getPluginPackageManager($noDb);
+            $oPkgMgr = TestEnv::getPluginPackageManager($noDb);
             $result = $oPkgMgr->installPackage($aFile);
             if (!$result)
             {
@@ -177,7 +177,7 @@ class TestEnv
     {
         $_POST['token'] = phpAds_SessionGetToken();
 
-        $oPkgMgr = & TestEnv::getPluginPackageManager($noDb);
+        $oPkgMgr = TestEnv::getPluginPackageManager($noDb);
 
         $result = $oPkgMgr->uninstallPackage($pkgName, true);
         /*if (!$result)
