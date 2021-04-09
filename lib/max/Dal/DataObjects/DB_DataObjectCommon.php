@@ -550,11 +550,11 @@ class DB_DataObjectCommon extends DB_DataObject
             return true;
         }
 
-        $condistions = array();
+        $conditions = array();
         foreach ($values as $value) {
-            $condistions[] = $field." = '".$this->escape($value)."'";
+            $conditions[] = $field." = '".$this->escape($value)."'";
         }
-        $query = implode ($condistions, ' OR ');
+        $query = implode (' OR ', $conditions );
         return $this->whereAdd($query, $logic);
     }
 
