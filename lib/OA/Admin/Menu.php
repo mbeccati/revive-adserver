@@ -73,7 +73,7 @@ class OA_Admin_Menu
         return $oMenu;
     }
 
-    public function _loadFromCache($accountType)
+    public static function _loadFromCache($accountType)
     {
         $oCache = new OA_Cache('Menu', $accountType);
         $oCache->setFileNameProtection(false);

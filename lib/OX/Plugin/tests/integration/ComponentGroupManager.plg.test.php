@@ -194,7 +194,7 @@ class Test_OX_Plugin_ComponentGroupManager extends UnitTestCase
         $this->assertEqual($oSection->aSections[2]->id, $oSection3->id);
 
         $this->assertTrue($oMenu->_saveToCache(OA_ACCOUNT_ADMIN));
-        $oMenu = $oMenu->_loadFromCache(OA_ACCOUNT_ADMIN);
+        $oMenu = OA_Admin_Menu::_loadFromCache(OA_ACCOUNT_ADMIN);
 
         $this->assertIsA($oMenu, 'OA_Admin_Menu');
 

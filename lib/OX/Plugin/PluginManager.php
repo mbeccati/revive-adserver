@@ -598,7 +598,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 			OA_ACCOUNT_TRAFFICKER,
 		);
 		foreach($accountTypes as $accountType) {
-		    OA_Admin_Menu::singleton()->_clearCache($accountType);
+            OA_Admin_Menu::_clearCache($accountType);
 		}
     }
 
