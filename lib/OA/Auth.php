@@ -34,7 +34,7 @@ class OA_Auth
         static $authPlugin;
         static $authPluginType;
 
-        if (!isset($authPlugin) || $authPluginType != $authType) {
+        if (!isset($authPlugin) || null === $authPluginType) {
             $aConf = $GLOBALS['_MAX']['CONF'];
             if (!empty($aConf['authentication']['type'])) {
                 $authType = $aConf['authentication']['type'];
