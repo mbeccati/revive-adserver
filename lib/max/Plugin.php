@@ -347,7 +347,7 @@ class MAX_Plugin
             // Check that the method name can be called
             if (!is_callable(array($oPlugin, $methodName))) {
                 $message = "Method '$methodName()' not defined in class '" .
-                            MAX_Plugin::_getPluginClassName($oPlugin->module, $oPlugin->package, $oPlugin->name) . "'.";
+                            MAX_Plugin::_getPluginClassName($oPlugin->extension, $oPlugin->group, $oPlugin->name) . "'.";
                 MAX::raiseError($message, MAX_ERROR_INVALIDARGS);
                 return false;
             }
