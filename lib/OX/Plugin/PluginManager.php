@@ -1213,7 +1213,8 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 		$pattPluginDefFile = '/'.preg_quote($aConf['pluginPaths']['packages'],'/').'[\w\d]+\.xml/';
 		$pattGroupDefFile = '/'.preg_quote($aConf['pluginPaths']['packages'],'/').'[\w\d]+\/[\w\d]+\.xml/';
 		// find all of the xml definition files and compile a smiple array of files that are stored in the zipfile (exclude folders)
-		foreach ($aContents AS $i => &$aItem)
+        $aPkgFile = [];
+        foreach ($aContents AS $i => &$aItem)
 		{
 	        $aPath = pathinfo($aItem['filename']);
 	        $file = '/'.$aItem['filename'];
@@ -1221,7 +1222,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 	        {
 	            continue;
 	        }
-	        if ((!$aPkgFile) && preg_match($pattPluginDefFile, $file, $aMatches)) // its a plugin definition file
+	        if (!$aPkgFile && preg_match($pattPluginDefFile, $file, $aMatches)) // its a plugin definition file
 	        {
 	            $this->_logMessage('detected plugin definition file '.$file);
 	            $aPkgFile['pathinfo']   = $aPath;
@@ -1430,7 +1431,10 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
     {
 		require_once( MAX_PATH . '/lib/pclzip/pclzip.lib.php' );
 
-    	define('OS_WINDOWS',((substr(PHP_OS, 0, 3) == 'WIN') ? 1 : 0));
+		if (!defined('OS_WINDOWS')) {
+            define('OS_WINDOWS',((substr(PHP_OS, 0, 3) == 'WIN') ? 1 : 0));
+        }
+
 		$oZip = new PclZip( $source );
 
 		if (!$overwrite)
@@ -1446,6 +1450,9 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 		    $this->_logError('Unrecoverable decompression error: '.$oZip->errorName(true));
 			return false;
 		}
+
+        $error = false;
+
         foreach ($result as $i => &$aInfo)
         {
             if ($aInfo['status'] != 'ok')

@@ -218,7 +218,7 @@ class OX_Component
      *               given directory parameter, and "filename" is the filename
      *               before the OX_COMPONENT_SUFFIX extension of the file.
      */
-    private static function _getComponentsFiles($extension, $group = null, $recursive = 1)
+    public static function _getComponentsFiles($extension, $group = null, $recursive = 1)
     {
         $aResult = array();
         $aConf = $GLOBALS['_MAX']['CONF'];
@@ -335,12 +335,12 @@ class OX_Component
      * @return mixed The result of the static method call, or false on failure to include
      *               the plugin.
      */
-    function &callStaticMethod($extension, $group, $component = null, $staticMethod, $aParams = null)
+    public static function callStaticMethod($extension, $group, $component, $staticMethod, $aParams = null)
     {
         if ($component === null) {
             $component = $group;
         }
-        if (!self::_isGroupEnabled($group, $extension))
+        if (!self::_isGroupEnabled($group))
         {
             return false;
         }
@@ -377,7 +377,7 @@ class OX_Component
      * @param array $aParams An optional array of parameters to pass to the method called.
      * @return mixed An array of the results of the method calls, or false on error.
      */
-    function &callOnComponents(&$aComponents, $methodName, $aParams = null)
+    public static function callOnComponents(&$aComponents, $methodName, $aParams = null)
     {
         if (!is_array($aComponents)) {
             MAX::raiseError('Bad argument: Not an array of components.', MAX_ERROR_INVALIDARGS);
@@ -463,7 +463,7 @@ class OX_Component
      * @param string $extension The extension to get the fallback handler for
      * @return object The handler object
      */
-    function &getFallbackHandler($extension)
+    public static function getFallbackHandler($extension)
     {
         //$path = $GLOBALS['_MAX']['CONF']['pluginPaths']['plugins'].$extension.'/';
         $fileName = LIB_PATH.'/Extension/'.$extension.'/'.$extension.'.php';

@@ -33,7 +33,7 @@ class OX
     {
         global $installing;
         $aConf = $GLOBALS['_MAX']['CONF'];
-        $assetsVersion = $aConf['webpath']['adminAssetsVersion'];
+        $assetsVersion = $aConf['webpath']['adminAssetsVersion'] ?? '';
         $prefix = $installing ? '' : MAX::constructURL(MAX_URL_ADMIN, '');
     	$pathWithSuffix = $prefix . "assets";
         if (strlen($assetsVersion))

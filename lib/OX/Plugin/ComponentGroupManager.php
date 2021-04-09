@@ -372,7 +372,7 @@ class OX_Plugin_ComponentGroupManager
                             'method' =>'_checkNavigationCheckers',
                             'params' => array(
                                               $aGroup['name'],
-                                              $aGroup['install']['navigation']['checkers'],
+                                              $aGroup['install']['navigation']['checkers'] ?? [],
                                               $aGroup['install']['files']
                                              ),
                             );
@@ -1380,15 +1380,12 @@ class OX_Plugin_ComponentGroupManager
         {
             return true;
         }
-        $aCheckers = $this->_prepareMenuCheckers($name, $aMenus['checkers'], $aFiles);
+        $aCheckers = $this->_prepareMenuCheckers($name, $aMenus['checkers'] ?? [], $aFiles);
         foreach ($aMenus AS $accountType => &$aMenu)
         {
-            if (!$this->aMenuObjects[$accountType])
-            {
+            if (empty($this->aMenuObjects[$accountType])) {
                 $oMenu = $this->_getMenuObject($accountType);
-            }
-            else
-            {
+            } else {
                 $oMenu = $this->aMenuObjects[$accountType];
             }
             foreach ($aMenu as $idx => &$aMenu)
