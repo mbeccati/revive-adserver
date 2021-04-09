@@ -310,7 +310,7 @@ class Date_TimeZone
      * @access public
      * @return mixed an array of strings with the valid time zone IDs
      */
-    function getAvailableIDs()
+    public static function getAvailableIDs()
     {
         global $_DATE_TIMEZONE_DATA;
         return array_keys($_DATE_TIMEZONE_DATA);
