@@ -143,7 +143,7 @@ class OX_Admin_UI_Event_EventDispatcher
     private function getKey($callback): ?string
     {
         if ($callback instanceof Closure) {
-            return $callback::class;
+            return get_class($callback);
         }
 
         if (is_array($callback)) {
