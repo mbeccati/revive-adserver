@@ -1309,9 +1309,7 @@ class OA_DB_Upgrade
                 }
                 else
                 {
-                    $this->oTable->dropTable($this->prefix.$table);
-                    if (!$this->_isPearError($result, 'error removing table '.$this->prefix.$table))
-                    {
+                    if ($this->oTable->dropTable($this->prefix.$table)) {
                         if (!$this->_executeMigrationMethodTable($table, 'afterRemoveTable'))
                         {
                             $this->_halt();
