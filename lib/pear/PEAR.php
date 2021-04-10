@@ -669,6 +669,9 @@ class PEAR
     public static function popErrorHandling()
     {
         $stack = &$GLOBALS['_PEAR_error_handler_stack'];
+        if (!count($stack)) {
+            throw new \RuntimeException("");
+        }
         array_pop($stack);
         list($mode, $options) = $stack[sizeof($stack) - 1];
         array_pop($stack);

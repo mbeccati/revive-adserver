@@ -1647,7 +1647,7 @@ class OA_Upgrade
                                              )
                                        );
         $this->_writeRecoveryFile();
-        if (!$this->runScript($this->aPackage['prescript']))
+        if (!$this->runScript($this->aPackage['prescript'] ?? null))
         {
             $this->oLogger->logError('Failure in upgrade prescript '.$this->aPackage['prescript']);
             return false;
@@ -1657,7 +1657,7 @@ class OA_Upgrade
             $this->oLogger->logError('Failure while upgrading schemas');
             return false;
         }
-        if (!$this->runScript($this->aPackage['postscript']))
+        if (!$this->runScript($this->aPackage['postscript'] ?? null))
         {
             $this->oLogger->logError('Failure in upgrade postscript '.$this->aPackage['postscript']);
             return false;
@@ -1988,11 +1988,12 @@ class OA_Upgrade
         if (in_array($tblTmp, $aExistingTables))
         {
             $result = $this->oDbh->exec("DROP TABLE {$tblTmpQuoted}");
-        }
-        if (PEAR::isError($result))
-        {
-            $this->oLogger->logError('Test privileges table already exists and you don\'t have permissions to remove it');
-            return false;
+
+            if (PEAR::isError($result))
+            {
+                $this->oLogger->logError('Test privileges table already exists and you don\'t have permissions to remove it');
+                return false;
+            }
         }
 
         $result = $this->oDbh->exec("CREATE TABLE {$tblTmpQuoted} (tmp int)");
@@ -2002,7 +2003,6 @@ class OA_Upgrade
             return false;
         }
         $result   = $this->oDbh->manager->listTableFields($tblTmp);
-        PEAR::popErrorHandling();
         if (PEAR::isError($result))
         {
             $this->oDbh->exec("DROP TABLE {$tblTmpQuoted}");

@@ -53,10 +53,8 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 
     var $previousVersionInstalled;
 
-    function __construct()
-    {
-        $this->init();
-    }
+    /** @var string */
+    public $basePath;
 
     /**
      * return the path to the packages folder
@@ -899,7 +897,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             }
         }
         $this->aParse['package'] = $this->parseXML($file);
-        if (!$this->aParse['package'] )
+        if (empty($this->aParse['package']))
         {
             $this->_logError('Error parsing package definition for '.$name);
             return false;

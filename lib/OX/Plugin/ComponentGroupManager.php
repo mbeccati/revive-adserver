@@ -504,7 +504,7 @@ class OX_Plugin_ComponentGroupManager
      *
      * @param string $input_file
      * @param string $classname
-     * @return boolean
+     * @return array|false
      */
     function parseXML($input_file, $classname='OX_ParserComponentGroup')
     {
@@ -521,7 +521,8 @@ class OX_Plugin_ComponentGroupManager
         }
         $result = $oParser->setInputFile($input_file);
         if (PEAR::isError($result)) {
-            return $result;
+            $this->_logError('problem setting the input file: '.$result->getMessage());
+            return false;
         }
         $result = $oParser->parse();
         if (PEAR::isError($result))
@@ -1388,9 +1389,9 @@ class OX_Plugin_ComponentGroupManager
             } else {
                 $oMenu = $this->aMenuObjects[$accountType];
             }
-            foreach ($aMenu as $idx => &$aMenu)
+            foreach ($aMenu as $idx => $aMenuPart)
             {
-                if (!$this->_addMenuSection($oMenu, $aMenu, $aCheckers))
+                if (!$this->_addMenuSection($oMenu, $aMenuPart, $aCheckers))
                 {
                     return false;
                 }
@@ -1571,19 +1572,19 @@ class OX_Plugin_ComponentGroupManager
         $file = $this->getPathToComponentGroup($name).'etc/'.$file;
         if (!file_exists($file))
         {
-            $this->_logError('File does not exist '.$path.$file);
+            $this->_logError('File does not exist '.$file);
             return false;
         }
         $className = '';
-        if (!@require_once $path.$file)
+        if (!@require_once $file)
         {
-            $this->_logError('Failed to acquire file '.$path.$file);
+            $this->_logError('Failed to acquire file '.$file);
             return false;
         }
         if (!empty($className)) {
-            $aClassNames[$path.$file] = $className;
+            $aClassNames[$file] = $className;
         } else {
-            $className = $aClassNames[$path.$file];
+            $className = $aClassNames[$file];
         }
         // $classname is declared in script
         $oScript = $this->_instantiateClass($className);
@@ -1937,7 +1938,7 @@ class OX_Plugin_ComponentGroupManager
                 $aParse = $this->parseXML($file);
                 if (isset($aParse['install']['navigation'][$accountType]))
                 {
-                    $aCheckers = $this->_prepareMenuCheckers($name, $aParse['install']['navigation']['checkers'], $aParse['install']['files']);
+                    $aCheckers = $this->_prepareMenuCheckers($name, $aParse['install']['navigation']['checkers'] ?? null, $aParse['install']['files'] ?? null);
                     foreach ($aParse['install']['navigation'][$accountType] as $idx => &$aMenu)
                     {
                         if (!$this->_addMenuSection($oMenu, $aMenu, $aCheckers))
@@ -1959,88 +1960,62 @@ class OX_Plugin_ComponentGroupManager
      * @param array $aCheckers
      * @return boolean
      */
-    function _addMenuSection(&$oMenu, &$aMenu, &$aCheckers)
+    function _addMenuSection($oMenu, $aMenu, $aCheckers)
     {
-        if (isset($aMenu['exclusive'])) {
-            if ($aMenu['exclusive'] == 'true' || $aMenu['exclusive'] == '1') {
-                $aMenu['exclusive'] = true;
-            } else {
-                $aMenu['exclusive'] = false;
-            }
-        }
-        if ($aMenu['add'])
-        {
-            if ($oMenu->get($aMenu['add'],false))
-            {
+        if (!empty($aMenu['add'])) {
+            if ($oMenu->get($aMenu['add'], false)) {
                 // menu already exists
-                $this->_logError('Menu already exists for '.$aMenu['add']);
+                $this->_logError('Menu already exists for ' . $aMenu['add']);
                 return false;
             }
-            $oMenuSection = new OA_Admin_Menu_Section($aMenu['add'], $aMenu['value'], $aMenu['link'], $aMenu['exclusive'], $aMenu['helplink']);
+            $oMenuSection = new OA_Admin_Menu_Section($aMenu['add'], $aMenu['value'], $aMenu['link'], $aMenu['exclusive'] ?? false, $aMenu['helplink'] ?? '');
             $oMenu->add($oMenuSection);
-        }
-        elseif ($aMenu['replace'])
-        {
-			if (!$oMenu->get($aMenu['replace'],false))
-			{
-			    $this->_logError('Menu to replace does not exist '.$aMenu['replace']);
-			    return false;
-			}
-			if( !empty($aMenu['index']) && $aMenu['index'] != $aMenu['replace'])
-			{
-			    $this->_logError('When replacing a menu, you can\'t define an \'index\' in the menu definition that is different from the menu index it is replacing.
-			    You can also simply remove the \'index='.$aMenu['index'].' from your menu definition file.');
-			    return false;
-			}
-			$oMenuSection = $oMenu->get($aMenu['replace'], false);
-			if($aMenu['value']) $oMenuSection->setNameKey($aMenu['value']);
-			if($aMenu['link']) $oMenuSection->setLink($aMenu['link']);
-			if($aMenu['exclusive']) $oMenuSection->setExclusive($aMenu['exclusive']);
-			if($aMenu['helplink']) $oMenuSection->setHelpLink($aMenu['helplink']);
-			$oMenuSection->setSectionHasBeenReplaced();
-        }
-        else
-		{
-            if ($oMenu->get($aMenu['index'],false))
-            {
-                $this->_logError('Menu already exists for '.$aMenu['index']);
+        } elseif (!empty($aMenu['replace'])) {
+            if (!$oMenu->get($aMenu['replace'], false)) {
+                $this->_logError('Menu to replace does not exist ' . $aMenu['replace']);
                 return false;
             }
-            $oMenuSection = new OA_Admin_Menu_Section($aMenu['index'], $aMenu['value'], $aMenu['link'], $aMenu['exclusive'], $aMenu['helplink']);
-            if ($aMenu['addto'])
-            {
-                if (!$oMenu->get($aMenu['addto'],false))
-                {
-                    $this->_logError('Parent menu does not exist for '.$aMenu['addto']);
+            if (!empty($aMenu['index']) && $aMenu['index'] != $aMenu['replace']) {
+                $this->_logError('When replacing a menu, you can\'t define an \'index\' in the menu definition that is different from the menu index it is replacing.
+			    You can also simply remove the \'index=' . $aMenu['index'] . ' from your menu definition file.');
+                return false;
+            }
+            $oMenuSection = $oMenu->get($aMenu['replace'], false);
+            if ($aMenu['value']) $oMenuSection->setNameKey($aMenu['value']);
+            if ($aMenu['link']) $oMenuSection->setLink($aMenu['link']);
+            if ($aMenu['exclusive']) $oMenuSection->setExclusive($aMenu['exclusive']);
+            if ($aMenu['helplink']) $oMenuSection->setHelpLink($aMenu['helplink']);
+            $oMenuSection->setSectionHasBeenReplaced();
+        } else {
+            if ($oMenu->get($aMenu['index'], false)) {
+                $this->_logError('Menu already exists for ' . $aMenu['index']);
+                return false;
+            }
+            $oMenuSection = new OA_Admin_Menu_Section($aMenu['index'], $aMenu['value'], $aMenu['link'], $aMenu['exclusive'] ?? false, $aMenu['helplink'] ?? '');
+            if ($aMenu['addto']) {
+                if (!$oMenu->get($aMenu['addto'], false)) {
+                    $this->_logError('Parent menu does not exist for ' . $aMenu['addto']);
                     return false;
                 }
                 $oMenu->addTo($aMenu['addto'], $oMenuSection);
-            }
-            else if ($aMenu['insertafter'])
-            {
-                if (!$oMenu->get($aMenu['insertafter'],false))
-                {
-                    $this->_logError('Menu to insert after does not exist '.$aMenu['insertafter']);
+            } else if ($aMenu['insertafter']) {
+                if (!$oMenu->get($aMenu['insertafter'], false)) {
+                    $this->_logError('Menu to insert after does not exist ' . $aMenu['insertafter']);
                     return false;
                 }
                 $oMenu->insertAfter($aMenu['insertafter'], $oMenuSection);
-            }
-            else if ($aMenu['insertbefore'])
-            {
-                if (!$oMenu->get($aMenu['insertbefore'],false))
-                {
-                    $this->_logError('Menu to insert before does not exist '.$aMenu['insertbefore']);
+            } else if ($aMenu['insertbefore']) {
+                if (!$oMenu->get($aMenu['insertbefore'], false)) {
+                    $this->_logError('Menu to insert before does not exist ' . $aMenu['insertbefore']);
                     return false;
                 }
                 $oMenu->insertBefore($aMenu['insertbefore'], $oMenuSection);
             }
         }
-        if ($aMenu['checker'])
-        {
+        if (!empty($aMenu['checker'])) {
             $checkerClassName = $aMenu['checker'];
             @include_once MAX_PATH . $aCheckers[$checkerClassName]['path'];
-            if (class_exists($checkerClassName))
-            {
+            if (class_exists($checkerClassName)) {
                 $oMenu->addCheckerIncludePath($checkerClassName, $aCheckers[$checkerClassName]['path']);
                 $oChecker = new $checkerClassName;
                 $oMenuSection->setChecker($oChecker);

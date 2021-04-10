@@ -135,7 +135,7 @@ class OA_Environment_Manager
             $aResult['memory_limit'] = OA_MEMORY_UNLIMITED;
         }
 
-        $aResult['original_memory_limit'] = $GLOBALS['_OX']['ORIGINAL_MEMORY_LIMIT'];
+        $aResult['original_memory_limit'] = $GLOBALS['_OX']['ORIGINAL_MEMORY_LIMIT'] ?? -1;
         if ($aResult['original_memory_limit'] == -1) {
             $aResult['original_memory_limit'] = OA_MEMORY_UNLIMITED;
         }
