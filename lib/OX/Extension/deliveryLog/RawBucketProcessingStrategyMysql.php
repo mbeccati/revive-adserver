@@ -41,7 +41,7 @@ class OX_Extension_DeliveryLog_RawBucketProcessingStrategyMysql implements OX_Ex
     public function processBucket($oBucket, $oEnd)
     {
         $sTableName = $oBucket->getBucketTableName();
-        $oMainDbh =& OA_DB_Distributed::singleton();
+        $oMainDbh = OA_DB_Distributed::singleton();
 
         if (PEAR::isError($oMainDbh)) {
             MAX::raiseError($oMainDbh, MAX_ERROR_DBFAILURE, PEAR_ERROR_DIE);

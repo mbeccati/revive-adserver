@@ -55,7 +55,7 @@ class OA_DB
      * @return MDB2_Driver_Common|PEAR_Error An MDB2 connection resource, or PEAR_Error
      *                            on failure to connect.
      */
-    static function singleton($dsn = null, $aDriverOptions = array())
+    public static function singleton($dsn = null, $aDriverOptions = [])
     {
         $aConf = $GLOBALS['_MAX']['CONF'];
 
