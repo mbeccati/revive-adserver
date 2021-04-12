@@ -690,7 +690,7 @@ class OA_Dll_Zone extends OA_Dll
         return false;
     }
 
-    function generateTags($zoneId, $codeType, $aParams = null)
+    function generateTags($zoneId, $codeType, $aParams = [])
     {
         // Backwards Compatibity Array for code types
         $aBackwardsCompatibityTypes = array (

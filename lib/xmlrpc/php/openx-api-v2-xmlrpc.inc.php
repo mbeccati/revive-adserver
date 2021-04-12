@@ -1269,7 +1269,7 @@ class OA_Api_Xmlrpc
 
     function generateTags($zoneId, $codeType, $aParams = null)
     {
-        if (!isset($aParams)) {
+        if (null === $aParams) {
             $aParams = array();
         }
         return $this->_sendWithSession('ox.generateTags', array((int)$zoneId, $codeType, $aParams));
