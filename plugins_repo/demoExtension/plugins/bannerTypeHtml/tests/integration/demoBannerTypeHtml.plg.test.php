@@ -13,6 +13,8 @@
 require_once LIB_PATH . '/Plugin/Component.php';
 require_once MAX_PATH . '/lib/OA/Dal/DataGenerator.php';
 
+Language_Loader::load();
+
 /**
  * A class for testing the Plugins_DeliveryLimitations_Client_Domain class.
  *
@@ -37,12 +39,12 @@ class Plugins_TestOfPlugins_demoBannerTypeHtml extends UnitTestCase
     function test_genericHtml_class()
     {
         // test the class implementation
-        $oComponent = &OX_Component::factory('bannerTypeHtml', 'demoBannerTypeHtml', 'demoHtml');
+        $oComponent = OX_Component::factory('bannerTypeHtml', 'demoBannerTypeHtml', 'demoHtml');
         // common extension methods
         $this->_assertClass($oComponent, 'bannerTypeHtml', 'demoBannerTypeHtml', 'demoHtml');
         // plugin-specific methods
-        $this->assertTrue(method_exists($oComponent, '_buildHtmlTemplate'), $sender.' missing method _buildHtmlTemplate');
-        $this->assertTrue(method_exists($oComponent, 'exportData'), $sender.' missing method exportData');
+        $this->assertTrue(method_exists($oComponent, '_buildHtmlTemplate'), 'missing method _buildHtmlTemplate');
+        $this->assertTrue(method_exists($oComponent, 'exportData'), 'missing method exportData');
 
         // generate test data
         $doBanners = OA_Dal::factoryDO('banners');
