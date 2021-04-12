@@ -799,14 +799,17 @@ class OA_DB_Upgrade
     {
 
         $aResult = $this->oAuditor->queryAuditUpgradeStartedByUpgradeId($id);
-        if ($this->_isPearError($aResult))
+        if ($this->_isPearError($aResult) || empty($aResult))
         {
             $this->_logError('failed to retrieve the details of the schema that was upgraded');
-            $aResult[0]['schema_name'] = 'unkown';
-            $aResult[1]['info2']       = 'unkown';
+            $aResult = [
+                'schema_name' => 'unknown',
+                'info2' => 'unknown',
+            ];
+        } else {
+            $schemaName = $aResult[0]['schema_name'];
+            $versionInitialSchema = $aResult[0]['info2'];
         }
-        $schemaName = $aResult[0]['schema_name'];
-        $versionInitialSchema = $aResult[0]['info2'];
 
         $this->aRestoreTables   = array();
         $this->aAddedTables     = array();

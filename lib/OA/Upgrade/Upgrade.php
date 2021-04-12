@@ -838,12 +838,7 @@ class OA_Upgrade
                      );
             if ($valid)
             {
-//                if (!$this->initDatabaseConnection())
-//                {
-//                    $this->existing_installation_status = OA_STATUS_PAN_DBCONNECT_FAILED;
-//                    return false;
-//                }
-                if ($this->oDbh->dbsyntax == 'pgsql') {
+                if (null !== $this->oDbh && $this->oDbh->dbsyntax === 'pgsql') {
                     // Openads 2.0 for PostgreSQL
                     $this->versionInitialSchema['tables_core'] = '049';
                 } else {
@@ -891,7 +886,7 @@ class OA_Upgrade
         if ($this->oPAN->detected)
         {
             $GLOBALS['_MAX']['CONF']['database'] = $this->oPAN->aDsn['database'];
-            $GLOBALS['_MAX']['CONF']['table']    = $this->oPAN->aDsn['table'];
+            $GLOBALS['_MAX']['CONF']['table']    = $this->oPAN->aDsn['table'] ?? null;
             $this->existing_installation_status = OA_STATUS_M01_CONFIG_DETECTED;
             if (PEAR::isError($this->oPAN->oDbh))
             {
@@ -947,7 +942,7 @@ class OA_Upgrade
      */
     function detectMAX($skipIntegrityCheck = false)
     {
-        if ($GLOBALS['_MAX']['CONF']['max']['installed'])
+        if (!empty($GLOBALS['_MAX']['CONF']['max']['installed']))
         {
             $this->existing_installation_status = OA_STATUS_MAX_CONFIG_DETECTED;
             if (!$this->initDatabaseConnection())
@@ -996,7 +991,7 @@ class OA_Upgrade
     {
         if (empty($aSchema))
         {
-            $path_schema = $this->oDBUpgrader->path_schema;
+            $path_schema = $this->oDBUpgrader->path_schema ?? '';
             $file_schema = $this->oDBUpgrader->file_schema;
             $aSchema['name'] = 'tables_core';
         }
@@ -1355,12 +1350,6 @@ class OA_Upgrade
         {
             $GLOBALS['_OA']['CONNECTIONS']  = array();
             $GLOBALS['_MDB2_databases']     = array();
-            if (PEAR::isError($result))
-            {
-                $this->oLogger->logError($result->getMessage());
-                $this->oLogger->logErrorUnlessEmpty($result->getUserInfo());
-                return false;
-            }
 
             //attempt to create DB
             $result = OA_DB::createDatabase($this->aDsn['database']['name']);
@@ -1493,16 +1482,10 @@ class OA_Upgrade
         {
             foreach ($this->aPackageList AS $k => $this->package_file)
             {
-                if (!$this->upgradeExecute($this->package_file))
-                {
-                    $halt = true;
-                    break;
+                if (!$this->upgradeExecute($this->package_file)) {
+                    return false;
                 }
             }
-        }
-        if ($halt)
-        {
-            return false;
         }
         // when upgrading from a milestone version such as pan or max
         // run through this upgrade again
@@ -1662,7 +1645,7 @@ class OA_Upgrade
             $this->oLogger->logError('Failure in upgrade postscript '.$this->aPackage['postscript']);
             return false;
         }
-        if (!$this->oVersioner->putApplicationVersion($this->aPackage['versionTo'], $this->aPackage['product']))
+        if (!$this->oVersioner->putApplicationVersion($this->aPackage['versionTo'], $this->aPackage['product'] ?? null))
         {
             $this->oLogger->logError('Failed to update '.$this->aPackage['product'].' version to '.$this->aPackage['versionTo']);
             $this->message = 'Failed to update '.$this->aPackage['product'].' version to '.$this->aPackage['versionTo'];
@@ -2255,7 +2238,7 @@ class OA_Upgrade
             }
             $this->aPackage     = $this->oParser->aPackage;
             $this->aDBPackages  = $this->aPackage['db_pkgs'];
-            $this->aPackage['versionFrom'] = ($this->aPackage['versionFrom'] ? $this->aPackage['versionFrom'] : $this->versionInitialApplication);
+            $this->aPackage['versionFrom'] = ($this->aPackage['versionFrom'] ??  $this->versionInitialApplication);
         }
         else
         {

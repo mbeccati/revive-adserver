@@ -21,7 +21,7 @@ class OA_phpAdsNew
     var $oDbh;
 
     var $detected   = false;
-    var $aDsn       = false;
+    var $aDsn       = [];
     var $aConfig    = false;
     //var $aPanConfig = false;
     var $pathCfg    = '/var/';
@@ -78,7 +78,7 @@ class OA_phpAdsNew
             file_put_contents($tmpFile, $config);
             include $tmpFile;
             unlink($tmpFile);
-            if (is_array($phpAds_config))
+            if (isset($phpAds_config) && is_array($phpAds_config))
             {
                 $this->detected = true;
                 return $phpAds_config;
