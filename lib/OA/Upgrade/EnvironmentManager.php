@@ -406,12 +406,12 @@ class OA_Environment_Manager
         }
 
         // Test that mbstring function overloading is disabled
-        if ($this->aInfo['PHP']['actual']['mbstring.func_overload']) {
+        if (!empty($this->aInfo['PHP']['actual']['mbstring.func_overload'])) {
             $this->aInfo['PHP']['error']['mbstring.func_overload'] = 'mbstring function overloading must be disabled';
         }
 
         // Test that at least one of the required database extensions are loaded
-        if (!($this->aInfo['PHP']['actual']['mysql'] || $this->aInfo['PHP']['actual']['mysqli'] || $this->aInfo['PHP']['actual']['pgsql'])) {
+        if (empty($this->aInfo['PHP']['actual']['mysql']) && empty($this->aInfo['PHP']['actual']['mysqli']) && empty($this->aInfo['PHP']['actual']['pgsql'])) {
             $this->aInfo['PHP']['error']['mysql'] = $this->aInfo['PHP']['error']['mysqli'] = $this->aInfo['PHP']['error']['pgsql'] =
                 'At least one of these database extensions must be loaded';
         }
@@ -439,10 +439,16 @@ class OA_Environment_Manager
      */
     function checkOriginalMemory()
     {
-        if ($this->aInfo['PHP']['actual']['original_memory_limit'] != OA_MEMORY_UNLIMITED && ($this->aInfo['PHP']['actual']['original_memory_limit'] > 0) && ($this->aInfo['PHP']['actual']['original_memory_limit'] < OX_getMinimumRequiredMemory())) {
-            return false;
+        if (!isset($this->aInfo['PHP']['actual']['original_memory_limit'])) {
+            return true;
         }
-        return true;
+
+        if (OA_MEMORY_UNLIMITED == $this->aInfo['PHP']['actual']['original_memory_limit']) {
+            return true;
+        }
+
+        return $this->aInfo['PHP']['actual']['original_memory_limit'] < 0 ||
+            $this->aInfo['PHP']['actual']['original_memory_limit'] >= OX_getMinimumRequiredMemory();
     }
 
     /**
@@ -464,20 +470,20 @@ class OA_Environment_Manager
         {
             if ($aFile['error'])
             {
-                if (is_null($this->aInfo['PERMS']['error']['filePerms']))
+                if (empty($this->aInfo['PERMS']['error']['filePerms']))
                 {
-                    if (DIRECTORY_SEPARATOR == '\\') {
+                    if (DIRECTORY_SEPARATOR === '\\') {
                         $this->aInfo['PERMS']['error']['filePerms'] = $GLOBALS['strErrorWritePermissionsWin'];
                     } else {
                         $this->aInfo['PERMS']['error']['filePerms'] = $GLOBALS['strErrorWritePermissions'];
                     }
                 }
-                if (DIRECTORY_SEPARATOR != '\\') {
+                if (DIRECTORY_SEPARATOR !== '\\') {
                     $this->aInfo['PERMS']['error']['filePerms'] .= "<br />" . sprintf($GLOBALS[$aFile['string']], $aFile['file']);
                 }
             }
         }
-        if (!is_null($this->aInfo['PERMS']['error']['filePerms']))
+        if (!empty($this->aInfo['PERMS']['error']['filePerms']))
         {
             $this->aInfo['PERMS']['error']['filePerms'] .= "<br />" . $GLOBALS['strCheckDocumentation'];
             return false;

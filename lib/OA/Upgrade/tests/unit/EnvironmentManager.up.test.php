@@ -434,61 +434,18 @@ class Test_OA_Environment_Manager extends UnitTestCase
      */
     function _testValidEnvironmentManagerObject($oEnvironmentManager, $aErrors = array(), $aWarnings = array())
     {
-        if (in_array('version', $aWarnings)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['warning']['version']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['warning']['version']);
-        }
-        if (in_array('memory_limit', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error']['memory_limit']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error']['memory_limit']);
-        }
-        if (in_array('memory_limit', $aWarnings)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['warning']['memory_limit']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['warning']['memory_limit']);
-        }
-        if (in_array('safe_mode', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error']['safe_mode']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error']['safe_mode']);
-        }
-        if (in_array('file_uploads', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error']['file_uploads']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error']['file_uploads']);
-        }
-        if (in_array('pcre', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error']['pcre']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error']['pcre']);
-        }
-        if (in_array('xml', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error']['xml']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error']['xml']);
-        }
-        if (in_array('zlib', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error']['zlib']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error']['zlib']);
-        }
-        if (in_array('mysql', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error']['mysql']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error']['mysql']);
-        }
-        if (in_array('spl', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error']['spl']);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error']['spl']);
-        }
-        if (in_array('OA_ENV_ERROR_PHP_TIMEOUT', $aErrors)) {
-            $this->assertNotNull($oEnvironmentManager->aInfo['PHP']['error'][OA_ENV_ERROR_PHP_TIMEOUT]);
-        } else {
-            $this->assertNull($oEnvironmentManager->aInfo['PHP']['error'][OA_ENV_ERROR_PHP_TIMEOUT]);
-        }
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['warning']['version']), in_array('version', $aWarnings));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error']['memory_limit']), in_array('memory_limit', $aErrors));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['warning']['memory_limit']), in_array('memory_limit', $aWarnings));
+
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error']['safe_mode']), in_array('safe_mode', $aErrors));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error']['file_uploads']), in_array('file_uploads', $aErrors));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error']['pcre']), in_array('pcre', $aErrors));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error']['xml']), in_array('xml', $aErrors));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error']['zlib']), in_array('zlib', $aErrors));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error']['mysql']), in_array('mysql', $aErrors));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error']['spl']), in_array('spl', $aErrors));
+        $this->assertEqual(isset($oEnvironmentManager->aInfo['PHP']['error'][OA_ENV_ERROR_PHP_TIMEOUT]), in_array('OA_ENV_ERROR_PHP_TIMEOUT', $aErrors));
     }
 
     function test_buildFilePermArrayItem()
@@ -562,7 +519,7 @@ class Test_OA_Environment_Manager extends UnitTestCase
                                                     'recurse'   => true,
                                                     'result'    => 'NOT writeable',
                                                     'error'     => true,
-                                                    'string'    => '',
+                                                    'string'    => 'strErrorFixPermissionsRCommand',
                                                   );
 
         $this->assertFalse($oEnvMgr->_checkCriticalFilePermissions(),'');
