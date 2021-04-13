@@ -116,6 +116,10 @@ class Migration
 
     function _setupSQLStatements()
     {
+        if (null === $this->oDBH) {
+            return;
+        }
+
         switch ($this->oDBH->dbsyntax)
         {
             case 'mysql':
