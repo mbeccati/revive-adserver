@@ -123,7 +123,7 @@ class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTest
 
                 // Create the OX_Maintenance_Statistics_Task_SetUpdateRequirements
                 // object and run the task
-                $oSetUpdateRequirements->__construct($this);
+                (new ReflectionMethod(OX_Maintenance_Statistics_Task_SetUpdateRequirements::class, '__construct'))->invoke($oSetUpdateRequirements);
                 $oSetUpdateRequirements->run();
 
                 // Test the results of the task run
@@ -186,7 +186,7 @@ class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTest
 
                 // Create the OX_Maintenance_Statistics_Task_SetUpdateRequirements
                 // object and run the task
-                $oSetUpdateRequirements->__construct($this);
+                (new ReflectionMethod(OX_Maintenance_Statistics_Task_SetUpdateRequirements::class, '__construct'))->invoke($oSetUpdateRequirements);
                 $oSetUpdateRequirements->run();
 
                 // Test the results of the task run
@@ -273,7 +273,7 @@ class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTest
 
                 // Create the OX_Maintenance_Statistics_Task_SetUpdateRequirements
                 // object and run the task
-                $oSetUpdateRequirements->__construct($this);
+                (new ReflectionMethod(OX_Maintenance_Statistics_Task_SetUpdateRequirements::class, '__construct'))->invoke($oSetUpdateRequirements);
                 $oSetUpdateRequirements->run();
 
                 // Test the results of the task run
@@ -355,7 +355,7 @@ class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTest
 
                 // Create the OX_Maintenance_Statistics_Task_SetUpdateRequirements
                 // object and run the task
-                $oSetUpdateRequirements->__construct($this);
+                (new ReflectionMethod(OX_Maintenance_Statistics_Task_SetUpdateRequirements::class, '__construct'))->invoke($oSetUpdateRequirements);
                 $oSetUpdateRequirements->run();
 
                 // Test the results of the task run
