@@ -74,6 +74,11 @@ class OA_phpAdsNew
         {
             $config = file_get_contents(MAX_PATH.$this->pathCfg.$this->fileCfg);
             $config = preg_replace('/set_magic_quotes_runtime\s*\(/', '//$1', $config);
+
+            if (defined('phpAds_installed')) {
+                $config = preg_replace('/define\(\'phpAds_installed/', '//$1', $config);
+            }
+
             $tmpFile = tempnam(MAX_PATH.'/var', 'pan_');
             file_put_contents($tmpFile, $config);
             include $tmpFile;
@@ -89,68 +94,66 @@ class OA_phpAdsNew
 
     function _migratePANConfig($phpAds_config)
     {
-        if (is_array($phpAds_config))
-        {
-            $aResult['ui']['enabled'] = $phpAds_config['ui_enabled'];
-            $aResult['openads']['requireSSL'] = $phpAds_config['ui_forcessl'];
-            $aResult['maintenance']['autoMaintenance'] = $phpAds_config['auto_maintenance'];
-            $aResult['logging']['reverseLookup'] = $phpAds_config['reverse_lookup'];
-            $aResult['logging']['proxyLookup'] = $phpAds_config['proxy_lookup'];
-            $aResult['logging']['adImpressions'] = $phpAds_config['log_adviews'];
-            $aResult['logging']['adClicks'] = $phpAds_config['log_adclicks'];
-            $aResult['logging']['ignoreHosts'] = join(',', $phpAds_config['ignore_hosts']);
-            $aResult['logging']['blockAdImpressions'] = $phpAds_config['block_adviews'];
-            $aResult['logging']['blockAdClicks'] = $phpAds_config['block_adclicks'];
-            $aResult['p3p']['policies'] = $phpAds_config['p3p_policies'];
-            $aResult['p3p']['compactPolicy'] = $phpAds_config['p3p_compact_policy'];
-            $aResult['p3p']['policyLocation'] = $phpAds_config['p3p_policy_location'];
-            $aResult['delivery']['acls'] = $phpAds_config['acl'];
-            $aResult['delivery']['execPhp'] = $phpAds_config['type_html_php'];
+        if (is_array($phpAds_config)) {
+            $aResult['ui']['enabled'] = $phpAds_config['ui_enabled'] ?? true;
+            $aResult['openads']['requireSSL'] = $phpAds_config['ui_forcessl'] ?? false;
+            $aResult['maintenance']['autoMaintenance'] = $phpAds_config['auto_maintenance'] ?? true;
+            $aResult['logging']['reverseLookup'] = $phpAds_config['reverse_lookup'] ?? false;
+            $aResult['logging']['proxyLookup'] = $phpAds_config['proxy_lookup'] ?? false;
+            $aResult['logging']['adImpressions'] = $phpAds_config['log_adviews'] ?? true;
+            $aResult['logging']['adClicks'] = $phpAds_config['log_adclicks'] ?? true;
+            $aResult['logging']['ignoreHosts'] = join(',', $phpAds_config['ignore_hosts'] ?? []);
+            $aResult['logging']['blockAdImpressions'] = $phpAds_config['block_adviews'] ?? false;
+            $aResult['logging']['blockAdClicks'] = $phpAds_config['block_adclicks'] ?? false;
+            $aResult['p3p']['policies'] = $phpAds_config['p3p_policies'] ?? '';
+            $aResult['p3p']['compactPolicy'] = $phpAds_config['p3p_compact_policy'] ?? '';
+            $aResult['p3p']['policyLocation'] = $phpAds_config['p3p_policy_location'] ?? '';
+            $aResult['delivery']['acls'] = $phpAds_config['acl'] ?? true;
+            $aResult['delivery']['execPhp'] = $phpAds_config['type_html_php'] ?? false;
 
             if (!empty($phpAds_config['table_type'])) {
-                $aResult['database']['type']    = extension_loaded('mysql') ? 'mysql' : 'mysqli';
-                $aResult['table']['type']       = $phpAds_config['table_type'];
+                $aResult['database']['type'] = extension_loaded('mysqli') ? 'mysqli' : 'mysql';
+                $aResult['table']['type'] = $phpAds_config['table_type'];
             } else {
-                $aResult['database']['type']    = 'pgsql';
-                $aResult['table']['type']       = '';
+                $aResult['database']['type'] = 'pgsql';
+                $aResult['table']['type'] = '';
             }
 
-            $aResult['database']['username']    = $phpAds_config['dbuser'];
-            $aResult['database']['password']    = $phpAds_config['dbpassword'];
-            $aResult['database']['name']        = $phpAds_config['dbname'];
-            $aResult['database']['persistent']  = $phpAds_config['persistent_connections'];
+            $aResult['database']['username'] = $phpAds_config['dbuser'] ?? '';
+            $aResult['database']['password'] = $phpAds_config['dbpassword'] ?? '';
+            $aResult['database']['name'] = $phpAds_config['dbname'] ?? '';
+            $aResult['database']['persistent'] = $phpAds_config['persistent_connections'] ?? false;
 
-            $aResult['table']['prefix']         = $phpAds_config['table_prefix'];
+            $aResult['table']['prefix'] = $phpAds_config['table_prefix'] ?? '';
 
             // Required for ACLs upgrade recompile mechanism
-            $aResult['table']['banners']        = 'banners';
-            $aResult['table']['channel']        = 'channel';
+            $aResult['table']['banners'] = 'banners';
+            $aResult['table']['channel'] = 'channel';
 
             // pan has a setting dblocal to indicate a socket connection
             // max v0.1 doesn't, just have to detect if the port is a port number or socket path
-            $aResult['database']['host']        = ($phpAds_config['dbhost'] ? $phpAds_config['dbhost'] : 'localhost');
-            $aResult['database']['port']        = ($phpAds_config['dbport'] ? $phpAds_config['dbport'] : ($aResult['database']['type'] == 'mysql' || $aResult['database']['type'] == 'mysqli' ? '3306' : '5432') );
-            if (isset($phpAds_config['dblocal']) && $phpAds_config['dblocal']) // must be pan (mysql/pgsql)
-            {
-                $aResult['database']['protocol']    = 'unix';
-                $aResult['database']['socket']      = ($aResult['database']['host'] == 'localhost' ? '' : preg_replace('/^:/', '', $phpAds_config['dbhost']));
-                $aResult['database']['host']        = 'localhost';
+            $aResult['database']['host'] = ($phpAds_config['dbhost'] ?: 'localhost');
+            $aResult['database']['port'] = ($phpAds_config['dbport'] ?: ($aResult['database']['type'] == 'mysql' || $aResult['database']['type'] == 'mysqli' ? '3306' : '5432'));
+            if (!empty($phpAds_config['dblocal'])) {
+                // must be pan (mysql/pgsql)
+                $aResult['database']['protocol'] = 'unix';
+                $aResult['database']['socket'] = ($aResult['database']['host'] == 'localhost' ? '' : preg_replace('/^:/', '', $phpAds_config['dbhost']));
+                $aResult['database']['host'] = 'localhost';
+            } else if (isset($phpAds_config['dbport']) && !is_numeric($phpAds_config['dbport'])) {
+                // must be max v0.1 (mysql only)
+                $aResult['database']['protocol'] = 'unix';
+                $aResult['database']['host'] = 'localhost';
+                $aResult['database']['port'] = '3306';
+                $aResult['database']['socket'] = $phpAds_config['dbport'];
+            } else {
+                $aResult['database']['protocol'] = 'tcp';
+                $aResult['database']['socket'] = '';
             }
-            else if (!is_numeric($phpAds_config['dbport'])) // must be max v0.1 (mysql only)
-            {
-                $aResult['database']['protocol']    = 'unix';
-                $aResult['database']['host']        = 'localhost';
-                $aResult['database']['port']        = '3306';
-                $aResult['database']['socket']      = $phpAds_config['dbport'];
-            }
-            else
-            {
-                $aResult['database']['protocol']    = 'tcp';
-                $aResult['database']['socket']      = '';
-            }
+
             return $aResult;
         }
-        return array();
+
+        return [];
     }
 
     function renamePANConfigFile($prefix='backup_')
