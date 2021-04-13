@@ -2098,11 +2098,11 @@ class OA_Upgrade
             $ok = false;
             if ($this->oDBUpgrader->init('constructive', $aPkg['schema'], $aPkg['version'], false))
             {
-                if ($this->_runUpgradeSchemaPreScript($aPkg['prescript']))
+                if ($this->_runUpgradeSchemaPreScript($aPkg['prescript'] ?? null))
                 {
                     if ($this->oDBUpgrader->upgrade($this->versionInitialSchema[$aPkg['schema']]))
                     {
-                        if ($this->_runUpgradeSchemaPostscript($aPkg['postscript']))
+                        if ($this->_runUpgradeSchemaPostscript($aPkg['postscript'] ?? null))
                         {
                             $ok = true;
                         }
@@ -2116,11 +2116,11 @@ class OA_Upgrade
                 // last param 'true' will reset the object without having to re-parse the schema
                 if ($this->oDBUpgrader->init('destructive', $aPkg['schema'], $aPkg['version'], true))
                 {
-                    if ($this->_runUpgradeSchemaPreScript($aPkg['prescript']))
+                    if ($this->_runUpgradeSchemaPreScript($aPkg['prescript'] ?? null))
                     {
                         if ($this->oDBUpgrader->upgrade($this->versionInitialSchema[$aPkg['schema']]))
                         {
-                            if ($this->_runUpgradeSchemaPostscript($aPkg['postscript']))
+                            if ($this->_runUpgradeSchemaPostscript($aPkg['postscript'] ?? null))
                             {
                                 $ok = true;
                             }
@@ -2130,7 +2130,7 @@ class OA_Upgrade
             }
             if ($ok)
             {
-              $version = ( $aPkg['stamp'] ?  $aPkg['stamp'] : $aPkg['version']);
+              $version = ( $aPkg['stamp'] ?? $aPkg['version']);
               $this->oVersioner->putSchemaVersion($aPkg['schema'],$version);
             }
             else
