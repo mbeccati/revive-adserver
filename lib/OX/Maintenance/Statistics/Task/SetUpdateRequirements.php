@@ -316,7 +316,7 @@ class OX_Maintenance_Statistics_Task_SetUpdateRequirements extends OX_Maintenanc
         // component, to find out what is the date of the earliest
         // logged data that the component knows about
         $aResult = OX_Component::callOnComponents($aDeliveryLogComponents, 'getEarliestLoggedDataDate');
-        if ($aResults === false) {
+        if ($aResult === false) {
             return null;
         }
 

@@ -28,15 +28,6 @@ require_once LIB_PATH . '/OperationInterval.php';
  */
 class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTestCase
 {
-
-    /**
-     * The constructor method.
-     */
-    function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * Test the creation of the class.
      */
@@ -60,7 +51,7 @@ class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTest
         $oServiceLocator = OA_ServiceLocator::instance();
 
         // Create the "log_maintenance_statistics" table required for the tests
-        $oTables =& OA_DB_Table_Core::singleton();
+        $oTables = OA_DB_Table_Core::singleton();
         $oTables->createTable('log_maintenance_statistics');
 
         // Create the "controller" OX_Maintenance_Statistics class, and

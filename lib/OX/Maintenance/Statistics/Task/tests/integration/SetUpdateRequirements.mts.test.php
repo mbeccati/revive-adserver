@@ -15,6 +15,8 @@ require_once MAX_PATH . '/lib/OA/ServiceLocator.php';
 require_once LIB_PATH . '/Maintenance/Statistics.php';
 require_once LIB_PATH . '/Maintenance/Statistics/Task/SetUpdateRequirements.php';
 
+Language_Loader::load();
+
 /**
  * A class for testing the OX_Maintenance_Statistics_Task_SetUpdateRequirements class.
  *
@@ -23,15 +25,6 @@ require_once LIB_PATH . '/Maintenance/Statistics/Task/SetUpdateRequirements.php'
  */
 class Test_OX_Maintenance_Statistics_Task_SetUpdateRequirements extends UnitTestCase
 {
-
-    /**
-     * The constructor method.
-     */
-    function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * Tests the _getMaintenanceStatisticsLastRunInfo() method.
      */
