@@ -246,7 +246,8 @@ class SimpleReflection
         $interface = new ReflectionClass($this->_interface);
         $method = $interface->getMethod($name);
         $reference = $method->returnsReference() ? '&' : '';
-        return "function $reference$name(" .
+        $sig = $method->isStatic() ? 'static ' : '';
+        return "public {$sig} function $reference$name(" .
             implode(', ', $this->_getParameterSignatures($method)) .
             ")";
     }
