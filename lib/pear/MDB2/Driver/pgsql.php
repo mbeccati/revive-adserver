@@ -1048,7 +1048,7 @@ class MDB2_Result_pgsql extends MDB2_Result_Common
      * @return int data array on success, a MDB2 error on failure
      * @access public
      */
-    function &fetchRow($fetchmode = MDB2_FETCHMODE_DEFAULT, $rownum = null)
+    function fetchRow($fetchmode = MDB2_FETCHMODE_DEFAULT, $rownum = null)
     {
         if (!is_null($rownum)) {
             $seek = $this->seek($rownum);

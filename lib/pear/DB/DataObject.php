@@ -383,7 +383,7 @@ class DB_DataObject extends DB_DataObject_Overload
 
         $quoteIdentifiers = !empty($_DB_DATAOBJECT['CONFIG']['quote_identifiers']);
         $this->_connect();
-        $DB = &$_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5];
+        $DB = $_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5];
 
         /* We are checking for method modifyLimitQuery as it is PEAR DB specific */
         $sql = 'SELECT ' .

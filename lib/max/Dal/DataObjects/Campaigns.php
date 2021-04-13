@@ -273,13 +273,13 @@ class DataObjects_Campaigns extends DB_DataObjectCommon
                 $aStats = $doDia->getAll(array());
 
                 if (isset($aStats[0])) {
-                    if ($this->views > 0 && $aStats[0]['impressions'] >= $this->views) {
+                    if ($this->views > 0 && ($aStats[0]['impressions'] ?? 0) >= $this->views) {
                         return true;
                     }
-                    if ($this->clicks > 0 && $aStats[0]['clicks'] >= $this->clicks) {
+                    if ($this->clicks > 0 && ($aStats[0]['clicks'] ?? 0) >= $this->clicks) {
                         return true;
                     }
-                    if ($this->conversions > 0 && $aStats[0]['conversions'] >= $this->conversions) {
+                    if ($this->conversions > 0 && ($aStats[0]['conversions'] ?? 0) >= $this->conversions) {
                         return true;
                     }
                 }
