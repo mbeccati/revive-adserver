@@ -512,7 +512,7 @@ class OA_Dal
         return $result;
     }
 
-    private static function batchInsertPlain($tableName, $aFields, $aValues)
+    public static function batchInsertPlain($tableName, $aFields, $aValues)
     {
         if(!is_array($aFields) || !is_array($aValues)) {
             return MAX::raiseError('$aFields and $aData must be arrays', PEAR_ERROR_RETURN);

@@ -3903,10 +3903,8 @@ class DB_DataObject extends DB_DataObject_Overload
      * @param    string $message - message to output
      * @param    string $logtype - bold at start
      * @param    string $level   - output level
-     * @access   public
-     * @return   none
      */
-    function debug($message, $logtype = 0, $level = 1)
+    protected static function debug($message, $logtype = 0, $level = 1): void
     {
         global $_DB_DATAOBJECT;
 
@@ -3914,15 +3912,15 @@ class DB_DataObject extends DB_DataObject_Overload
             (is_numeric($_DB_DATAOBJECT['CONFIG']['debug']) &&  $_DB_DATAOBJECT['CONFIG']['debug'] < $level)) {
             return;
         }
-        // this is a bit flaky due to php's wonderfull class passing around crap..
-        // but it's about as good as it gets..
-        $class = (isset($this) && is_a($this,'DB_DataObject')) ? get_class($this) : 'DB_DataObject';
+
+        $class = get_class();
 
         if (!is_string($message)) {
             $message = print_r($message,true);
         }
+
         if (!is_numeric( $_DB_DATAOBJECT['CONFIG']['debug']) && is_callable( $_DB_DATAOBJECT['CONFIG']['debug'])) {
-            return call_user_func($_DB_DATAOBJECT['CONFIG']['debug'], $class, $message, $logtype, $level);
+            call_user_func($_DB_DATAOBJECT['CONFIG']['debug'], $class, $message, $logtype, $level);
         }
 
         if (!ini_get('html_errors')) {
@@ -3930,6 +3928,7 @@ class DB_DataObject extends DB_DataObject_Overload
             flush();
             return;
         }
+
         if (!is_string($message)) {
             $message = print_r($message,true);
         }
@@ -3943,7 +3942,6 @@ class DB_DataObject extends DB_DataObject_Overload
      *
      * @param   int     $v  level
      * @access  public
-     * @return  none
      */
     function debugLevel($v = null)
     {
