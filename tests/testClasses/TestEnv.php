@@ -38,7 +38,7 @@ class TestEnv
      */
     static function setupDB($ignore_errors = false)
     {
-        $oDbh = &OA_DB::singleton();
+        $oDbh = OA_DB::singleton();
         if (PEAR::isError($oDbh)) {
             $aConf = $GLOBALS['_MAX']['CONF'];
             $result = OA_DB::createDatabase($aConf['database']['name']);

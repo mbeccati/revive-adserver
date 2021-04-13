@@ -219,7 +219,7 @@ class MDB2_Schema extends PEAR
      * @access public
      * @see     MDB2::parseDSN
      */
-    public static function factory(&$db, $options = array())
+    public static function factory($db, $options = array())
     {
         $obj = new MDB2_Schema();
         $err = $obj->connect($db, $options);
