@@ -487,9 +487,9 @@ class Test_OA_Upgrade extends UnitTestCase
     function test_upgradeSchemas()
     {
         $this->_deleteTestAppVarRecord('tables_core', '');
-        $this->assertEqual($this->_getTestAppVarValue('tables_core', ''), '', '');
+        $this->assertEqual($this->_getTestAppVarValue('tables_core'), '', '');
         $this->_createTestAppVarRecord('tables_core', '997');
-        $this->assertEqual($this->_getTestAppVarValue('tables_core', '997'), '997', '');
+        $this->assertEqual($this->_getTestAppVarValue('tables_core'), '997', '');
 
         $this->_createTestAppVarRecord('oa_version','2.3.00');
 
@@ -506,7 +506,7 @@ class Test_OA_Upgrade extends UnitTestCase
         $this->assertTrue($oUpgrade->upgradeSchemas(),'upgradeSchemas');
 
         $this->_checkTablesUpgraded($oUpgrade);
-        $this->assertEqual($this->_getTestAppVarValue('tables_core', '999'), '999', '');
+        $this->assertEqual($this->_getTestAppVarValue('tables_core'), '999', '');
 
         // remove the fake application variable records
         $this->_deleteTestAppVarRecordAllNames('oa_version');
@@ -757,7 +757,7 @@ class Test_OA_Upgrade extends UnitTestCase
         return $id;
     }
 
-    function _getTestAppVarValue($name, $value)
+    function _getTestAppVarValue($name)
     {
         $doApplicationVariable          = OA_Dal::factoryDO('application_variable');
         $doApplicationVariable->name    = $name;

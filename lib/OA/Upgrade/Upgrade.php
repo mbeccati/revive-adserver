@@ -2130,7 +2130,7 @@ class OA_Upgrade
             }
             if ($ok)
             {
-              $version = ( $aPkg['stamp'] ?? $aPkg['version']);
+              $version = ($aPkg['stamp'] ?? '') ?: $aPkg['version'];
               $this->oVersioner->putSchemaVersion($aPkg['schema'],$version);
             }
             else
