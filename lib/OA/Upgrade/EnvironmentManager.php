@@ -439,7 +439,7 @@ class OA_Environment_Manager
      */
     function checkOriginalMemory()
     {
-        if (!isset($this->aInfo['PHP']['actual']['original_memory_limit'])) {
+        if (empty($this->aInfo['PHP']['actual']['original_memory_limit'])) {
             return true;
         }
 
