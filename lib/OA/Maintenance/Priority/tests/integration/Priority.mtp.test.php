@@ -277,7 +277,6 @@ class Test_Priority extends UnitTestCase
 
         // Test 2: Set "previous" date for the MPE run
         $oPreviousDate = new Date('2005-06-15 13:01:01');
-        $previousOperationIntervalID = $currentOperationIntervalID;
         // Test 2: Set "current" date for the MPE run
         $oDate = new Date('2005-06-15 14:01:01');
         $this->oServiceLocator->register('now', $oDate);

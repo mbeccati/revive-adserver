@@ -201,27 +201,27 @@ class OA_Maintenance_Priority_AdServer_Task_PriorityCompensation extends OA_Main
                 foreach ($aAdPastDetails as $aPastDetail) {
                     // Only insert the past details for creatives that are still linked to the same zone
                     if (isset($aZones[$aPastDetail['zone_id']]->aAdverts[$aPastDetail['ad_id']])) {
-                        if (!is_null($aPastDetail['required_impressions'])) {
+                        if (!is_null($aPastDetail['required_impressions'] ?? null)) {
                             $aZones[$aPastDetail['zone_id']]->aAdverts[$aPastDetail['ad_id']]->pastRequiredImpressions
                                 = $aPastDetail['required_impressions'];
                         }
-                        if (!is_null($aPastDetail['requested_impressions'])) {
+                        if (!is_null($aPastDetail['requested_impressions'] ?? null)) {
                             $aZones[$aPastDetail['zone_id']]->aAdverts[$aPastDetail['ad_id']]->pastRequestedImpressions
                                 = $aPastDetail['requested_impressions'];
                         }
-                        if (!is_null($aPastDetail['to_be_delivered'])) {
+                        if (!is_null($aPastDetail['to_be_delivered'] ?? null)) {
                             $aZones[$aPastDetail['zone_id']]->aAdverts[$aPastDetail['ad_id']]->pastToBeDelivered
                                 = $aPastDetail['to_be_delivered'];
                         }
-                        if (!is_null($aPastDetail['impressions'])) {
+                        if (!is_null($aPastDetail['impressions'] ?? null)) {
                             $aZones[$aPastDetail['zone_id']]->aAdverts[$aPastDetail['ad_id']]->pastActualImpressions
                                 = $aPastDetail['impressions'];
                         }
-                        if (!is_null($aPastDetail['priority_factor'])) {
+                        if (!is_null($aPastDetail['priority_factor'] ?? null)) {
                             $aZones[$aPastDetail['zone_id']]->aAdverts[$aPastDetail['ad_id']]->pastAdZonePriorityFactor
                                 = $aPastDetail['priority_factor'];
                         }
-                        if (!is_null($aPastDetail['past_zone_traffic_fraction'])) {
+                        if (!is_null($aPastDetail['past_zone_traffic_fraction'] ?? null)) {
                             $aZones[$aPastDetail['zone_id']]->aAdverts[$aPastDetail['ad_id']]->pastZoneTrafficFraction
                                 = $aPastDetail['past_zone_traffic_fraction'];
                         }
