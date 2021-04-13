@@ -2538,7 +2538,7 @@ class OA_DB_Upgrade
         if (!PEAR::isError($aResult) && count($aResult) > 0) {
             $warning = false;
             foreach ($aResult as $row) {
-                if ($v['revenue_type'] == MAX_FINANCE_CPM) {
+                if ($row['revenue_type'] == MAX_FINANCE_CPM) {
                     $type = 'CPM';
                     $what = 'clicks and/or conversions';
                 } else {
