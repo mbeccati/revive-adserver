@@ -1615,6 +1615,11 @@ class DB_DataObjectCommon extends DB_DataObject
         return false;
     }
 
+    function _getContextId()
+    {
+        return false;
+    }
+
     /**
      * Returns the date transformed into default format (as string)
      *
@@ -1728,7 +1733,7 @@ class DB_DataObjectCommon extends DB_DataObject
         $aAuditFields['key_desc']     = '';
     }
 
-    function _boolToStr($val)
+    public static function _boolToStr($val)
     {
         if (is_numeric($val))
         {
