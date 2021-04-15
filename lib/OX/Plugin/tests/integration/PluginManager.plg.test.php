@@ -121,9 +121,12 @@ class Test_OX_PluginManager extends UnitTestCase
 
         $wrongPath = DIRECTORY_SEPARATOR == '/' ? '/foo' : 'ABC:\Foo';
 
-        $oPackageManager->aErrors = array();
-        $this->assertFalse($oPackageManager->_decompressFile(MAX_PATH.$this->testpathData.'ziptest.zip', $wrongPath));
-        $this->assertEqual(count($oPackageManager->aErrors),3);
+        // Test fails as root
+        if (function_exists('posix_getuid') && 0 !== posix_getuid()) {
+            $oPackageManager->aErrors = array();
+            $this->assertFalse($oPackageManager->_decompressFile(MAX_PATH.$this->testpathData.'ziptest.zip', $wrongPath));
+            $this->assertEqual(count($oPackageManager->aErrors),3);
+        }
 
         $oPackageManager->aErrors = array();
         $this->assertEqual(count($oPackageManager->_decompressFile(MAX_PATH.$this->testpathData.'ziptest.zip', MAX_PATH.'/var/')),3);
