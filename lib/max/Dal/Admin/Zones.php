@@ -151,10 +151,6 @@ class MAX_Dal_Admin_Zones extends MAX_Dal_Common
             $aWebsitesAndZones[$aZone['affiliateid']]['zones'][$aZone['zoneid']] =
                    array (
                      'name'            => $aZone['zonename'],
-//                     'campaign_stats'  => $aZone['campaign_stats'],
-//                     'ecpm'            => $aZone['ecpm'],
-//                     'cr'              => $aZone['cr'],
-//                     'ctr'             => $aZone['ctr'],
                      'linked'          => $aZone['islinked'] ?? false,
                    );
         }

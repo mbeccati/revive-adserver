@@ -1894,15 +1894,15 @@ class DB_DataObject extends DB_DataObject_Overload
         }
 
         global $_DB_DATAOBJECT;
-        if (!isset($_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5])) {
+        if (empty($this->_database_dsn_md5) || !isset($_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5])) {
             $this->_connect();
         }
-        if (isset($_DB_DATAOBJECT['INI'][$this->_database][$this->__table."__keys"])) {
+        if (isset($this->__table) && isset($_DB_DATAOBJECT['INI'][$this->_database][$this->__table."__keys"])) {
             return array_keys($_DB_DATAOBJECT['INI'][$this->_database][$this->__table."__keys"]);
         }
         $this->databaseStructure();
 
-        if (isset($_DB_DATAOBJECT['INI'][$this->_database][$this->__table."__keys"])) {
+        if (isset($this->__table) && isset($_DB_DATAOBJECT['INI'][$this->_database][$this->__table."__keys"])) {
             return array_keys($_DB_DATAOBJECT['INI'][$this->_database][$this->__table."__keys"]);
         }
         return array();

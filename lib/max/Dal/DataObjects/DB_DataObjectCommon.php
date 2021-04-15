@@ -962,7 +962,7 @@ class DB_DataObjectCommon extends DB_DataObject
      */
     function _connect()
     {
-        if ($this->_database_dsn_md5 && !empty($GLOBALS['_DB_DATAOBJECT']['CONNECTIONS'][$this->_database_dsn_md5]) && $this->_database) {
+        if (!empty($this->_database_dsn_md5) && !empty($GLOBALS['_DB_DATAOBJECT']['CONNECTIONS'][$this->_database_dsn_md5]) && $this->_database) {
             return true;
         }
 
