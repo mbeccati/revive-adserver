@@ -53,6 +53,8 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 
     var $previousVersionInstalled;
 
+    protected $configLocked;
+
     /** @var string */
     public $basePath;
 
@@ -308,8 +310,8 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             $aPackage = &$this->aParse['package'];
             $aPlugins = &$this->aParse['plugins'];
             $this->_runExtensionTasks('BeforePluginInstall');
-            $this->_auditSetKeys( array('upgrade_name'=>'install_'.$aPackage['name'],
-                                        'version_to'=>$aPackage['version'],
+            $this->_auditSetKeys( array('upgrade_name'=>'install_'.($aPackage['name'] ?? ''),
+                                        'version_to'=>$aPackage['version'] ?? 0,
                                         'version_from'=>0,
                                         'logfile'=>'plugins.log'
                                         )
@@ -321,12 +323,12 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 
             if (!$this->_installComponentGroups($aPlugins))
             {
-                $this->_logError('Failed to install plugins for package '.$aPackage['name']);
+                $this->_logError('Failed to install plugins for package '.($aPackage['name'] ?? ''));
                 $this->_uninstallComponentGroups($aPlugins);
                 throw new Exception();
             }
             // this sets up conf but leaves package disabled
-            if (!$this->_registerPackage($aPackage['name']))
+            if (!$this->_registerPackage($aPackage['name'] ?? ''))
             {
                 throw new Exception();
             }
@@ -375,7 +377,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
                 throw new Exception('Failed to parse the package definition for '.$name);
             }
             $aPackage = &$this->aParse['package'];
-            if (!$this->_parseComponentGroups($aPackage['install']['contents']))
+            if (!$this->_parseComponentGroups($aPackage['install']['contents'] ?? null))
             {
                 throw new Exception('Failed to parse the plugin definitions contained in package '.$name);
             }
@@ -390,9 +392,9 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
                 throw new Exception('You may not uninstall this plugin at this time');
             }
             $this->_runExtensionTasks('BeforePluginUninstall');
-            $this->_auditSetKeys( array('upgrade_name'=>'uninstall_'.$aPackage['name'],
+            $this->_auditSetKeys( array('upgrade_name'=>'uninstall_'.($aPackage['name'] ?? ''),
                                         'version_to'=>0,
-                                        'version_from'=>$aPackage['version'],
+                                        'version_from'=>$aPackage['version'] ?? 0,
                                         'logfile'=>'plugins.log'
                                         )
                                  );
@@ -410,7 +412,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             {
                 throw new Exception('Failed to unregister package '.$name);
             }
-            if (!$this->_removeFiles('', $aPackage['allfiles']))
+            if (!$this->_removeFiles('', $aPackage['allfiles'] ?? []))
             {
                 $this->_logError('Failed to remove some files belonging to '.$name);
             }
@@ -499,7 +501,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
         foreach ($aPackage['install']['contents'] AS $k => &$plugin)
         {
             if (is_array($plugin)) {
-                if (!$this->enableComponentGroup($plugin['name'], $aPlugins[$k]['extends']))
+                if (!$this->enableComponentGroup($plugin['name'], $aPlugins[$k]['extends'] ?? null))
                 {
                     $this->_logError('Failed to enable plugin '.$plugin['name'].' for package '.$name);
                     $this->disablePackage($name);
@@ -562,7 +564,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
         foreach ($aPackage['install']['contents'] AS $k => &$plugin)
         {
             if (is_array($plugin)) {
-                if (!$this->disableComponentGroup($plugin['name'], $aPlugins[$k]['extends'], $force))
+                if (!$this->disableComponentGroup($plugin['name'], $aPlugins[$k]['extends'] ?? null, $force))
                 {
                     $this->_logError('Failed to disable plugin '.$plugin['name'].' for package '.$name);
                     return false;
@@ -714,7 +716,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             {
                 return false;
             }
-            $aGroupsNew[$idx]['status'] = $aGroup['status'];
+            $aGroupsNew[$idx]['status'] = $aGroup['status'] ?? null;
         }
         return true;
     }
@@ -777,8 +779,8 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
         }
         foreach ($aGroups as $idx => &$aGroup)
         {
-            $this->_auditSetKeys( array('upgrade_name'=>'install_'.$aGroup['name'],
-                                        'version_to'=>$aGroup['version'],
+            $this->_auditSetKeys( array('upgrade_name'=>'install_'.($aGroup['name'] ?? ''),
+                                        'version_to'=>$aGroup['version'] ?? 0,
                                         'version_from'=>0,
                                         'logfile'=>'plugins.log'
                                         )
@@ -790,7 +792,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             $this->_auditSetID();
             if (!$this->installComponentGroup($aGroup))
             {
-                $this->_logError('Failed to install '.$aGroup['name']);
+                $this->_logError('Failed to install '.($aGroup['name'] ?? ''));
                 return false;
             }
             $this->_cacheDependencies(); // need to keep recreating the array
@@ -819,9 +821,9 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
         //krsort($aGroups);
         foreach ($aGroups as $idx => &$aGroup)
         {
-            $this->_auditSetKeys(array('upgrade_name'=>'uninstall_'.$aGroup['name'],
+            $this->_auditSetKeys(array('upgrade_name'=>'uninstall_'.($aGroup['name'] ?? null),
                                             'version_to'=>0,
-                                            'version_from'=>$aGroup['version'],
+                                            'version_from'=>$aGroup['version'] ?? 0,
                                             'logfile'=>'plugins.log'
                                             )
                                      );
@@ -832,7 +834,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             $this->_auditSetID();
             if (!$this->uninstallComponentGroup($aGroup))
             {
-                $this->_logError('Failed to uninstall '.$aGroup['name']);
+                $this->_logError('Failed to uninstall '.($aGroup['name'] ?? null));
                 return false;
             }
             $this->_cacheDependencies(); // need to keep recreating the array
