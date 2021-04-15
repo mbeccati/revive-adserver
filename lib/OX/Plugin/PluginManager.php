@@ -647,7 +647,6 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
         foreach ($aContents as $idx => &$aElement)
         {
             $aResult[$idx]['error'] = false;
-            $error = false;
             $file = $this->getFilePathToXMLInstall($aElement['name']);
             if (!@file_exists($file))
             {
@@ -678,8 +677,6 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 					$this->_logError('Failed to parse plugin definition in '.$file);
 				}
 
-				$this->_logError($errorMsg);
-
                 $this->aParse['plugins'][$idx]['error'] = true;
                 if ($returnOnError)
                 {
@@ -688,7 +685,6 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             }
             else
             {
-                //$aResult[$idx] = $aParsed;
                 $this->aExtensionsAffected[] = $this->aParse['plugins'][$idx]['extends'];
             }
         }
@@ -1048,20 +1044,18 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
             $aPackage['error']  = true;
             $this->_logError('Package is missing any plugin declarations');
         }
-        $err = $this->_parseComponentGroups($aPackage['install']['contents'],false);
+        $this->_parseComponentGroups($aPackage['install']['contents'],false);
         $aPlugins = &$this->aParse['plugins'];
         if (isset($aPlugins['error']) && $aPlugins['error'])
         {
             $aPackage['error']  = true;
             $aPackage['errors'] = $this->aErrors;
         }
-        if ($getComponentGroupInfo)
-        {
-            foreach ($aPlugins as $idx => &$aPlugin)
-            {
+        if ($getComponentGroupInfo) {
+            foreach ($aPlugins as $idx => &$aPlugin) {
                 $this->clearErrors();
-                if (!$aPlugin['error'])
-                {
+
+                if (empty($aPlugin['error'])) {
                     $aPlugins[$idx]['error'] = false;
                     $aPlugins[$idx]['errors'] = array();
                     $this->_canUpgradeComponentGroup($aPlugin);
@@ -1439,7 +1433,7 @@ class OX_PluginManager extends OX_Plugin_ComponentGroupManager
 		{
 		    $result = $oZip->extract( PCLZIP_OPT_REPLACE_NEWER, PCLZIP_OPT_PATH, $target, PCLZIP_OPT_SET_CHMOD, OX_PLUGIN_DIR_WRITE_MODE);
 		}
-		if($result == 0)
+		if(!$result)
 		{
 		    $this->_logError('Unrecoverable decompression error: '.$oZip->errorName(true));
 			return false;

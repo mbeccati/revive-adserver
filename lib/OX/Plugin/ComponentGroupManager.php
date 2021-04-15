@@ -221,7 +221,7 @@ class OX_Plugin_ComponentGroupManager
         return UPGRADE_ACTION_UPGRADE_SUCCEEDED;
     }
 
-    public function diagnoseComponentGroup(&$aGroup)
+    public function diagnoseComponentGroup($aGroup)
     {
         $aTaskList = $this->getDiagnosticTasks($aGroup);
 
@@ -262,7 +262,7 @@ class OX_Plugin_ComponentGroupManager
      * @param array $aGroup
      * @return array
      */
-    function getDiagnosticTasks(&$aGroup)
+    function getDiagnosticTasks($aGroup)
     {
         $aTaskList[] = array(
                             'method' =>'_checkOpenXCompatibility',
@@ -310,7 +310,7 @@ class OX_Plugin_ComponentGroupManager
                             'method' =>'_checkNavigationCheckers',
                             'params' => array(
                                               $aGroup['name'],
-                                              $aGroup['install']['navigation']['checkers'],
+                                              $aGroup['install']['navigation']['checkers'] ?? [],
                                               $aGroup['install']['files']
                                              ),
                             );
@@ -324,7 +324,7 @@ class OX_Plugin_ComponentGroupManager
      * @param array $aGroup
      * @return array
      */
-    function getInstallTasks(&$aGroup)
+    function getInstallTasks($aGroup)
     {
         $aTaskList[] = array(
                             'method' =>'_checkOpenXCompatibility',
@@ -435,7 +435,7 @@ class OX_Plugin_ComponentGroupManager
      * @param array $aGroup
      * @return array
      */
-    function getRollbackTasks(&$aGroup)
+    function getRollbackTasks($aGroup)
     {
         /*$aTaskList[] = array(
                             'method' =>'_checkDependenciesForUninstallOrDisable',
@@ -618,6 +618,8 @@ class OX_Plugin_ComponentGroupManager
         } elseif (file_exists(str_replace('/plugins/', '/extensions/', $file))) {
             return str_replace('/plugins/', '/extensions/', $file);
         }
+
+        return $file;
     }
 
     /**
@@ -1791,7 +1793,7 @@ class OX_Plugin_ComponentGroupManager
      * return only the schema portion of the array
      *
      * @param string $name
-     * @return array
+     * @return array|false
      */
     function _getDataObjectSchema($name)
     {
@@ -1799,7 +1801,7 @@ class OX_Plugin_ComponentGroupManager
         if (!file_exists($file))
         {
             $this->_logError('Unable to determine schema requirements for '.$name.' - could not locate definition at '.$file);
-            return $false;
+            return false;
         }
         $aGroup = $this->parseXML($file, 'OX_ParserComponentGroup');
         return $aGroup['install']['schema'];
@@ -2160,7 +2162,7 @@ class OX_Plugin_ComponentGroupManager
      * return only the configuration portion of the array
      *
      * @param string $name
-     * @return array
+     * @return array|false
      */
     function _getComponentGroupConfiguration($name)
     {
@@ -2168,7 +2170,7 @@ class OX_Plugin_ComponentGroupManager
         if (!file_exists($file))
         {
             $this->_logError('Unable to determine configuration requirements for '.$name.' - could not locate definition at '.$file);
-            return $false;
+            return false;
         }
         $aGroup = $this->parseXML($file);
         return $aGroup['install']['conf'];
