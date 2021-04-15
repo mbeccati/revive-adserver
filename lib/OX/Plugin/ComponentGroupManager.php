@@ -1415,7 +1415,7 @@ class OX_Plugin_ComponentGroupManager
         $aCheckers = array();
         if ($aMenuCheckers && $aFiles) {
             foreach($aMenuCheckers as &$aChecker) {
-                foreach ($aFiles as &$aFile)
+                foreach ($aFiles as $aFile)
                 {
                     if ($aFile['name'] == $aChecker['include']) {
                         $aChecker['path'] = $this->_expandFilePath($aFile['path'], $aFile['name'], $name);
@@ -1987,24 +1987,28 @@ class OX_Plugin_ComponentGroupManager
             if ($aMenu['helplink']) $oMenuSection->setHelpLink($aMenu['helplink']);
             $oMenuSection->setSectionHasBeenReplaced();
         } else {
+            if (!isset($aMenu['index'], $aMenu['value'], $aMenu['link'])) {
+                $this->_logError('Menu definition is missing index, value or link');
+                return false;
+            }
             if ($oMenu->get($aMenu['index'], false)) {
                 $this->_logError('Menu already exists for ' . $aMenu['index']);
                 return false;
             }
             $oMenuSection = new OA_Admin_Menu_Section($aMenu['index'], $aMenu['value'], $aMenu['link'], $aMenu['exclusive'] ?? false, $aMenu['helplink'] ?? '');
-            if ($aMenu['addto']) {
+            if (!empty($aMenu['addto'])) {
                 if (!$oMenu->get($aMenu['addto'], false)) {
                     $this->_logError('Parent menu does not exist for ' . $aMenu['addto']);
                     return false;
                 }
                 $oMenu->addTo($aMenu['addto'], $oMenuSection);
-            } else if ($aMenu['insertafter']) {
+            } elseif (!empty($aMenu['insertafter'])) {
                 if (!$oMenu->get($aMenu['insertafter'], false)) {
                     $this->_logError('Menu to insert after does not exist ' . $aMenu['insertafter']);
                     return false;
                 }
                 $oMenu->insertAfter($aMenu['insertafter'], $oMenuSection);
-            } else if ($aMenu['insertbefore']) {
+            } elseif (!empty($aMenu['insertbefore'])) {
                 if (!$oMenu->get($aMenu['insertbefore'], false)) {
                     $this->_logError('Menu to insert before does not exist ' . $aMenu['insertbefore']);
                     return false;
@@ -2024,9 +2028,9 @@ class OX_Plugin_ComponentGroupManager
         return true;
     }
 
-    function &_getOA_Admin_Menu($accountType)
+    function _getOA_Admin_Menu()
     {
-        return new OA_Admin_Menu($accountType);
+        return new OA_Admin_Menu();
     }
 
     /**
@@ -2037,7 +2041,7 @@ class OX_Plugin_ComponentGroupManager
      */
     function _getMenuObject($accountType)
     {
-        $oMenu = $this->_getOA_Admin_Menu($accountType);
+        $oMenu = $this->_getOA_Admin_Menu();
         if (empty($oMenu->aAllSections))
         {
             include_once MAX_PATH. '/lib/OA/Admin/Menu/config.php';
