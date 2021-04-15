@@ -63,7 +63,7 @@ class OX_Maintenance_Statistics_Task_MigrateBucketData extends OX_Maintenance_St
     function run()
     {
         $aConf = $GLOBALS['_MAX']['CONF'];
-        if ($this->oController->updateIntermediate) {
+        if ($this->oController && $this->oController->updateIntermediate) {
 
             // Locate all plugin components which may require bucket data to be
             // migrated from bucket tables to statistics tables
