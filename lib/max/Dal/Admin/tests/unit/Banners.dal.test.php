@@ -230,7 +230,7 @@ class MAX_Dal_Admin_BannersTest extends DalUnitTestCase
         $doBanners = OA_Dal::factoryDO('banners');
         $doBanners->description = 'foo';
         $doBanners->alt = 'bar';
-        $doBanners->campaignid = $campaignId;
+        $doBanners->campaignid = 0;
         $doBanners->ext_bannertype = DataObjects_Banners::BANNER_TYPE_MARKET;
         $doBanners->acls_updated = '2007-04-03 18:39:45';
         $aData = array(

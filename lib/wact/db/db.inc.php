@@ -93,7 +93,7 @@ class DBC {
     * @return Record reference
     * @access public
     */
-    function NewRecord($DataSpace = NULL) {
+    public static function NewRecord($DataSpace = NULL) {
         $connection = DBC::getCurrentConnection();
         return $connection->NewRecord($DataSpace);
     }
@@ -104,7 +104,7 @@ class DBC {
     * @see http://wact.sourceforge.net/index.php/NewRecordSet
     * @param string SQL statement
     * @param object filter class (optional)
-    * @return MySqlRecordSet reference
+    * @return RecordSet reference
     */
     public static function NewRecordSet($query, $filter = NULL) {
         $connection = DBC::getCurrentConnection();
@@ -118,7 +118,7 @@ class DBC {
     * @param string SQL statement
     * @param object pager
     * @param object filter class (optional)
-    * @return MySqlRecordSet reference
+    * @return RecordSet reference
     */
     public static function NewPagedRecordSet($query, &$pager, $filter = NULL) {
         $connection = DBC::getCurrentConnection();
