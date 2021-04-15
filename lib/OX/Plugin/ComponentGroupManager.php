@@ -38,6 +38,8 @@ require_once(MAX_PATH.'/lib/OA/Admin/Menu.php');
 
 class OX_Plugin_ComponentGroupManager
 {
+    var $basePath;
+
     var $pathPackages;
     var $pathPlugins;
     var $pathPluginsAdmin;
@@ -547,9 +549,10 @@ class OX_Plugin_ComponentGroupManager
      * r
      *
      * @param string $classname
-     * @return object
+     * @param array  $aParams
+     * @return object|false
      */
-    function &_instantiateClass($classname) // cannot take params //, $aParams=null)
+    function _instantiateClass($classname, $aParams = [])
     {
         if (!$classname)
         {
@@ -561,24 +564,10 @@ class OX_Plugin_ComponentGroupManager
             $this->_logError('Class not found '.$classname);
             return false;
         }
-        $oResult = new $classname();
-/*      newInstanceArgs() method not implemented until php 5.1.3
-        if (!$aParams)
-        {
-            $oResult = new $classname();
-        }
-        else
-        {
-            // use Reflection to create a new instance, using the $args
-            $oReflection = new ReflectionClass($classname);
-            $oResult = $oReflection->newInstanceArgs($aParams);
-        }*/
-        if (!is_a($oResult,$classname))
-        {
-            $this->_logError('Failed to instantiate class '.$classname);
-            return false;
-        }
-        return $oResult;
+
+        $oReflection = new ReflectionClass($classname);
+
+        return $oReflection->newInstanceArgs($aParams);
     }
 
     /**
@@ -589,7 +578,7 @@ class OX_Plugin_ComponentGroupManager
      */
     public function getComponentGroupSettingsArray($name)
     {
-        return $GLOBALS['_MAX']['CONF'][$name] ? $GLOBALS['_MAX']['CONF'][$name] : array();
+        return $GLOBALS['_MAX']['CONF'][$name] ?? [];
     }
 
     /**
@@ -784,9 +773,8 @@ class OX_Plugin_ComponentGroupManager
         if ($aSettings)
         {
             $oSettings  = $this->_instantiateClass('OA_Admin_Settings');
-            foreach ($aSettings AS &$aSetting)
-            {
-                $oSettings->settingChange($name,$aSetting['key'],$aSetting['value']);
+            foreach ($aSettings AS $aSetting) {
+                $oSettings->settingChange($name, $aSetting['key'], $aSetting['value'] ?? null);
             }
             if (!$oSettings->writeConfigChange())
             {
@@ -2124,13 +2112,13 @@ class OX_Plugin_ComponentGroupManager
                 }
             }
         }
-        $schema_version = $this->getSchemaInfo($aParse['install']['schema']['mdb2schema']);
+        $schema_version = $this->getSchemaInfo($aParse['install']['schema']['mdb2schema'] ?? null);
         if ($schema_version)
         {
             $aGroup['schema_name']     = $aParse['install']['schema']['mdb2schema'];
             $aGroup['schema_version']  = $schema_version;
         }
-        $aGroup['components'] = $aParse['install']['components'];
+        $aGroup['components'] = $aParse['install']['components'] ?? null;
 
         unset($aGroup['upgrade']);
         return $aGroup;
