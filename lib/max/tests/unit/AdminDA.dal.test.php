@@ -867,7 +867,12 @@ class Admin_DaTest extends DalUnitTestCase
     function testCheckBannerZoneAdAssoc()
     {
         // sql banner with an email zone
-        $aZone = array('type' => 4);
+        $aZone = [
+            'type' => 4,
+            'publisher_id' => 1,
+            'zone_id' => 1,
+            'name' => 'foo',
+        ];
         $bannerType = 'sql';
         $contentType = 'gif';
 
@@ -875,7 +880,6 @@ class Admin_DaTest extends DalUnitTestCase
         $this->assertFalse(PEAR::isError($ret));
 
         // web banner (png) with an email zone
-        $aZone = array('type' => 4);
         $bannerType = 'web';
         $contentType = 'png';
 
@@ -883,7 +887,6 @@ class Admin_DaTest extends DalUnitTestCase
         $this->assertFalse(PEAR::isError($ret));
 
         // url banner (jpg) with an email zone
-        $aZone = array('type' => 4);
         $bannerType = 'url';
         $contentType = 'jpeg';
 
@@ -891,7 +894,6 @@ class Admin_DaTest extends DalUnitTestCase
         $this->assertFalse(PEAR::isError($ret));
 
         // html banner (swf) with an email zone
-        $aZone = array('type' => 4);
         $bannerType = 'html';
 
         PEAR::pushErrorHandling(null);
@@ -907,7 +909,7 @@ class Admin_DaTest extends DalUnitTestCase
         $ret = Admin_DA::addAdZone(array('zone_id' => $this->zoneId, 'ad_id' => $this->bannerId));
         $this->assertTrue(is_int($ret));
         $this->assertTrue($ret > 0);
-        Admin_DA::deleteAdZones(array('zone_id' => $this->zoneId, 'ad_id' => $this->adId));
+        Admin_DA::deleteAdZones(array('zone_id' => $this->zoneId, 'ad_id' => $this->bannerId));
     }
 
     // +---------------------------------------+
