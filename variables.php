@@ -40,7 +40,12 @@ if (!function_exists('each')) {
         $value = current($array);
         next($array);
 
-        return [$key, $value];
+        return [
+            0 => $key,
+            1 => $value,
+            'key' => $key,
+            'value' => $value,
+        ];
     }
 }
 

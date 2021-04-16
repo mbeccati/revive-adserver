@@ -113,12 +113,12 @@ class Admin_DA
      * @param string $table
      * @param string $column
      * @param string $id
-     * @return array
+     * @return array|null
      */
     public static function _getDataRowFromId($table, $column, $id)
     {
         $aDataRows = Admin_DA::_getEntities($table, array($column => $id), true);
-        return $aDataRows[$id];
+        return $aDataRows[$id] ?? null;
     }
 
     /**
@@ -417,6 +417,11 @@ class Admin_DA
     {
         $aParams = array();
         $aZone = Admin_DA::getZone($zoneId);
+
+        if (null === $aZone) {
+            return [];
+        }
+
         if ($aZone['type'] == phpAds_ZoneText) {
             $aParams['ad_type'] = 'txt';
         } else {

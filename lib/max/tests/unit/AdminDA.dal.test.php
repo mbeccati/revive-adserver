@@ -22,6 +22,8 @@ require_once MAX_PATH . '/lib/max/Dal/tests/util/DalUnitTestCase.php';
 require_once MAX_PATH . '/lib/OA/Dal/DataGenerator.php';
 require_once MAX_PATH .'/www/admin/lib-zones.inc.php';
 
+Language_Loader::load();
+
 /**
  * A class for testing the Admin_DA class.
  */
