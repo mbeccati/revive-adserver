@@ -24,14 +24,18 @@ Language_Loader::load();
  */
 class Plugins_TestOfPlugins_DeliveryLimitations_Client_Language extends UnitTestCase
 {
+    private $langSave;
+
     function setUp()
     {
-        $this->langSave = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        $this->langSave = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
     }
 
     function tearDown()
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $this->langSave;
+        if (null !== $this->langSave) {
+            $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $this->langSave;
+        }
     }
 
     function testMAX_checkClient_Language()
