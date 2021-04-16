@@ -809,7 +809,7 @@ class DB_DataObjectCommon extends DB_DataObject
      * then try to locate this record in the database.
      *
      * @access private
-     * @return mixed Either the "original" DB_DataObject, if it can be
+     * @return DB_DataObjectCommon|false Either the "original" DB_DataObject, if it can be
      *               found, otherwise false.
      */
     function _cloneObjectFromDatabase()
@@ -1652,49 +1652,42 @@ class DB_DataObjectCommon extends DB_DataObject
     function _prepAuditArray($actionid, $dataobjectOld)
     {
         global $_DB_DATAOBJECT;
+
         $oDbh = $_DB_DATAOBJECT['CONNECTIONS'][$this->_database_dsn_md5];
         $aFields = $_DB_DATAOBJECT['INI'][$oDbh->database_name][$this->_tableName];
 
-        $aAuditFields = array();
-        switch ($actionid)
-        {
+        $aAuditFields = [];
+        switch ($actionid) {
             case OA_AUDIT_ACTION_INSERT:
             case OA_AUDIT_ACTION_DELETE:
-                        // audit all data
-                        foreach ($aFields AS $name => $type)
-                        {
-                            $aAuditFields[$name] = $this->_formatValue($name, $type);
-                            if ($aAuditFields[$name] === NULL)
-                            {
-                                $aAuditFields[$name] = 'null';
-                            }
-                        }
-                        break;
+                // audit all data
+                foreach ($aFields as $name => $type) {
+                    $aAuditFields[$name] = $this->_formatValue($name, $type);
+                }
+                break;
+
             case OA_AUDIT_ACTION_UPDATE:
-                        $dataobjectNew = $this->_cloneObjectFromDatabase();
-                        // only audit data that has changed
-                        if ($dataobjectNew)
-                        {
-                            foreach ($aFields AS $name => $type)
-                            {
-                                // don't bother auditing timestamp changes?
-                                if ($name <> 'updated')
-                                {
-                                    $valNew = $dataobjectNew->_formatValue($name, $type);
-                                    $valOld = !empty($dataobjectOld) ? $dataobjectOld->_formatValue($name,$type) : '';
-                                    if ($valNew != $valOld)
-                                    {
-                                        $aAuditFields[$name]['was'] = $valOld;
-                                        $aAuditFields[$name]['is']  = $valNew;
-                                    }
-                                }
-                            }
+                $dataobjectNew = $this->_cloneObjectFromDatabase();
+                // only audit data that has changed
+                if (!$dataobjectNew) {
+                    break;
+                }
+
+                foreach ($aFields as $name => $type) {
+                    // don't bother auditing timestamp changes?
+                    if ($name <> 'updated') {
+                        $valNew = $dataobjectNew->_formatValue($name, $type);
+                        $valOld = null !== $dataobjectOld ? $dataobjectOld->_formatValue($name, $type) : '';
+                        if ($valNew !== $valOld) {
+                            $aAuditFields[$name]['was'] = $valOld;
+                            $aAuditFields[$name]['is'] = $valNew;
                         }
-                        else
-                        {
-                            //MAX::raiseError('No dataobject for '.$this->_tableName.'. Unable to prep the audit array', PEAR_LOG_ERR);
-                        }
+                    }
+                }
+
+                break;
         }
+
         return $aAuditFields;
     }
 
@@ -1708,7 +1701,7 @@ class DB_DataObjectCommon extends DB_DataObject
      * @return mixed
      */
 
-    function _formatValue($field, $type ='')
+    function _formatValue(string $field, $type = 0)
     {
         switch ($type)
         {
@@ -1735,44 +1728,39 @@ class DB_DataObjectCommon extends DB_DataObject
 
     public static function _boolToStr($val)
     {
-        if (is_numeric($val))
-        {
-            switch ($val)
-            {
+        if (null === $val) {
+            return 'null';
+        }
+
+        if (is_bool($val)) {
+            return $val ? 'true' : 'false';
+        }
+
+        $val = (string)$val;
+
+        if (is_numeric($val)) {
+            switch ($val) {
                 case '0':
-                case 0:
                     return 'false';
                 case '1':
-                case 1:
                     return 'true';
                 default:
                     return $val;
             }
-        }
-        elseif (is_bool($val))
-        {
-            switch ($val)
-            {
-                case false:
-                    return 'false';
-                case true:
-                    return 'true';
-            }
-        }
-        else
-        {
-            switch ($val)
-            {
+        } else {
+            switch ($val) {
                 case 'f':
                 case 'n':
                 case 'N':
                 case 'false':
                     return 'false';
+
                 case 't':
                 case 'y':
                 case 'Y':
                 case 'true':
                     return 'true';
+
                 default:
                     return $val;
             }
