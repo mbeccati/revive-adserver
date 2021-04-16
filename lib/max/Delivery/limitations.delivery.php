@@ -224,7 +224,7 @@ function MAX_limitationsMatchArrayClientGeo($paramName, $limitation, $op, &$aPar
 function MAX_limitationsMatchArray($paramName, $limitation, $op, $aParams = array(), $namespace='CLIENT')
 {
     if (empty($aParams)) {
-        $aParams = $GLOBALS['_MAX'][$namespace];
+        $aParams = $GLOBALS['_MAX'][$namespace] ?? [];
     }
     if ($limitation == '' || empty($aParams[$paramName])) {
         return !MAX_limitationsIsOperatorPositive($op);
