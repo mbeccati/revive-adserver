@@ -141,7 +141,7 @@ class OA_Dal
      * @param int $newId    The id to be assigned as the id of the row copied (optional)
      * @return mixed        Returns the restults returned from the duplicate method
      */
-    function staticDuplicate($table, $origId, $newId = null)
+    public static function staticDuplicate($table, $origId, $newId = null)
     {
         self::_setupDataObjectOptions();
         $do = OA_Dal::factoryDO($table);
