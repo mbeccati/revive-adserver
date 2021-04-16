@@ -285,7 +285,7 @@ function MAX_Delivery_log_getArrGetVariable(string $name, array $array = null)
         $array = $_GET;
     }
 
-    $varName = $GLOBALS['_MAX']['CONF']['var'][$name];
+    $varName = $GLOBALS['_MAX']['CONF']['var'][$name] ?? $name;
 
     if (!isset($array[$varName])) {
         return [];
