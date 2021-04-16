@@ -197,7 +197,7 @@ function _viewersHostOkayToLog($adId=0, $zoneId=0, $trackerId=0)
 {
     $aConf = $GLOBALS['_MAX']['CONF'];
 
-    $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $agent = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
 
     $okToLog = true;
     // Check the user-agent against the list of known browsers (if set)
