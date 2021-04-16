@@ -815,7 +815,7 @@ class MDB2_Driver_pgsql extends MDB2_Driver_Common
     function &prepare($query, $types = null, $result_types = null, $lobs = array())
     {
         if ($this->options['emulate_prepared']) {
-            $obj =& parent::prepare($query, $types, $result_types, $lobs);
+            $obj = parent::prepare($query, $types, $result_types, $lobs);
             return $obj;
         }
         $is_manip = ($result_types === MDB2_PREPARE_MANIP);
@@ -1309,7 +1309,7 @@ class MDB2_Statement_pgsql extends MDB2_Statement_Common
     function &_execute($result_class = true, $result_wrap_class = false)
     {
         if (is_null($this->statement)) {
-            $result =& parent::_execute($result_class, $result_wrap_class);
+            $result = parent::_execute($result_class, $result_wrap_class);
             return $result;
         }
         $this->db->last_query = $this->query;
