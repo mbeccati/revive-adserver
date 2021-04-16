@@ -113,6 +113,20 @@ class DataObjects_Campaigns extends DB_DataObjectCommon
     /* the code above is auto generated do not remove the tag below */
     ###END_AUTOCODE
 
+    public function __construct()
+    {
+        $aConf = $GLOBALS['_MAX']['CONF'];
+
+        // Set default connection windows
+        if (!empty($aConf['logging']['defaultImpressionConnectionWindow'])) {
+            $this->defaultValues['viewwindow'] = $aConf['logging']['defaultImpressionConnectionWindow'];
+        }
+
+        if (!empty($aConf['logging']['defaultClickConnectionWindow'])) {
+            $this->defaultValues['clickwindow'] = $aConf['logging']['defaultClickConnectionWindow'];
+        }
+    }
+
     /**
      * A method to set the correct status based on the other campaign properties
      *
@@ -210,7 +224,7 @@ class DataObjects_Campaigns extends DB_DataObjectCommon
 
         if (!empty($this->activate_time) && $this->activate_time != OX_DATAOBJECT_NULL) {
             if (!isset($oServiceLocator)) {
-                $oServiceLocator = &OA_ServiceLocator::instance();
+                $oServiceLocator = OA_ServiceLocator::instance();
             }
             if ((!$oNow = $oServiceLocator->get('now'))) {
                 $oNow = new Date();
@@ -237,7 +251,7 @@ class DataObjects_Campaigns extends DB_DataObjectCommon
 
         if (!empty($this->expire_time) && $this->expire_time != OX_DATAOBJECT_NULL) {
             if (!isset($oServiceLocator)) {
-                $oServiceLocator = &OA_ServiceLocator::instance();
+                $oServiceLocator = OA_ServiceLocator::instance();
             }
             if ((!$oNow = $oServiceLocator->get('now'))) {
                 $oNow = new Date();
@@ -291,8 +305,6 @@ class DataObjects_Campaigns extends DB_DataObjectCommon
 
     function update($dataObject = false)
     {
-//        $this->setEcpmEnabled();
-
         if ($this->priority == self::PRIORITY_ECPM || $this->ecpm_enabled) {
             $this->ecpm = $this->calculateEcpm();
         }
@@ -307,24 +319,12 @@ class DataObjects_Campaigns extends DB_DataObjectCommon
 
     function insert()
     {
-        $aConf = $GLOBALS['_MAX']['CONF'];
-
-//        $this->setEcpmEnabled();
-
         if ($this->priority == self::PRIORITY_ECPM || $this->ecpm_enabled) {
             $this->ecpm = $this->calculateEcpm();;
         }
 
         // Set the correct campaign status
         $this->recalculateStatus();
-
-        // Set deafult connection windows if not supplied
-        if (!isset($this->viewwindow) && !empty($aConf['logging']['defaultImpressionConnectionWindow'])) {
-            $this->viewwindow = $aConf['logging']['defaultImpressionConnectionWindow'];
-        }
-        if (!isset($this->clickwindow) && !empty($aConf['logging']['defaultClickConnectionWindow'])) {
-            $this->clickwindow = $aConf['logging']['defaultClickConnectionWindow'];
-        }
 
         $id = parent::insert();
         if (!$id) {
@@ -334,7 +334,7 @@ class DataObjects_Campaigns extends DB_DataObjectCommon
         // Initalise any tracker based plugins
         $plugins = array();
         require_once LIB_PATH . '/Plugin/Component.php';
-        $invocationPlugins = &OX_Component::getComponents('invocationTags');
+        $invocationPlugins = OX_Component::getComponents('invocationTags');
         foreach($invocationPlugins as $pluginKey => $plugin) {
             if (!empty($plugin->trackerEvent)) {
                 $plugins[] = $plugin;
