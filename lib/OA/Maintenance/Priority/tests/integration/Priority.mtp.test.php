@@ -427,6 +427,7 @@ class Test_Priority extends UnitTestCase
         // Insert some stats for an ad zone combination
         $doDIA = OA_DAL::factoryDO('data_intermediate_ad');
         $doDIA->ad_id = 3;
+        $doDIA->creative_id = 0;
         $doDIA->zone_id = 3;
         $doDIA->impressions = 20;
         $doDIA->date_time = $aOiDates['start']->getDate();
