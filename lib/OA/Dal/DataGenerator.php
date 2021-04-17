@@ -458,8 +458,11 @@ class DataGenerator
             OA_DB::disableCaseSensitive();
             if (is_array($aSequences))
             {
-                RV::disableErrorHandling();
                 $tableName = substr($aConf['table']['prefix'].$tableName, 0, 29).'_';
+
+                $result = null;
+                
+                RV::disableErrorHandling();
                 foreach ($aSequences AS $k => $sequence)
                 {
                     OA::debug('Resetting sequence ' . $sequence, PEAR_LOG_DEBUG);
@@ -471,7 +474,9 @@ class DataGenerator
                         break;
                     }
                 }
+
                 RV::enableErrorHandling();
+
                 if (PEAR::isError($result)) {
                     OA::debug('Unable to reset sequence on table ' . $tableName, PEAR_LOG_ERR);
                     return false;
