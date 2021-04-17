@@ -461,7 +461,7 @@ class DataGenerator
                 $tableName = substr($aConf['table']['prefix'].$tableName, 0, 29).'_';
 
                 $result = null;
-                
+
                 RV::disableErrorHandling();
                 foreach ($aSequences AS $k => $sequence)
                 {
