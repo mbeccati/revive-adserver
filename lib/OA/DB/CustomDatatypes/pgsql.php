@@ -739,7 +739,7 @@ function datatype_openads_int_callback($db, $method, $aParameters)
             }
             $declaration_options = $db->datatype->_getDeclarationOptions($aParameters['field']);
             $value = $name . ' ' . $datatype;
-            if ($aParameters['field']['notnull'] && ($aParameters['field']['default'] === '')) {
+            if (!empty($aParameters['field']['notnull']) && ($aParameters['field']['default'] === '')) {
                 // Cannot declare NOT NULL DEFAULT NULL, so strip DEFAULT declaration
                 $declaration_options = preg_replace('/DEFAULT \w+/', '', $declaration_options);
             }
