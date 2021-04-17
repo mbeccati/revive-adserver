@@ -150,7 +150,7 @@ class PEAR
      * @var     array
      * @access  private
      */
-    var $_expected_errors = array();
+    private static $EXPECTED_ERRORS = [];
 
     // }}}
 
@@ -383,12 +383,13 @@ class PEAR
      */
     function expectError($code = '*')
     {
-        if (is_array($code)) {
-            array_push($this->_expected_errors, $code);
-        } else {
-            array_push($this->_expected_errors, array($code));
+        if (!is_array($code)) {
+            $code = [$code];
         }
-        return sizeof($this->_expected_errors);
+
+        array_push(self::$EXPECTED_ERRORS, $code);
+
+        return count(self::$EXPECTED_ERRORS);
     }
 
     // }}}
@@ -402,7 +403,7 @@ class PEAR
      */
     function popExpect()
     {
-        return array_pop($this->_expected_errors);
+        return array_pop(self::$EXPECTED_ERRORS);
     }
 
     // }}}
@@ -416,21 +417,22 @@ class PEAR
      * @access private
      * @since PHP 4.3.0
      */
-    function _checkDelExpect($error_code)
+    private function _checkDelExpect($error_code)
     {
         $deleted = false;
 
-        foreach ($this->_expected_errors AS $key => $error_array) {
+        foreach (self::$EXPECTED_ERRORS AS $key => $error_array) {
             if (in_array($error_code, $error_array)) {
-                unset($this->_expected_errors[$key][array_search($error_code, $error_array)]);
+                unset(self::$EXPECTED_ERRORS[$key][array_search($error_code, $error_array)]);
                 $deleted = true;
             }
 
             // clean up empty arrays
-            if (0 == count($this->_expected_errors[$key])) {
-                unset($this->_expected_errors[$key]);
+            if (0 == count(self::$EXPECTED_ERRORS[$key])) {
+                unset(self::$EXPECTED_ERRORS[$key]);
             }
         }
+
         return $deleted;
     }
 
@@ -530,6 +532,14 @@ class PEAR
             $error_class = $message->getType();
             $message->error_message_prefix = '';
             $message     = $message->getMessage();
+        }
+
+        if (sizeof(self::$EXPECTED_ERRORS) > 0 && sizeof($exp = end(self::$EXPECTED_ERRORS))) {
+            if ($exp[0] == "*" ||
+                (is_int(reset($exp)) && in_array($code, $exp)) ||
+                (is_string(reset($exp)) && in_array($message, $exp))) {
+                $mode = PEAR_ERROR_RETURN;
+            }
         }
 
         // No mode given, try global ones
