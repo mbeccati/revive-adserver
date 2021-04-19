@@ -455,7 +455,7 @@ function MAX_commonIsAdActionBlockedBecauseInactive($adId)
         // Check if the ad and/or campaign is inactive - therefore the ad action is blocked
         $aAdInfo = MAX_cacheGetAd($adId);
 
-        if (null === $aAdInfo) {
+        if (!$aAdInfo) {
             return false;
         }
 
