@@ -225,6 +225,11 @@ class Test_DB_Upgrade extends UnitTestCase
      */
     function test_getDefinitionFromDatabase1()
     {
+        if ('pgsql' === $GLOBALS['_MAX']['CONF']['database']['type']) {
+            $this->skip();
+            return;
+        }
+
         TestEnv::teardownDB();
         TestEnv::setupDB();
 
@@ -252,6 +257,11 @@ class Test_DB_Upgrade extends UnitTestCase
      */
     function test_getDefinitionFromDatabase2()
     {
+        if ('pgsql' === $GLOBALS['_MAX']['CONF']['database']['type']) {
+            $this->skip();
+            return;
+        }
+
         TestEnv::teardownDB();
         TestEnv::setupDB();
 
@@ -280,6 +290,11 @@ class Test_DB_Upgrade extends UnitTestCase
      */
     function test_getDefinitionFromDatabase3()
     {
+        if ('pgsql' === $GLOBALS['_MAX']['CONF']['database']['type']) {
+            $this->skip();
+            return;
+        }
+
         TestEnv::teardownDB();
         TestEnv::setupDB();
 

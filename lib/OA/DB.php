@@ -532,6 +532,7 @@ class OA_DB
         $dsn = OA_DB::_getDefaultDsn();
         $oDbh = OA_DB::singleton($dsn);
         RV::disableErrorHandling();
+        self::disconnectAll();
         $result = $oDbh->manager->dropDatabase($name);
         RV::enableErrorHandling();
         if (PEAR::isError($result)) {

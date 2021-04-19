@@ -1239,6 +1239,9 @@ class MDB2_Driver_Common extends PEAR
      */
     var $destructor_registered = true;
 
+    /** @var MDB2_Driver_Manager_Common */
+    public $manager;
+
     // }}}
     // {{{ constructor: function __construct()
 
