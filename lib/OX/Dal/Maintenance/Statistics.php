@@ -157,7 +157,6 @@ abstract class OX_Dal_Maintenance_Statistics extends MAX_Dal_Common
         $aSelectColumns        = array();
         $aGroupedColumns       = array();
         $aSummedColumns        = array();
-        $aSummedColumnDefaults = array();
         foreach ($aMigrationMaps[$masterMigrationMapKey]['groupDestination'] as $value) {
             $aDestinationColumns[] = $value;
             $aSelectColumns[]      = $value;
@@ -168,7 +167,6 @@ abstract class OX_Dal_Maintenance_Statistics extends MAX_Dal_Common
                 $aDestinationColumns[] = $value;
                 $aSelectColumns[]      = 'SUM(' . $this->oDbh->quoteIdentifier($value, true) . ') AS ' . $this->oDbh->quoteIdentifier($value, true);
                 $aSummedColumns[]      = $value;
-                $aSummedColumnDefaults = $aMigrationDetails['sumDefault'][$key];
             }
         }
 
@@ -187,7 +185,7 @@ abstract class OX_Dal_Maintenance_Statistics extends MAX_Dal_Common
             foreach ($aSummedColumns as $value) {
                 $key = array_search($value, $aMigrationDetails['sumDestination']);
                 if ($key === false) {
-                    $aSelectColumnStatements[] = $this->oDbh->quoteIdentifier($aMigrationDetails['sumDefault'][$key], true) . ' AS ' . $this->oDbh->quoteIdentifier($value, true);
+                    $aSelectColumnStatements[] = $this->oDbh->quote($aMigrationDetails['sumDefault'][$key]) . ' AS ' . $this->oDbh->quoteIdentifier($value, true);
                 } else {
                     $aSelectColumnStatements[] = $this->oDbh->quoteIdentifier($aMigrationDetails['sumSource'][$key], true) . ' AS ' . $this->oDbh->quoteIdentifier($value, true);
                 }
