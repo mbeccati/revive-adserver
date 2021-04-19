@@ -1501,7 +1501,7 @@ class DB_DataObjectCommon extends DB_DataObject
         } else if ($accountType == OA_ACCOUNT_ADVERTISER) {
             // Set the owning manager account ID to the admin
             // account ID, in case something goes wrong
-            $managerAccountId = OA_Dal_ApplicationVariables::get('admin_account_id');
+            $managerAccountId = OA_Dal_ApplicationVariables::get('admin_account_id') ?? 0;
             // This is an advertiser account, so find the
             // "owning" manager account ID
             $doClients = OA_Dal::factoryDO('clients');
@@ -1519,7 +1519,7 @@ class DB_DataObjectCommon extends DB_DataObject
         } else if ($accountType == OA_ACCOUNT_TRAFFICKER) {
             // Set the owning manager account ID to the admin
             // account ID, in case something goes wrong
-            $managerAccountId = OA_Dal_ApplicationVariables::get('admin_account_id');
+            $managerAccountId = OA_Dal_ApplicationVariables::get('admin_account_id') ?? 0;
             // This is a trafficker account, so find the
             // "owning" manager account ID
             $doAffiliates = OA_Dal::factoryDO('affiliates');
