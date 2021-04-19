@@ -2787,18 +2787,19 @@ class MDB2_Driver_Common extends PEAR
             return $this->customRaiseError(MDB2_ERROR_UNSUPPORTED, null, null,
                 'replace query is not supported', __FUNCTION__);
         }
-        $count = count($fields);
+
         $condition = $values = array();
-        for ($colnum = 0, reset($fields); $colnum < $count; next($fields), $colnum++) {
-            $name = key($fields);
-            if (isset($fields[$name]['null']) && $fields[$name]['null']) {
+
+        foreach ($fields as $name => $field) {
+            if (!empty($field['null']) || !isset($fields[$name]['value'])) {
                 $value = 'NULL';
             } else {
-                $type = isset($fields[$name]['type']) ? $fields[$name]['type'] : null;
+                $type = $field[$name]['type'] ?? null;
                 $value = $this->quote($fields[$name]['value'], $type);
             }
+
             $values[$name] = $value;
-            if (isset($fields[$name]['key']) && $fields[$name]['key']) {
+            if (!empty($field['key'])) {
                 if ($value === 'NULL') {
                     return $this->customRaiseError(MDB2_ERROR_CANNOT_REPLACE, null, null,
                         'key value '.$name.' may not be NULL', __FUNCTION__);
@@ -2806,6 +2807,7 @@ class MDB2_Driver_Common extends PEAR
                 $condition[] = $name . '=' . $value;
             }
         }
+
         if (empty($condition)) {
             return $this->customRaiseError(MDB2_ERROR_CANNOT_REPLACE, null, null,
                 'not specified which fields are keys', __FUNCTION__);
